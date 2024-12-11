@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useSurfboards } from "@/hooks/use-surfboards";
 import { useSessions } from "@/hooks/use-sessions";
 import { useToast } from "@/hooks/use-toast";
+import CreateSurfboardDialog from "./CreateSurfboardDialog";
+import { useState } from "react";
 
 type FormData = {
   location: string;
@@ -33,6 +35,7 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
   const { surfboards, createSurfboard } = useSurfboards();
   const { userSessions } = useSessions();
   const lastLocation = userSessions?.[0]?.location;
+  const [isCreateSurfboardOpen, setIsCreateSurfboardOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -140,14 +143,7 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
                 <Button
                   variant="ghost"
                   className="w-full justify-start"
-                  onClick={async () => {
-                    const name = window.prompt("Enter surfboard name");
-                    if (name) {
-                      const description = window.prompt("Enter surfboard description (optional)");
-                      const newBoard = await createSurfboard({ name, description });
-                      form.setValue("surfboardId", newBoard.id);
-                    }
-                  }}
+                  onClick={() => setIsCreateSurfboardOpen(true)}
                 >
                   + Add New Surfboard
                 </Button>
@@ -187,6 +183,16 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
           </Button>
         </form>
       </DialogContent>
+      
+      <CreateSurfboardDialog
+        open={isCreateSurfboardOpen}
+        onOpenChange={setIsCreateSurfboardOpen}
+        onSubmit={async (data) => {
+          const newBoard = await createSurfboard(data);
+          form.setValue("surfboardId", newBoard.id);
+          setIsCreateSurfboardOpen(false);
+        }}
+      />
     </Dialog>
   );
 }
