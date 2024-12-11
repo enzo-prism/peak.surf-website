@@ -149,7 +149,9 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    const result = insertUserSchema.safeParse(req.body);
+    // Create a login schema that only requires username and password
+    const loginSchema = insertUserSchema.pick({ username: true, password: true });
+    const result = loginSchema.safeParse(req.body);
     if (!result.success) {
       return res
         .status(400)
