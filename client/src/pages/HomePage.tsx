@@ -17,7 +17,7 @@ export default function HomePage() {
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 max-w-screen-2xl items-center">
           <div className="mr-4 flex items-center gap-4">
-            <img src="/public/Transparent.png" alt="Peak Logo" className="h-6" />
+            <img src="/Transparent.png" alt="Peak Logo" className="h-6" />
             <div className="text-sm text-muted-foreground border-l border-border/40 pl-4">
               {isLoading ? (
                 "Loading..."
