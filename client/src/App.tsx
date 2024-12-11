@@ -1,6 +1,7 @@
 import { Switch, Route } from "wouter";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
+import CreateSessionPage from "./pages/CreateSessionPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 
@@ -22,6 +23,7 @@ function App() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/new-session" component={CreateSessionPage} />
       <Route>404 Page Not Found</Route>
     </Switch>
   );

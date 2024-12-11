@@ -1,16 +1,15 @@
-import { useState } from "react";
 import { useUser } from "@/hooks/use-user";
 import { useSessions } from "@/hooks/use-sessions";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SessionCard from "@/components/SessionCard";
-import CreateSessionDialog from "@/components/CreateSessionDialog";
 import { Plus, LogOut } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function HomePage() {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { logout, user } = useUser();
   const { userSessions, publicSessions, isLoading } = useSessions();
+  const [, setLocation] = useLocation();
 
   return (
     <div className="min-h-screen bg-background">
@@ -29,7 +28,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <Button variant="ghost" size="sm" onClick={() => setIsCreateOpen(true)}>
+            <Button variant="ghost" size="sm" onClick={() => setLocation("/new-session")}>
               <Plus className="h-4 w-4 mr-2" />
               New Session
             </Button>
@@ -61,11 +60,6 @@ export default function HomePage() {
           </TabsContent>
         </Tabs>
       </main>
-
-      <CreateSessionDialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-      />
     </div>
   );
 }
