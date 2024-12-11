@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { setupAuth } from "./auth";
 import { db } from "../db";
 import { sessions, surfboards } from "@db/schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, sql } from "drizzle-orm";
 import multer from "multer";
 import path from "path";
 
@@ -52,14 +52,16 @@ export function registerRoutes(app: Express) {
       });
 
       // Get session counts for all users who have public sessions
-      const userIds = [...new Set(publicSessions.map(session => session.userId))];
+      const userIds = Array.from(new Set(publicSessions.map(session => session.userId)));
       const sessionCounts = await Promise.all(
         userIds.map(async (userId) => {
-          const count = await db
-            .select({ count: sql`count(*)::int` })
+          const [result] = await db
+            .select({
+              count: sql<number>`cast(count(*) as integer)`,
+            })
             .from(sessions)
             .where(eq(sessions.userId, userId));
-          return { userId, count: count[0].count };
+          return { userId, count: result.count };
         })
       );
 
