@@ -102,6 +102,16 @@ export function registerRoutes(app: Express) {
 
     try {
       const photoUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
+      let surfFriends = [];
+      try {
+        if (req.body.surfFriends) {
+          surfFriends = JSON.parse(req.body.surfFriends);
+          console.log('Parsed friends:', surfFriends);
+        }
+      } catch (error) {
+        console.error('Error parsing friends:', error);
+      }
+      
       const [newSession] = await db.insert(sessions)
         .values({
           userId: req.user.id,
@@ -112,7 +122,7 @@ export function registerRoutes(app: Express) {
           waveConditions: req.body.waveConditions,
           waveHeight: req.body.waveHeight ? parseFloat(req.body.waveHeight) : null,
           surfboardId: req.body.surfboardId ? parseInt(req.body.surfboardId) : null,
-          surfFriends: req.body.surfFriends ? JSON.parse(req.body.surfFriends) : [],
+          surfFriends: surfFriends,
         })
         .returning();
       res.json(newSession);

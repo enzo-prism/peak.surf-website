@@ -207,8 +207,9 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
                   const input = e.currentTarget;
                   const value = input.value.trim();
                   if (value) {
-                    const currentFriends = form.watch("surfFriends") || [];
-                    form.setValue("surfFriends", [...currentFriends, value]);
+                    const currentFriends = form.watch("surfFriends");
+                    const updatedFriends = currentFriends ? [...currentFriends, value] : [value];
+                    form.setValue("surfFriends", updatedFriends);
                     input.value = "";
                   }
                 }
