@@ -23,10 +23,12 @@ type SessionCardProps = {
   session: Session & { 
     user?: { username: string };
     surfboard?: { name: string; description?: string };
+    userSessionCount?: number;
   };
+  isPublicFeed?: boolean;
 };
 
-export default function SessionCard({ session }: SessionCardProps) {
+export default function SessionCard({ session, isPublicFeed }: SessionCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { user } = useUser();
   const { toast } = useToast();
@@ -86,9 +88,15 @@ export default function SessionCard({ session }: SessionCardProps) {
             </Avatar>
             <div>
               <h3 className="text-lg font-medium">{session.location}</h3>
-              <p className="text-sm text-muted-foreground">
-                {format(new Date(session.date), "PPP")}
-              </p>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>{format(new Date(session.date), "PPP")}</span>
+                {isPublicFeed && session.userSessionCount !== undefined && (
+                  <>
+                    <span>•</span>
+                    <span>{session.userSessionCount} total sessions</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           {user?.id === session.userId && (

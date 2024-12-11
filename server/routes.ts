@@ -24,6 +24,7 @@ export function registerRoutes(app: Express) {
   // Get all public sessions
   app.get("/api/sessions/public", async (req, res) => {
     try {
+      // First get all public sessions
       const publicSessions = await db.query.sessions.findMany({
         where: eq(sessions.isPublic, true),
         orderBy: (sessions, { desc }) => [desc(sessions.date)],
@@ -49,7 +50,31 @@ export function registerRoutes(app: Express) {
           surfboard: true
         }
       });
-      res.json(publicSessions);
+
+      // Get session counts for all users who have public sessions
+      const userIds = [...new Set(publicSessions.map(session => session.userId))];
+      const sessionCounts = await Promise.all(
+        userIds.map(async (userId) => {
+          const count = await db
+            .select({ count: sql`count(*)::int` })
+            .from(sessions)
+            .where(eq(sessions.userId, userId));
+          return { userId, count: count[0].count };
+        })
+      );
+
+      // Create a map for quick lookup
+      const userSessionCounts = new Map(
+        sessionCounts.map(({ userId, count }) => [userId, count])
+      );
+
+      // Attach session counts to the response
+      const sessionsWithCounts = publicSessions.map(session => ({
+        ...session,
+        userSessionCount: userSessionCounts.get(session.userId) || 0
+      }));
+
+      res.json(sessionsWithCounts);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch public sessions" });
     }

@@ -56,7 +56,7 @@ export default function HomePage() {
           
           <TabsContent value="public" className="space-y-4">
             {publicSessions?.map((session) => (
-              <SessionCard key={session.id} session={session} />
+              <SessionCard key={session.id} session={session} isPublicFeed={true} />
             ))}
           </TabsContent>
         </Tabs>
