@@ -11,6 +11,9 @@ type SessionCardProps = {
 };
 
 export default function SessionCard({ session }: SessionCardProps) {
+  // Check if surfFriends exists and is an array
+  const hasFriends = Array.isArray(session.surfFriends) && session.surfFriends.length > 0;
+  
   return (
     <Card className="overflow-hidden">
       {session.photoUrl && (
@@ -56,7 +59,7 @@ export default function SessionCard({ session }: SessionCardProps) {
             <span className="text-sm text-muted-foreground">{session.surfboard.name}</span>
           </div>
         )}
-        {Array.isArray(session.surfFriends) && session.surfFriends.length > 0 && (
+        {hasFriends && (
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Friends:</span>
             <span className="text-sm text-muted-foreground">
