@@ -29,7 +29,11 @@ export function registerRoutes(app: Express) {
         where: eq(sessions.isPublic, true),
         orderBy: (sessions, { desc }) => [desc(sessions.date)],
         with: {
-          user: true
+          user: {
+            columns: {
+              username: true
+            }
+          }
         }
       });
       res.json(publicSessions);
