@@ -21,6 +21,7 @@ type FormData = {
   waveConditions: string;
   waveHeight: number;
   surfboardId?: number;
+  surfFriends: string[];
 };
 
 type CreateSessionDialogProps = {
@@ -29,7 +30,11 @@ type CreateSessionDialogProps = {
 };
 
 export default function CreateSessionDialog({ open, onOpenChange }: CreateSessionDialogProps) {
-  const form = useForm<FormData>();
+  const form = useForm<FormData>({
+    defaultValues: {
+      surfFriends: [],
+    },
+  });
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { surfboards, createSurfboard } = useSurfboards();
@@ -50,6 +55,9 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
       }
       if (data.photo?.[0]) {
         formData.append("photo", data.photo[0]);
+      }
+      if (data.surfFriends?.length) {
+        formData.append("surfFriends", JSON.stringify(data.surfFriends));
       }
 
       const res = await fetch("/api/sessions", {
@@ -169,6 +177,45 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
             />
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="surfFriends">Friends (Press Enter to add)</Label>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {form.watch("surfFriends")?.map((friend, index) => (
+                <div key={index} className="flex items-center bg-primary/20 px-2 py-1 rounded">
+                  <span>{friend}</span>
+                  <button
+                    type="button"
+                    className="ml-2 text-sm hover:text-destructive"
+                    onClick={() => {
+                      const currentFriends = form.watch("surfFriends");
+                      form.setValue("surfFriends", 
+                        currentFriends.filter((_, i) => i !== index)
+                      );
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+            <Input
+              id="surfFriends"
+              placeholder="Type a friend's name and press Enter"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  const input = e.currentTarget;
+                  const value = input.value.trim();
+                  if (value) {
+                    const currentFriends = form.watch("surfFriends") || [];
+                    form.setValue("surfFriends", [...currentFriends, value]);
+                    input.value = "";
+                  }
+                }
+              }}
+            />
+          </div>
+
           <div className="flex items-center space-x-2">
             <Switch
               id="isPublic"

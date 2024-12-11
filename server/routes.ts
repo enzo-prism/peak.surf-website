@@ -86,6 +86,7 @@ export function registerRoutes(app: Express) {
           waveConditions: req.body.waveConditions,
           waveHeight: req.body.waveHeight ? parseFloat(req.body.waveHeight) : null,
           surfboardId: req.body.surfboardId ? parseInt(req.body.surfboardId) : null,
+          surfFriends: req.body.surfFriends ? JSON.parse(req.body.surfFriends) : [],
         })
         .returning();
       res.json(newSession);

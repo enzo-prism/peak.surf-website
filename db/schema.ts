@@ -26,6 +26,7 @@ export const sessions = pgTable("sessions", {
   waveConditions: text("wave_conditions"),
   waveHeight: real("wave_height"),
   surfboardId: integer("surfboard_id").references(() => surfboards.id),
+  surfFriends: text("surf_friends").array(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

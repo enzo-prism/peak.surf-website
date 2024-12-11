@@ -56,6 +56,14 @@ export default function SessionCard({ session }: SessionCardProps) {
             <span className="text-sm text-muted-foreground">{session.surfboard.name}</span>
           </div>
         )}
+        {session.surfFriends && session.surfFriends.length > 0 && (
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-sm font-medium">Friends:</span>
+            <span className="text-sm text-muted-foreground">
+              {session.surfFriends.join(", ")}
+            </span>
+          </div>
+        )}
         {session.highlight && (
           <p className="text-muted-foreground mt-4">{session.highlight}</p>
         )}
