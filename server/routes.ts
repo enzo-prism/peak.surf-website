@@ -1,4 +1,5 @@
 import { type Express } from "express";
+import { createServer } from "http";
 import { setupAuth } from "./auth";
 import { db } from "../db";
 import { sessions, surfboards } from "@db/schema";
@@ -9,14 +10,12 @@ import path from "path";
 const upload = multer({
   storage: multer.diskStorage({
     destination: "uploads/",
-    filename: (req, file, cb) => {
+    filename: (_req, file, cb) => {
       const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
       cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
     }
   })
 });
-
-import { createServer } from "http";
 
 export function registerRoutes(app: Express) {
   const server = createServer(app);
@@ -106,7 +105,6 @@ export function registerRoutes(app: Express) {
       try {
         if (req.body.surfFriends) {
           surfFriends = JSON.parse(req.body.surfFriends);
-          console.log('Parsed friends:', surfFriends);
         }
       } catch (error) {
         console.error('Error parsing friends:', error);
@@ -169,6 +167,40 @@ export function registerRoutes(app: Express) {
     } catch (error) {
       console.error("Error creating surfboard:", error);
       res.status(500).json({ error: "Failed to create surfboard" });
+    }
+  });
+
+  // Delete session
+  app.delete("/api/sessions/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).send("Not authenticated");
+    }
+
+    try {
+      // First check if the session belongs to the user
+      const [session] = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.id, parseInt(req.params.id)))
+        .limit(1);
+
+      if (!session) {
+        return res.status(404).send("Session not found");
+      }
+
+      if (session.userId !== req.user.id) {
+        return res.status(403).send("Not authorized to delete this session");
+      }
+
+      // Delete the session
+      await db
+        .delete(sessions)
+        .where(eq(sessions.id, parseInt(req.params.id)));
+
+      res.json({ message: "Session deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting session:", error);
+      res.status(500).json({ error: "Failed to delete session" });
     }
   });
 
