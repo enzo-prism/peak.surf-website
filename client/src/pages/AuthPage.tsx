@@ -47,13 +47,44 @@ export default function AuthPage() {
     try {
       if (activeTab === "login") {
         const { username, password } = data as LoginFormData;
-        await login({ username, password });
+        const result = await login({ username, password });
+        if (!result.ok) {
+          if (result.message.toLowerCase().includes("username")) {
+            loginForm.setError("username", { message: result.message });
+          } else if (result.message.toLowerCase().includes("password")) {
+            loginForm.setError("password", { message: result.message });
+          } else {
+            toast({
+              title: "Error",
+              description: result.message,
+              variant: "destructive",
+            });
+          }
+          return;
+        }
       } else {
         const formData = data as RegisterFormData;
         if (!formData.phoneNumber) {
-          throw new Error("Phone number is required");
+          registerForm.setError("phoneNumber", { message: "Phone number is required" });
+          return;
         }
-        await register(formData);
+        const result = await register(formData);
+        if (!result.ok) {
+          if (result.message.toLowerCase().includes("username")) {
+            registerForm.setError("username", { message: result.message });
+          } else if (result.message.toLowerCase().includes("password")) {
+            registerForm.setError("password", { message: result.message });
+          } else if (result.message.toLowerCase().includes("phone")) {
+            registerForm.setError("phoneNumber", { message: result.message });
+          } else {
+            toast({
+              title: "Error",
+              description: result.message,
+              variant: "destructive",
+            });
+          }
+          return;
+        }
       }
     } catch (error: any) {
       toast({
