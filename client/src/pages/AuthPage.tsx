@@ -18,17 +18,29 @@ type LoginFormData = {
   password: string;
 };
 
+const FormError = ({ message }: { message?: string }) => {
+  if (!message) return null;
+  return <p className="text-xs text-destructive mt-1">{message}</p>;
+};
+
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
   const { login, register } = useUser();
   const { toast } = useToast();
-  const loginForm = useForm<LoginFormData>();
+  const loginForm = useForm<LoginFormData>({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    mode: "onChange",
+  });
   const registerForm = useForm<RegisterFormData>({
     defaultValues: {
       username: "",
       password: "",
       phoneNumber: "",
     },
+    mode: "onChange",
   });
 
   const onSubmit = async (data: LoginFormData | RegisterFormData) => {
@@ -67,17 +79,39 @@ export default function AuthPage() {
               </TabsList>
               <TabsContent value="login">
                 <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-4 mt-6">
-                  <Input
-                    placeholder="Username"
-                    className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...loginForm.register("username", { required: "Username is required" })}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...loginForm.register("password", { required: "Password is required" })}
-                  />
+                  <div className="space-y-1">
+                    <Input
+                      placeholder="Username"
+                      className={`bg-black/50 border-primary/20 placeholder:text-primary/50 ${
+                        loginForm.formState.errors.username ? "border-destructive" : ""
+                      }`}
+                      {...loginForm.register("username", { 
+                        required: "Username is required",
+                        minLength: {
+                          value: 3,
+                          message: "Username must be at least 3 characters"
+                        }
+                      })}
+                    />
+                    <FormError message={loginForm.formState.errors.username?.message} />
+                  </div>
+                  <div className="space-y-1">
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      className={`bg-black/50 border-primary/20 placeholder:text-primary/50 ${
+                        loginForm.formState.errors.password ? "border-destructive" : ""
+                      }`}
+                      {...loginForm.register("password", { 
+                        required: "Password is required",
+                        minLength: {
+                          value: 6,
+                          message: "Password must be at least 6 characters"
+                        }
+                      })}
+                    />
+                    <FormError message={loginForm.formState.errors.password?.message} />
+                  </div>
                   <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                     Login
                   </Button>
@@ -85,23 +119,73 @@ export default function AuthPage() {
               </TabsContent>
               <TabsContent value="register">
                 <form onSubmit={registerForm.handleSubmit(onSubmit)} className="space-y-4 mt-6">
-                  <Input
-                    placeholder="Username"
-                    className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...registerForm.register("username", { required: "Username is required" })}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...registerForm.register("password", { required: "Password is required" })}
-                  />
-                  <Input
-                    type="tel"
-                    placeholder="Phone Number"
-                    className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...registerForm.register("phoneNumber", { required: "Phone number is required" })}
-                  />
+                  <div className="space-y-1">
+                    <Input
+                      placeholder="Username"
+                      className={`bg-black/50 border-primary/20 placeholder:text-primary/50 ${
+                        registerForm.formState.errors.username ? "border-destructive" : ""
+                      }`}
+                      {...registerForm.register("username", { 
+                        required: "Username is required",
+                        minLength: {
+                          value: 3,
+                          message: "Username must be at least 3 characters"
+                        },
+                        pattern: {
+                          value: /^[a-zA-Z0-9_]+$/,
+                          message: "Username can only contain letters, numbers, and underscores"
+                        }
+                      })}
+                    />
+                    <FormError message={registerForm.formState.errors.username?.message} />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Username should be at least 3 characters and can contain letters, numbers, and underscores.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      className={`bg-black/50 border-primary/20 placeholder:text-primary/50 ${
+                        registerForm.formState.errors.password ? "border-destructive" : ""
+                      }`}
+                      {...registerForm.register("password", { 
+                        required: "Password is required",
+                        minLength: {
+                          value: 6,
+                          message: "Password must be at least 6 characters"
+                        },
+                        pattern: {
+                          value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/,
+                          message: "Password must contain at least one letter and one number"
+                        }
+                      })}
+                    />
+                    <FormError message={registerForm.formState.errors.password?.message} />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Password must be at least 6 characters long and contain both letters and numbers.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <Input
+                      type="tel"
+                      placeholder="Phone Number (e.g., 123-456-7890)"
+                      className={`bg-black/50 border-primary/20 placeholder:text-primary/50 ${
+                        registerForm.formState.errors.phoneNumber ? "border-destructive" : ""
+                      }`}
+                      {...registerForm.register("phoneNumber", { 
+                        required: "Phone number is required",
+                        pattern: {
+                          value: /^\d{3}-?\d{3}-?\d{4}$/,
+                          message: "Please enter a valid phone number (e.g., 123-456-7890)"
+                        }
+                      })}
+                    />
+                    <FormError message={registerForm.formState.errors.phoneNumber?.message} />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Enter your phone number in the format: 123-456-7890
+                    </p>
+                  </div>
                   <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                     Register
                   </Button>
