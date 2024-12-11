@@ -7,24 +7,41 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-type FormData = {
+type RegisterFormData = {
   username: string;
   password: string;
-  phoneNumber?: string;
+  phoneNumber: string;
+};
+
+type LoginFormData = {
+  username: string;
+  password: string;
 };
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
   const { login, register } = useUser();
   const { toast } = useToast();
-  const form = useForm<FormData>();
+  const loginForm = useForm<LoginFormData>();
+  const registerForm = useForm<RegisterFormData>({
+    defaultValues: {
+      username: "",
+      password: "",
+      phoneNumber: "",
+    },
+  });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: LoginFormData | RegisterFormData) => {
     try {
       if (activeTab === "login") {
-        await login(data);
+        const { username, password } = data as LoginFormData;
+        await login({ username, password });
       } else {
-        await register(data);
+        const formData = data as RegisterFormData;
+        if (!formData.phoneNumber) {
+          throw new Error("Phone number is required");
+        }
+        await register(formData);
       }
     } catch (error: any) {
       toast({
@@ -49,17 +66,17 @@ export default function AuthPage() {
                 <TabsTrigger value="register" className="data-[state=active]:bg-white data-[state=active]:text-black">Register</TabsTrigger>
               </TabsList>
               <TabsContent value="login">
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+                <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-4 mt-6">
                   <Input
                     placeholder="Username"
                     className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...form.register("username")}
+                    {...loginForm.register("username", { required: "Username is required" })}
                   />
                   <Input
                     type="password"
                     placeholder="Password"
                     className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...form.register("password")}
+                    {...loginForm.register("password", { required: "Password is required" })}
                   />
                   <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                     Login
@@ -67,23 +84,23 @@ export default function AuthPage() {
                 </form>
               </TabsContent>
               <TabsContent value="register">
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+                <form onSubmit={registerForm.handleSubmit(onSubmit)} className="space-y-4 mt-6">
                   <Input
                     placeholder="Username"
                     className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...form.register("username")}
+                    {...registerForm.register("username", { required: "Username is required" })}
                   />
                   <Input
                     type="password"
                     placeholder="Password"
                     className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...form.register("password")}
+                    {...registerForm.register("password", { required: "Password is required" })}
                   />
                   <Input
                     type="tel"
                     placeholder="Phone Number"
                     className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...form.register("phoneNumber", { required: true })}
+                    {...registerForm.register("phoneNumber", { required: "Phone number is required" })}
                   />
                   <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                     Register
