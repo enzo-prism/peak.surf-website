@@ -33,7 +33,8 @@ export function registerRoutes(app: Express) {
             columns: {
               username: true
             }
-          }
+          },
+          surfboard: true
         }
       });
       res.json(publicSessions);
@@ -57,7 +58,8 @@ export function registerRoutes(app: Express) {
             columns: {
               username: true
             }
-          }
+          },
+          surfboard: true
         }
       });
       res.json(userSessions);
@@ -81,11 +83,51 @@ export function registerRoutes(app: Express) {
           highlight: req.body.highlight,
           photoUrl,
           isPublic: req.body.isPublic === "true" || req.body.isPublic === true,
+          waveConditions: req.body.waveConditions,
+          waveHeight: req.body.waveHeight ? parseFloat(req.body.waveHeight) : null,
+          surfboardId: req.body.surfboardId ? parseInt(req.body.surfboardId) : null,
         })
         .returning();
       res.json(newSession);
     } catch (error) {
       res.status(500).json({ error: "Failed to create session" });
+    }
+  });
+
+  // Get user's surfboards
+  app.get("/api/surfboards", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).send("Not authenticated");
+    }
+
+    try {
+      const userSurfboards = await db.query.surfboards.findMany({
+        where: eq(surfboards.userId, req.user.id),
+        orderBy: (surfboards, { asc }) => [asc(surfboards.name)],
+      });
+      res.json(userSurfboards);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch surfboards" });
+    }
+  });
+
+  // Create new surfboard
+  app.post("/api/surfboards", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).send("Not authenticated");
+    }
+
+    try {
+      const [newSurfboard] = await db.insert(surfboards)
+        .values({
+          userId: req.user.id,
+          name: req.body.name,
+          description: req.body.description,
+        })
+        .returning();
+      res.json(newSurfboard);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create surfboard" });
     }
   });
 

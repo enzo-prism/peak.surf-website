@@ -4,7 +4,10 @@ import { type Session } from "@db/schema";
 import { format } from "date-fns";
 
 type SessionCardProps = {
-  session: Session & { user?: { username: string } };
+  session: Session & { 
+    user?: { username: string };
+    surfboard?: { name: string; description?: string };
+  };
 };
 
 export default function SessionCard({ session }: SessionCardProps) {
@@ -34,11 +37,29 @@ export default function SessionCard({ session }: SessionCardProps) {
         </div>
       </CardHeader>
       
-      {session.highlight && (
-        <CardContent>
-          <p className="text-muted-foreground">{session.highlight}</p>
-        </CardContent>
-      )}
+      <CardContent className="space-y-2">
+        {session.waveConditions && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Conditions:</span>
+            <span className="text-sm text-muted-foreground">{session.waveConditions}</span>
+          </div>
+        )}
+        {session.waveHeight && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Wave Height:</span>
+            <span className="text-sm text-muted-foreground">{session.waveHeight}ft</span>
+          </div>
+        )}
+        {session.surfboard && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Board:</span>
+            <span className="text-sm text-muted-foreground">{session.surfboard.name}</span>
+          </div>
+        )}
+        {session.highlight && (
+          <p className="text-muted-foreground mt-4">{session.highlight}</p>
+        )}
+      </CardContent>
     </Card>
   );
 }

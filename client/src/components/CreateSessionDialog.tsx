@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSurfboards } from "@/hooks/use-surfboards";
+import { useSessions } from "@/hooks/use-sessions";
 import { useToast } from "@/hooks/use-toast";
 
 type FormData = {
@@ -13,6 +16,9 @@ type FormData = {
   highlight: string;
   photo: FileList;
   isPublic: boolean;
+  waveConditions: string;
+  waveHeight: number;
+  surfboardId?: number;
 };
 
 type CreateSessionDialogProps = {
@@ -24,6 +30,9 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
   const form = useForm<FormData>();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { surfboards, createSurfboard } = useSurfboards();
+  const { userSessions } = useSessions();
+  const lastLocation = userSessions?.[0]?.location;
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -31,6 +40,11 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
       formData.append("location", data.location);
       formData.append("highlight", data.highlight);
       formData.append("isPublic", String(data.isPublic));
+      formData.append("waveConditions", data.waveConditions || "");
+      formData.append("waveHeight", String(data.waveHeight || ""));
+      if (data.surfboardId) {
+        formData.append("surfboardId", String(data.surfboardId));
+      }
       if (data.photo?.[0]) {
         formData.append("photo", data.photo[0]);
       }
@@ -77,8 +91,68 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
+              defaultValue={lastLocation}
               {...form.register("location", { required: true })}
             />
+            {lastLocation && (
+              <p className="text-sm text-muted-foreground">Last session location: {lastLocation}</p>
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="waveConditions">Wave Conditions</Label>
+            <Input
+              id="waveConditions"
+              placeholder="e.g., Clean, Choppy, Glassy"
+              {...form.register("waveConditions")}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="waveHeight">Wave Height (ft)</Label>
+            <Input
+              id="waveHeight"
+              type="number"
+              step="0.5"
+              min="0"
+              {...form.register("waveHeight", { 
+                valueAsNumber: true,
+                min: { value: 0, message: "Wave height must be positive" }
+              })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="surfboard">Surfboard</Label>
+            <Select
+              value={form.watch("surfboardId")?.toString()}
+              onValueChange={(value) => form.setValue("surfboardId", parseInt(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a surfboard" />
+              </SelectTrigger>
+              <SelectContent>
+                {surfboards?.map((board) => (
+                  <SelectItem key={board.id} value={board.id.toString()}>
+                    {board.name}
+                  </SelectItem>
+                ))}
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={async () => {
+                    const name = window.prompt("Enter surfboard name");
+                    if (name) {
+                      const description = window.prompt("Enter surfboard description (optional)");
+                      const newBoard = await createSurfboard({ name, description });
+                      form.setValue("surfboardId", newBoard.id);
+                    }
+                  }}
+                >
+                  + Add New Surfboard
+                </Button>
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="space-y-2">
