@@ -102,7 +102,8 @@ export default function CreateSessionDialog({ open, onOpenChange }: CreateSessio
           <div className="flex items-center space-x-2">
             <Switch
               id="isPublic"
-              {...form.register("isPublic")}
+              checked={form.watch("isPublic") || false}
+              onCheckedChange={(checked) => form.setValue("isPublic", checked)}
             />
             <Label htmlFor="isPublic">Make public</Label>
           </div>

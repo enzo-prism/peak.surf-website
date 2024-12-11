@@ -80,7 +80,7 @@ export function registerRoutes(app: Express) {
           location: req.body.location,
           highlight: req.body.highlight,
           photoUrl,
-          isPublic: req.body.isPublic === "true",
+          isPublic: req.body.isPublic === "true" || req.body.isPublic === true,
         })
         .returning();
       res.json(newSession);
