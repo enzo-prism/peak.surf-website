@@ -16,8 +16,17 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 max-w-screen-2xl items-center">
-          <div className="mr-4 flex">
+          <div className="mr-4 flex items-center gap-4">
             <h1 className="text-xl font-light">Peak</h1>
+            <div className="text-sm text-muted-foreground border-l border-border/40 pl-4">
+              {isLoading ? (
+                "Loading..."
+              ) : userSessions ? (
+                `${userSessions.length} sessions`
+              ) : (
+                "0 sessions"
+              )}
+            </div>
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
             <Button variant="ghost" size="sm" onClick={() => setIsCreateOpen(true)}>
