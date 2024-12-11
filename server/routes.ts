@@ -28,6 +28,19 @@ export function registerRoutes(app: Express) {
       const publicSessions = await db.query.sessions.findMany({
         where: eq(sessions.isPublic, true),
         orderBy: (sessions, { desc }) => [desc(sessions.date)],
+        columns: {
+          id: true,
+          userId: true,
+          date: true,
+          location: true,
+          highlight: true,
+          photoUrl: true,
+          isPublic: true,
+          waveConditions: true,
+          waveHeight: true,
+          surfboardId: true,
+          surfFriends: true,
+        },
         with: {
           user: {
             columns: {
@@ -53,6 +66,19 @@ export function registerRoutes(app: Express) {
       const userSessions = await db.query.sessions.findMany({
         where: eq(sessions.userId, req.user.id),
         orderBy: (sessions, { desc }) => [desc(sessions.date)],
+        columns: {
+          id: true,
+          userId: true,
+          date: true,
+          location: true,
+          highlight: true,
+          photoUrl: true,
+          isPublic: true,
+          waveConditions: true,
+          waveHeight: true,
+          surfboardId: true,
+          surfFriends: true,
+        },
         with: {
           user: {
             columns: {
