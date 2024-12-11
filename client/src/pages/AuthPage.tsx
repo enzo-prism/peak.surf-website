@@ -35,12 +35,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white p-4"
-         style={{
-           backgroundImage: `url(https://images.unsplash.com/photo-1518623489648-a173ef7824f3)`,
-           backgroundSize: 'cover',
-           backgroundPosition: 'center',
-         }}>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white p-4">
       <Card className="w-full max-w-md bg-black/80 border-primary/20">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-light">Peak</CardTitle>
