@@ -1,8 +1,8 @@
 import { type Express } from "express";
 import { setupAuth } from "./auth";
 import { db } from "../db";
-import { sessions } from "@db/schema";
-import { eq } from "drizzle-orm";
+import { sessions, surfboards } from "@db/schema";
+import { eq, asc } from "drizzle-orm";
 import multer from "multer";
 import path from "path";
 
@@ -101,12 +101,14 @@ export function registerRoutes(app: Express) {
     }
 
     try {
-      const userSurfboards = await db.query.surfboards.findMany({
-        where: eq(surfboards.userId, req.user.id),
-        orderBy: (surfboards, { asc }) => [asc(surfboards.name)],
-      });
+      const userSurfboards = await db
+        .select()
+        .from(surfboards)
+        .where(eq(surfboards.userId, req.user.id))
+        .orderBy(asc(surfboards.name));
       res.json(userSurfboards);
     } catch (error) {
+      console.error("Error fetching surfboards:", error);
       res.status(500).json({ error: "Failed to fetch surfboards" });
     }
   });
@@ -118,15 +120,17 @@ export function registerRoutes(app: Express) {
     }
 
     try {
-      const [newSurfboard] = await db.insert(surfboards)
+      const [newSurfboard] = await db
+        .insert(surfboards)
         .values({
           userId: req.user.id,
           name: req.body.name,
-          description: req.body.description,
+          description: req.body.description || null,
         })
         .returning();
       res.json(newSurfboard);
     } catch (error) {
+      console.error("Error creating surfboard:", error);
       res.status(500).json({ error: "Failed to create surfboard" });
     }
   });
