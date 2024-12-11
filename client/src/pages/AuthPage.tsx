@@ -81,9 +81,9 @@ export default function AuthPage() {
                   />
                   <Input
                     type="tel"
-                    placeholder="Phone Number (Optional)"
+                    placeholder="Phone Number"
                     className="bg-black/50 border-primary/20 placeholder:text-primary/50"
-                    {...form.register("phoneNumber")}
+                    {...form.register("phoneNumber", { required: true })}
                   />
                   <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                     Register
