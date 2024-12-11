@@ -32,7 +32,7 @@ export default function AuthPage() {
       username: "",
       password: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
   const registerForm = useForm<RegisterFormData>({
     defaultValues: {
@@ -40,7 +40,7 @@ export default function AuthPage() {
       password: "",
       phoneNumber: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const onSubmit = async (data: LoginFormData | RegisterFormData) => {
@@ -138,9 +138,6 @@ export default function AuthPage() {
                       })}
                     />
                     <FormError message={registerForm.formState.errors.username?.message} />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Username should be at least 3 characters and can contain letters, numbers, and underscores.
-                    </p>
                   </div>
                   <div className="space-y-1">
                     <Input
@@ -162,9 +159,6 @@ export default function AuthPage() {
                       })}
                     />
                     <FormError message={registerForm.formState.errors.password?.message} />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Password must be at least 6 characters long and contain both letters and numbers.
-                    </p>
                   </div>
                   <div className="space-y-1">
                     <Input
@@ -182,9 +176,6 @@ export default function AuthPage() {
                       })}
                     />
                     <FormError message={registerForm.formState.errors.phoneNumber?.message} />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Enter your phone number in the format: 123-456-7890
-                    </p>
                   </div>
                   <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                     Register
