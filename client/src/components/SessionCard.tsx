@@ -79,16 +79,16 @@ export default function SessionCard({ session, isPublicFeed }: SessionCardProps)
           </div>
         )}
         
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-4">
-            <Avatar>
-              <AvatarFallback>
+        <CardHeader className="flex flex-row items-center justify-between p-6">
+          <div className="flex flex-row items-center gap-5">
+            <Avatar className="h-12 w-12">
+              <AvatarFallback className="text-lg">
                 {session.user?.username?.[0] ?? "U"}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="text-lg font-medium">{session.location}</h3>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <h3 className="text-lg font-medium mb-1">{session.location}</h3>
+              <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <span>{format(new Date(session.date), "PPP")}</span>
                 {isPublicFeed && session.userSessionCount !== undefined && (
                   <>
@@ -111,35 +111,35 @@ export default function SessionCard({ session, isPublicFeed }: SessionCardProps)
           )}
         </CardHeader>
         
-        <CardContent className="space-y-2">
+        <CardContent className="px-6 pb-6 space-y-4">
           {session.waveConditions && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Conditions:</span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium min-w-20">Conditions:</span>
               <span className="text-sm text-muted-foreground">{session.waveConditions}</span>
             </div>
           )}
           {session.waveHeight && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Wave Height:</span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium min-w-20">Wave Height:</span>
               <span className="text-sm text-muted-foreground">{session.waveHeight}ft</span>
             </div>
           )}
           {session.surfboard && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Board:</span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium min-w-20">Board:</span>
               <span className="text-sm text-muted-foreground">{session.surfboard.name}</span>
             </div>
           )}
           {hasFriends && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Friends:</span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium min-w-20">Friends:</span>
               <span className="text-sm text-muted-foreground">
                 {session.surfFriends!.join(", ")}
               </span>
             </div>
           )}
           {session.highlight && (
-            <p className="text-muted-foreground mt-4">{session.highlight}</p>
+            <p className="text-muted-foreground mt-6 pt-4 border-t border-border/40">{session.highlight}</p>
           )}
         </CardContent>
       </Card>

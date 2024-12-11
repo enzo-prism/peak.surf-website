@@ -99,17 +99,18 @@ export default function CreateSessionPage() {
         </div>
       </header>
 
-      <main className="container py-6 max-w-2xl">
-        <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
+      <main className="container px-4 md:px-6 lg:px-8 py-8 max-w-3xl mx-auto">
+        <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-8">
+          <div className="space-y-3">
+            <Label htmlFor="location" className="text-base">Location</Label>
             <Input
               id="location"
               defaultValue={lastLocation}
+              className="h-11"
               {...form.register("location", { required: true })}
             />
             {lastLocation && (
-              <p className="text-sm text-muted-foreground">Last session location: {lastLocation}</p>
+              <p className="text-sm text-muted-foreground mt-2">Last session location: {lastLocation}</p>
             )}
           </div>
           

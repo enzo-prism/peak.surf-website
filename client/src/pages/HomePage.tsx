@@ -40,20 +40,20 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="container py-6">
-        <Tabs defaultValue="personal" className="space-y-6">
-          <TabsList>
+      <main className="container px-4 md:px-6 lg:px-8 py-8">
+        <Tabs defaultValue="personal" className="space-y-8">
+          <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="personal">My Sessions</TabsTrigger>
             <TabsTrigger value="public">Public Feed</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="personal" className="space-y-4">
+          <TabsContent value="personal" className="space-y-6">
             {userSessions?.map((session) => (
               <SessionCard key={session.id} session={session} />
             ))}
           </TabsContent>
           
-          <TabsContent value="public" className="space-y-4">
+          <TabsContent value="public" className="space-y-6">
             {publicSessions?.map((session) => (
               <SessionCard key={session.id} session={session} isPublicFeed={true} />
             ))}
