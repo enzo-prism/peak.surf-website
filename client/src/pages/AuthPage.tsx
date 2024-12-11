@@ -38,7 +38,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-black text-white p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="flex justify-center">
-          <img src="/Transparent.png" alt="Peak Logo" className="h-16 w-auto" />
+          <img src="/Transparent.png" alt="Peak Logo" className="h-16 w-auto md:h-20 transition-transform hover:scale-105" />
         </div>
         <Card className="bg-black border-primary/20">
           <CardContent className="pt-6">
