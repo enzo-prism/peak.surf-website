@@ -52,6 +52,13 @@ export function registerRoutes(app: Express) {
       const userSessions = await db.query.sessions.findMany({
         where: eq(sessions.userId, req.user.id),
         orderBy: (sessions, { desc }) => [desc(sessions.date)],
+        with: {
+          user: {
+            columns: {
+              username: true
+            }
+          }
+        }
       });
       res.json(userSessions);
     } catch (error) {
