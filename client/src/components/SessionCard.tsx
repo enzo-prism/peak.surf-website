@@ -89,12 +89,20 @@ export default function SessionCard({ session, isPublicFeed }: SessionCardProps)
             <div>
               <h3 className="text-lg font-medium mb-1">{session.location}</h3>
               <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                <span>{format(new Date(session.date), "PPP")}</span>
-                {isPublicFeed && session.userSessionCount !== undefined && (
+                {isPublicFeed ? (
                   <>
+                    <span>{session.user?.username}</span>
                     <span>•</span>
-                    <span>{session.userSessionCount} total sessions</span>
+                    <span>{format(new Date(session.date), "PPP")}</span>
+                    {session.userSessionCount !== undefined && (
+                      <>
+                        <span>•</span>
+                        <span>{session.userSessionCount} total sessions</span>
+                      </>
+                    )}
                   </>
+                ) : (
+                  <span>{format(new Date(session.date), "PPP")}</span>
                 )}
               </div>
             </div>
