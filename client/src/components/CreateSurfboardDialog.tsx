@@ -67,13 +67,14 @@ export default function CreateSurfboardDialog({ open, onOpenChange, onSubmit }: 
                   }`}
                 >
                   <div className="text-2xl mb-1">
-                    {icon === "shortboard" ? "🏄" :
-                     icon === "longboard" ? "🏄‍♂️" :
+                    {icon === "shortboard" ? "🏄‍♂️" :
+                     icon === "longboard" ? "🏄" :
                      icon === "fish" ? "🐟" :
                      icon === "funboard" ? "🌊" :
                      icon === "gun" ? "🎯" :
-                     icon === "sup" ? "🚣" :
+                     icon === "sup" ? "🚣‍♂️" :
                      icon === "foamboard" ? "☁️" :
+                     icon === "retro" ? "🌴" :
                      "🏄‍♂️"}
                   </div>
                   <span className="text-xs capitalize">{icon}</span>
