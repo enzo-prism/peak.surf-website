@@ -14,10 +14,10 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 max-w-screen-2xl items-center px-4 md:px-6 lg:px-8">
-          <div className="mr-6 flex items-center gap-6">
+        <div className="container flex h-16 max-w-[1200px] mx-auto items-center justify-between px-4 md:px-8 lg:px-12">
+          <div className="flex items-center gap-8">
             <img src="/Transparent.png" alt="Peak Logo" className="h-7 w-auto transition-transform hover:scale-105" />
-            <div className="text-sm text-muted-foreground border-l border-border/40 pl-6">
+            <div className="text-sm text-muted-foreground border-l border-border/40 pl-8">
               {isLoading ? (
                 "Loading..."
               ) : userSessions ? (
@@ -27,12 +27,12 @@ export default function HomePage() {
               )}
             </div>
           </div>
-          <div className="flex flex-1 items-center justify-between space-x-4 md:justify-end">
-            <Button variant="ghost" size="sm" onClick={() => setLocation("/new-session")} className="px-4">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" onClick={() => setLocation("/new-session")} className="px-6">
               <Plus className="h-4 w-4 mr-2.5" />
               New Session
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => logout()} className="px-4">
+            <Button variant="ghost" size="sm" onClick={() => logout()} className="px-6">
               <LogOut className="h-4 w-4 mr-2.5" />
               Logout
             </Button>
