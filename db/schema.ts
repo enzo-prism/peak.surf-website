@@ -14,6 +14,7 @@ export const surfboards = pgTable("surfboards", {
   userId: integer("user_id").references(() => users.id).notNull(),
   name: text("name").notNull(),
   description: text("description"),
+  icon: text("icon"),
 });
 
 export const sessions = pgTable("sessions", {

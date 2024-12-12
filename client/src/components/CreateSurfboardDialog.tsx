@@ -5,9 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
+const surfboardIcons = [
+  "shortboard", "longboard", "fish", "funboard", "gun", "sup", "foamboard", "retro"
+];
+
 type FormData = {
   name: string;
   description?: string;
+  icon: string;
 };
 
 type CreateSurfboardDialogProps = {
@@ -17,7 +22,11 @@ type CreateSurfboardDialogProps = {
 };
 
 export default function CreateSurfboardDialog({ open, onOpenChange, onSubmit }: CreateSurfboardDialogProps) {
-  const form = useForm<FormData>();
+  const form = useForm<FormData>({
+    defaultValues: {
+      icon: surfboardIcons[0]
+    }
+  });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -43,6 +52,34 @@ export default function CreateSurfboardDialog({ open, onOpenChange, onSubmit }: 
               placeholder="Details about your board"
               {...form.register("description")}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Board Type</Label>
+            <div className="grid grid-cols-4 gap-2">
+              {surfboardIcons.map((icon) => (
+                <button
+                  key={icon}
+                  type="button"
+                  onClick={() => form.setValue("icon", icon)}
+                  className={`p-2 border rounded-md text-center hover:bg-accent transition-colors ${
+                    form.watch("icon") === icon ? "border-primary bg-accent" : "border-border"
+                  }`}
+                >
+                  <div className="text-2xl mb-1">
+                    {icon === "shortboard" ? "🏄" :
+                     icon === "longboard" ? "🏄‍♂️" :
+                     icon === "fish" ? "🐟" :
+                     icon === "funboard" ? "🌊" :
+                     icon === "gun" ? "🎯" :
+                     icon === "sup" ? "🚣" :
+                     icon === "foamboard" ? "☁️" :
+                     "🏄‍♂️"}
+                  </div>
+                  <span className="text-xs capitalize">{icon}</span>
+                </button>
+              ))}
+            </div>
           </div>
           
           <Button type="submit" className="w-full">

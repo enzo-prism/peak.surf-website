@@ -149,7 +149,19 @@ export default function CreateSessionPage() {
               <SelectContent>
                 {surfboards?.map((board) => (
                   <SelectItem key={board.id} value={board.id.toString()}>
-                    {board.name}
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">
+                        {board.icon === "shortboard" ? "🏄" :
+                         board.icon === "longboard" ? "🏄‍♂️" :
+                         board.icon === "fish" ? "🐟" :
+                         board.icon === "funboard" ? "🌊" :
+                         board.icon === "gun" ? "🎯" :
+                         board.icon === "sup" ? "🚣" :
+                         board.icon === "foamboard" ? "☁️" :
+                         "🏄‍♂️"}
+                      </span>
+                      {board.name}
+                    </div>
                   </SelectItem>
                 ))}
                 <Button
