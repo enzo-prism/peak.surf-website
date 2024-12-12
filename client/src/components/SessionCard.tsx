@@ -21,7 +21,7 @@ import { useState } from "react";
 
 type SessionCardProps = {
   session: Session & { 
-    user?: { username: string };
+    user?: { username: string; profilePhotoUrl?: string };
     surfboard?: { name: string; description?: string };
     userSessionCount?: number;
   };
@@ -82,8 +82,9 @@ export default function SessionCard({ session, isPublicFeed }: SessionCardProps)
         <CardHeader className="flex flex-row items-center justify-between p-6">
           <div className="flex flex-row items-center gap-5">
             <Avatar className="h-12 w-12">
+              <AvatarImage src={session.user?.profilePhotoUrl || undefined} />
               <AvatarFallback className="text-lg">
-                {session.user?.username?.[0] ?? "U"}
+                {session.user?.username?.[0]?.toUpperCase() ?? "U"}
               </AvatarFallback>
             </Avatar>
             <div>

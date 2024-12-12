@@ -44,7 +44,8 @@ export function registerRoutes(app: Express) {
         with: {
           user: {
             columns: {
-              username: true
+              username: true,
+              profilePhotoUrl: true
             }
           },
           surfboard: true
@@ -108,7 +109,8 @@ export function registerRoutes(app: Express) {
         with: {
           user: {
             columns: {
-              username: true
+              username: true,
+              profilePhotoUrl: true
             }
           },
           surfboard: true

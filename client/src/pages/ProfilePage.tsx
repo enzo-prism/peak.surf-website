@@ -28,7 +28,10 @@ export default function ProfilePage() {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate both user and session queries to refresh all profile photos
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sessions/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sessions/public"] });
       toast({
         title: "Success",
         description: "Profile updated successfully",
