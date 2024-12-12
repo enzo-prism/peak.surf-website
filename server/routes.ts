@@ -188,6 +188,7 @@ export function registerRoutes(app: Express) {
           userId: req.user.id,
           name: req.body.name,
           description: req.body.description || null,
+          icon: req.body.icon,
         })
         .returning();
       res.json(newSurfboard);
