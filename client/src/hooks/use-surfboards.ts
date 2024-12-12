@@ -4,6 +4,7 @@ import type { Surfboard } from "@db/schema";
 type CreateSurfboardData = {
   name: string;
   description?: string;
+  icon: string;
 };
 
 export function useSurfboards() {
@@ -20,11 +21,16 @@ export function useSurfboards() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: data.name,
+          description: data.description,
+          icon: data.icon,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error(await response.text());
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to create surfboard');
       }
 
       return response.json();

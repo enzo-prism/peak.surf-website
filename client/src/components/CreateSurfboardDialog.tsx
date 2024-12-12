@@ -21,9 +21,20 @@ type CreateSurfboardDialogProps = {
 export default function CreateSurfboardDialog({ open, onOpenChange, onSubmit }: CreateSurfboardDialogProps) {
   const form = useForm<FormData>({
     defaultValues: {
-      icon: surfboardIcons[0]
+      icon: surfboardIcons[0],
+      name: "",
+      description: ""
     }
   });
+
+  const handleSubmit = async (data: FormData) => {
+    try {
+      await onSubmit(data);
+      form.reset({ icon: surfboardIcons[0], name: "", description: "" });
+    } catch (error) {
+      console.error("Failed to create surfboard:", error);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -32,7 +43,7 @@ export default function CreateSurfboardDialog({ open, onOpenChange, onSubmit }: 
           <DialogTitle>New Surfboard</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
             <Input
