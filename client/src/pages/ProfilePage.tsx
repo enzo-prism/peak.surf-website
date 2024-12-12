@@ -63,16 +63,18 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 max-w-screen-2xl items-center">
-          <Button variant="ghost" size="sm" onClick={() => setLocation("/")} className="mr-4">
+        <div className="container px-4 md:px-8 lg:px-12 h-14 max-w-[800px] mx-auto relative flex items-center justify-between">
+          <Button variant="ghost" size="sm" onClick={() => setLocation("/")} className="absolute left-4 md:left-8 lg:left-12">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
-          <h1 className="text-lg font-medium">Profile</h1>
+          <div className="flex-1 text-center">
+            <h1 className="text-lg font-medium">Profile</h1>
+          </div>
         </div>
       </header>
 
-      <main className="container px-6 md:px-8 lg:px-12 py-8 max-w-3xl mx-auto">
+      <main className="container px-4 md:px-8 lg:px-12 py-8 max-w-[800px] mx-auto">
         <div className="space-y-8">
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="h-32 w-32">
