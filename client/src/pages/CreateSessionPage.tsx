@@ -99,7 +99,7 @@ export default function CreateSessionPage() {
         </div>
       </header>
 
-      <main className="container px-4 md:px-6 lg:px-8 py-8 max-w-3xl mx-auto">
+      <main className="container px-6 md:px-8 lg:px-12 py-8 max-w-3xl mx-auto">
         <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-8">
           <div className="space-y-3">
             <Label htmlFor="location" className="text-base">Location</Label>
