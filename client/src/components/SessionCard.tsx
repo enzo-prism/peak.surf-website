@@ -68,7 +68,7 @@ export default function SessionCard({ session, isPublicFeed }: SessionCardProps)
   
   return (
     <>
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden w-full max-w-[800px]">
         {session.photoUrl && (
           <div className="aspect-video w-full overflow-hidden">
             <img

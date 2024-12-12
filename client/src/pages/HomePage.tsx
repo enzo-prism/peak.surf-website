@@ -40,23 +40,29 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="container px-4 md:px-6 lg:px-8 py-8">
+      <main className="container max-w-[800px] mx-auto px-4 md:px-6 lg:px-8 py-8">
         <Tabs defaultValue="personal" className="space-y-8">
-          <TabsList className="w-full sm:w-auto">
-            <TabsTrigger value="personal">My Sessions</TabsTrigger>
-            <TabsTrigger value="public">Public Feed</TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center">
+            <TabsList className="w-full sm:w-auto">
+              <TabsTrigger value="personal">My Sessions</TabsTrigger>
+              <TabsTrigger value="public">Public Feed</TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="personal" className="space-y-6">
-            {userSessions?.map((session) => (
-              <SessionCard key={session.id} session={session} />
-            ))}
+            <div className="flex flex-col items-center gap-6">
+              {userSessions?.map((session) => (
+                <SessionCard key={session.id} session={session} />
+              ))}
+            </div>
           </TabsContent>
           
           <TabsContent value="public" className="space-y-6">
-            {publicSessions?.map((session) => (
-              <SessionCard key={session.id} session={session} isPublicFeed={true} />
-            ))}
+            <div className="flex flex-col items-center gap-6">
+              {publicSessions?.map((session) => (
+                <SessionCard key={session.id} session={session} isPublicFeed={true} />
+              ))}
+            </div>
           </TabsContent>
         </Tabs>
       </main>
