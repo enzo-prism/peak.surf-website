@@ -4,10 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-
-const surfboardIcons = [
-  "shortboard", "longboard", "fish", "funboard", "gun", "sup", "foamboard", "retro"
-];
+import { surfboardIcons, getSurfboardEmoji } from "@/lib/surfboard-icons";
 
 type FormData = {
   name: string;
@@ -67,15 +64,7 @@ export default function CreateSurfboardDialog({ open, onOpenChange, onSubmit }: 
                   }`}
                 >
                   <div className="text-2xl mb-1">
-                    {icon === "shortboard" ? "🏄‍♂️" :
-                     icon === "longboard" ? "🏄" :
-                     icon === "fish" ? "🐟" :
-                     icon === "funboard" ? "🌊" :
-                     icon === "gun" ? "🎯" :
-                     icon === "sup" ? "🚣‍♂️" :
-                     icon === "foamboard" ? "☁️" :
-                     icon === "retro" ? "🌴" :
-                     "🏄‍♂️"}
+                    {getSurfboardEmoji(icon)}
                   </div>
                   <span className="text-xs capitalize">{icon}</span>
                 </button>

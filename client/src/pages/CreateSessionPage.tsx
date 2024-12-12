@@ -13,6 +13,7 @@ import CreateSurfboardDialog from "@/components/CreateSurfboardDialog";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { getSurfboardEmoji } from "@/lib/surfboard-icons";
 
 type FormData = {
   location: string;
@@ -151,15 +152,7 @@ export default function CreateSessionPage() {
                   <SelectItem key={board.id} value={board.id.toString()}>
                     <div className="flex items-center gap-2">
                       <span className="text-xl">
-                        {board.icon === "shortboard" ? "🏄‍♂️" :
-                         board.icon === "longboard" ? "🏄" :
-                         board.icon === "fish" ? "🐟" :
-                         board.icon === "funboard" ? "🌊" :
-                         board.icon === "gun" ? "🎯" :
-                         board.icon === "sup" ? "🚣‍♂️" :
-                         board.icon === "foamboard" ? "☁️" :
-                         board.icon === "retro" ? "🌴" :
-                         "🏄‍♂️"}
+                        {getSurfboardEmoji(board.icon)}
                       </span>
                       {board.name}
                     </div>
