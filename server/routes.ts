@@ -2,7 +2,7 @@ import { type Express } from "express";
 import { createServer } from "http";
 import { setupAuth } from "./auth";
 import { db } from "../db";
-import { sessions, surfboards } from "@db/schema";
+import { sessions, surfboards, users } from "@db/schema";
 import { eq, asc, sql } from "drizzle-orm";
 import multer from "multer";
 import path from "path";
