@@ -32,6 +32,9 @@ export default function HomePage() {
               <Plus className="h-4 w-4 mr-2.5" />
               New Session
             </Button>
+            <Button variant="ghost" size="sm" onClick={() => setLocation("/profile")} className="px-6">
+              Profile
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => logout()} className="px-6">
               <LogOut className="h-4 w-4 mr-2.5" />
               Logout

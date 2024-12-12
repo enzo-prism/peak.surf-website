@@ -232,5 +232,31 @@ export function registerRoutes(app: Express) {
     }
   });
 
+  // Update user profile
+  app.post("/api/user/profile", upload.single("photo"), async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).send("Not authenticated");
+    }
+
+    try {
+      const photoUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
+      
+      if (photoUrl) {
+        await db
+          .update(users)
+          .set({ profilePhotoUrl: photoUrl })
+          .where(eq(users.id, req.user.id));
+
+        // Update the session user object
+        req.user.profilePhotoUrl = photoUrl;
+      }
+
+      res.json({ message: "Profile updated successfully", photoUrl });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ error: "Failed to update profile" });
+    }
+  });
+
   return server;
 }
