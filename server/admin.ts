@@ -3,17 +3,34 @@ import { db } from "../db";
 import { sessions } from "@db/schema";
 import { eq } from "drizzle-orm";
 
-// Middleware to check if user is admin
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123"; // Default for development
+
+// Middleware to check if user has provided correct admin password
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) {
     return res.status(401).send("Not authenticated");
   }
 
-  if (!req.user.isAdmin) {
+  const session = req.session as any;
+  if (!session.isAdminAuthorized) {
     return res.status(403).send("Not authorized");
   }
 
   next();
+}
+
+// Export both admin setup functions
+export function setupAdminAuth(app: Express) {
+  app.post("/api/admin/verify", (req, res) => {
+    const { password } = req.body;
+    
+    if (password === ADMIN_PASSWORD) {
+      (req.session as any).isAdminAuthorized = true;
+      res.json({ message: "Authorized" });
+    } else {
+      res.status(403).send("Invalid password");
+    }
+  });
 }
 
 export function setupAdminRoutes(app: Express) {

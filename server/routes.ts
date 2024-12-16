@@ -1,7 +1,7 @@
 import { type Express } from "express";
 import { createServer } from "http";
 import { setupAuth } from "./auth";
-import { setupAdminRoutes } from "./admin";
+import { setupAdminRoutes, setupAdminAuth } from "./admin";
 import { db } from "../db";
 import { sessions, surfboards, users } from "@db/schema";
 import { eq, asc, sql } from "drizzle-orm";
@@ -21,6 +21,7 @@ const upload = multer({
 export function registerRoutes(app: Express) {
   const server = createServer(app);
   setupAuth(app);
+  setupAdminAuth(app);
   setupAdminRoutes(app);
 
   // Get all public sessions

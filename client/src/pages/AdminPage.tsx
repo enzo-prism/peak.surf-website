@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@/hooks/use-user";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Trash2 } from "lucide-react";
 
@@ -80,15 +81,55 @@ export default function AdminPage() {
     }
   };
 
-  if (!user?.isAdmin) {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setIsAuthorized(true);
+        setError("");
+      } else {
+        const errorText = await response.text();
+        setError(errorText || "Invalid password");
+      }
+    } catch (error) {
+      setError("Failed to verify password");
+    }
+  };
+
+  if (!isAuthorized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black p-4">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6">
-            <h1 className="text-xl font-bold mb-4">Access Denied</h1>
-            <p className="text-muted-foreground">
-              You do not have permission to access this page.
-            </p>
+            <h1 className="text-xl font-bold mb-4">Admin Authentication</h1>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter admin password"
+                  className="bg-black/50 border-primary/20 placeholder:text-primary/50"
+                />
+                {error && <p className="text-sm text-destructive mt-1">{error}</p>}
+              </div>
+              <Button type="submit" className="w-full">
+                Verify Password
+              </Button>
+            </form>
           </CardContent>
         </Card>
       </div>
