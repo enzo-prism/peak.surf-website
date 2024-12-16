@@ -12,8 +12,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Loader2, Trash2, Key } from "lucide-react";
+import { Loader2, Trash2, Key, ArrowLeft } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
+
+interface Session {
+  id: number;
+  userId: number;
+  date: string;
+  location: string;
+  highlight?: string;
+  user: {
+    username: string;
+  };
+}
 
 interface PasswordChangeDialog {
   isOpen: boolean;
@@ -24,6 +36,7 @@ interface PasswordChangeDialog {
 export default function AdminPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
   const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
   const [deleting, setDeleting] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
@@ -35,7 +48,7 @@ export default function AdminPage() {
   const [newPassword, setNewPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
 
-  const { data: sessions = [] } = useQuery({
+  const { data: sessions = [] } = useQuery<Session[]>({
     queryKey: ["/api/admin/sessions"],
     queryFn: async () => {
       const response = await fetch("/api/admin/sessions");
@@ -136,158 +149,138 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container px-4 py-8 mx-auto max-w-[800px] space-y-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container px-4 md:px-8 lg:px-12 h-14 max-w-[800px] mx-auto relative flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setLocation("/")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Button>
+          <div className="flex-1 text-center">
+            <h1 className="text-lg font-medium">Admin Dashboard</h1>
+          </div>
+        </div>
+      </header>
+
+      <main className="container px-4 md:px-8 lg:px-12 py-8 max-w-[800px] mx-auto">
+        <div className="space-y-4">
           {selectedSessions.length > 0 && (
             <Button
               variant="destructive"
               onClick={bulkDeleteSessions}
               disabled={bulkDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="w-full"
             >
               {bulkDeleting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
               <Trash2 className="h-4 w-4 mr-2" />
               Delete Selected ({selectedSessions.length})
             </Button>
           )}
-        </div>
 
-        <div className="grid gap-4">
-          {sessions.length === 0 ? (
-            <Card className="bg-black/50 border-primary/20">
-              <CardContent className="pt-6">
-                <p className="text-center py-8">No sessions found</p>
-              </CardContent>
-            </Card>
-          ) : (
-            sessions.map((session) => (
-              <Card key={session.id} className="bg-black/50 border-primary/20">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start">
-                    <div className="flex gap-4">
-                      <Checkbox
-                        checked={selectedSessions.includes(session.id)}
-                        onCheckedChange={() => toggleSession(session.id)}
-                        className="mt-1 border-white"
-                      />
-                      <div>
-                        <h2 className="text-lg font-semibold">
-                          {session.user.username}'s Session
-                        </h2>
-                        <p className="text-sm text-primary/60">
-                          {new Date(session.date).toLocaleDateString()}
+          {sessions.map((session) => (
+            <Card key={session.id}>
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex gap-4">
+                    <Checkbox
+                      checked={selectedSessions.includes(session.id)}
+                      onCheckedChange={() => toggleSession(session.id)}
+                    />
+                    <div>
+                      <h2 className="text-lg font-semibold">
+                        {session.user.username}'s Session
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(session.date).toLocaleDateString()}
+                      </p>
+                      <p className="text-sm mt-2">
+                        Location: {session.location}
+                      </p>
+                      {session.highlight && (
+                        <p className="text-sm mt-1">
+                          Highlight: {session.highlight}
                         </p>
-                        <p className="text-sm mt-2">
-                          Location: {session.location}
-                        </p>
-                        {session.highlight && (
-                          <p className="text-sm mt-1">
-                            Highlight: {session.highlight}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Dialog open={passwordDialog.isOpen && passwordDialog.userId === session.userId}>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setPasswordDialog({
-                              isOpen: true,
-                              userId: session.userId,
-                              username: session.user.username
-                            })}
-                            className="bg-primary text-primary-foreground hover:bg-primary/90"
-                          >
-                            <Key className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="bg-background">
-                          <DialogHeader>
-                            <DialogTitle>Change Password</DialogTitle>
-                            <DialogDescription>
-                              Set a new password for {session.user.username}
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="space-y-4 py-4">
-                            <Input
-                              type="password"
-                              placeholder="New password"
-                              value={newPassword}
-                              onChange={(e) => setNewPassword(e.target.value)}
-                              className="bg-background"
-                            />
-                            <Button
-                              onClick={updateUserPassword}
-                              disabled={changingPassword || !newPassword}
-                              className="w-full"
-                            >
-                              {changingPassword && (
-                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                              )}
-                              Update Password
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => deleteSession(session.id)}
-                        disabled={deleting}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      )}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))
+                  <div className="flex gap-2">
+                    <Dialog
+                      open={passwordDialog.isOpen && passwordDialog.userId === session.userId}
+                      onOpenChange={(open) => {
+                        if (!open) {
+                          setPasswordDialog({ isOpen: false, userId: null, username: "" });
+                          setNewPassword("");
+                        }
+                      }}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setPasswordDialog({
+                            isOpen: true,
+                            userId: session.userId,
+                            username: session.user.username
+                          })}
+                        >
+                          <Key className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Change Password</DialogTitle>
+                          <DialogDescription>
+                            Set a new password for {session.user.username}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <Input
+                            type="password"
+                            placeholder="New password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                          <Button
+                            onClick={updateUserPassword}
+                            disabled={changingPassword || !newPassword}
+                            className="w-full"
+                          >
+                            {changingPassword && (
+                              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                            )}
+                            Update Password
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => deleteSession(session.id)}
+                      disabled={deleting}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {sessions.length === 0 && (
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-center text-muted-foreground">No sessions found</p>
+              </CardContent>
+            </Card>
           )}
         </div>
-
-        <Dialog
-          open={passwordDialog.isOpen}
-          onOpenChange={(open) => {
-            if (!open) {
-              setPasswordDialog({ isOpen: false, userId: null, username: "" });
-              setNewPassword("");
-            }
-          }}
-        >
-          <DialogContent className="bg-black border-primary/20">
-            <DialogHeader>
-              <DialogTitle className="text-white">Change Password</DialogTitle>
-              <DialogDescription className="text-primary/60">
-                Set a new password for {passwordDialog.username}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <Input
-                type="password"
-                placeholder="New password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="bg-black/50 border-primary/20 placeholder:text-primary/50 text-white"
-              />
-              <Button
-                onClick={updateUserPassword}
-                disabled={changingPassword || !newPassword}
-                className="w-full bg-white text-black hover:bg-white/90"
-              >
-                {changingPassword && (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                )}
-                Update Password
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+      </main>
     </div>
   );
 }
