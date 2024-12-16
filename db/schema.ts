@@ -8,6 +8,7 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   phoneNumber: text("phone_number").notNull(),
   profilePhotoUrl: text("profile_photo_url"),
+  isAdmin: boolean("is_admin").default(false).notNull(),
 });
 
 export const surfboards = pgTable("surfboards", {
