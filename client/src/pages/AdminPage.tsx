@@ -10,6 +10,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Loader2, Trash2, Key } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -189,18 +190,49 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setPasswordDialog({
-                          isOpen: true,
-                          userId: session.userId,
-                          username: session.user.username
-                        })}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90"
-                      >
-                        <Key className="h-4 w-4" />
-                      </Button>
+                      <Dialog open={passwordDialog.isOpen && passwordDialog.userId === session.userId}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setPasswordDialog({
+                              isOpen: true,
+                              userId: session.userId,
+                              username: session.user.username
+                            })}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90"
+                          >
+                            <Key className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-background">
+                          <DialogHeader>
+                            <DialogTitle>Change Password</DialogTitle>
+                            <DialogDescription>
+                              Set a new password for {session.user.username}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <Input
+                              type="password"
+                              placeholder="New password"
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              className="bg-background"
+                            />
+                            <Button
+                              onClick={updateUserPassword}
+                              disabled={changingPassword || !newPassword}
+                              className="w-full"
+                            >
+                              {changingPassword && (
+                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                              )}
+                              Update Password
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                       <Button
                         variant="outline"
                         size="icon"
