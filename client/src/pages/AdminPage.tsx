@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/hooks/use-user";
+import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,7 @@ interface Session {
 export default function AdminPage() {
   const { user } = useUser();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
@@ -195,7 +197,16 @@ export default function AdminPage() {
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+            <Button
+              variant="outline"
+              onClick={() => setLocation("/")}
+              className="px-6 text-white border-white/20 hover:bg-white/10"
+            >
+              Back to Home
+            </Button>
+          </div>
           {selectedSessions.length > 0 && (
             <Button
               variant="outline"
