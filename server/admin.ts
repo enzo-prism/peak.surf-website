@@ -82,4 +82,25 @@ export function setupAdminRoutes(app: Express) {
       res.status(500).json({ error: "Failed to delete session" });
     }
   });
+
+  // Bulk delete sessions (admin only)
+  app.delete("/api/admin/sessions/bulk-delete", isAdmin, async (req, res) => {
+    try {
+      const { ids } = req.body;
+      
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).send("Invalid session IDs provided");
+      }
+
+      // Delete all selected sessions
+      await db
+        .delete(sessions)
+        .where(sql`id = ANY(${ids})`);
+
+      res.json({ message: `Successfully deleted ${ids.length} sessions` });
+    } catch (error) {
+      console.error("Error bulk deleting sessions:", error);
+      res.status(500).json({ error: "Failed to delete sessions" });
+    }
+  });
 }

@@ -3,6 +3,7 @@ import { useUser } from "@/hooks/use-user";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Trash2 } from "lucide-react";
 
@@ -27,6 +28,8 @@ export default function AdminPage() {
   const { toast } = useToast();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetchSessions();
@@ -144,35 +147,104 @@ export default function AdminPage() {
     );
   }
 
+  const bulkDeleteSessions = async () => {
+    if (!selectedSessions.length) return;
+    
+    setDeleting(true);
+    try {
+      const response = await fetch("/api/admin/sessions/bulk-delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ ids: selectedSessions }),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      toast({
+        title: "Success",
+        description: `${selectedSessions.length} sessions deleted successfully`,
+      });
+
+      setSessions(sessions.filter(session => !selectedSessions.includes(session.id)));
+      setSelectedSessions([]);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const toggleSession = (sessionId: number) => {
+    setSelectedSessions(prev => 
+      prev.includes(sessionId) 
+        ? prev.filter(id => id !== sessionId)
+        : [...prev, sessionId]
+    );
+  };
+
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6 text-white">Admin Dashboard</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+          {selectedSessions.length > 0 && (
+            <Button
+              variant="destructive"
+              onClick={bulkDeleteSessions}
+              disabled={deleting}
+              className="flex items-center gap-2"
+            >
+              {deleting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4" />
+              )}
+              Delete Selected ({selectedSessions.length})
+            </Button>
+          )}
+        </div>
         <div className="grid gap-4">
           {sessions.map((session) => (
             <Card key={session.id} className="bg-black/50 border-primary/20">
               <CardContent className="pt-6">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      {session.user.username}'s Session
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(session.date).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm text-white mt-2">
-                      Location: {session.location}
-                    </p>
-                    {session.highlight && (
-                      <p className="text-sm text-white mt-1">
-                        Highlight: {session.highlight}
+                  <div className="flex gap-4">
+                    <Checkbox
+                      checked={selectedSessions.includes(session.id)}
+                      onCheckedChange={() => toggleSession(session.id)}
+                      className="mt-1"
+                    />
+                    <div>
+                      <h2 className="text-lg font-semibold text-white">
+                        {session.user.username}'s Session
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(session.date).toLocaleDateString()}
                       </p>
-                    )}
+                      <p className="text-sm text-white mt-2">
+                        Location: {session.location}
+                      </p>
+                      {session.highlight && (
+                        <p className="text-sm text-white mt-1">
+                          Highlight: {session.highlight}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <Button
                     variant="destructive"
                     size="icon"
                     onClick={() => deleteSession(session.id)}
+                    disabled={deleting}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
