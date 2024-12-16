@@ -1,21 +1,31 @@
 import { type Express, Request, Response, NextFunction } from "express";
 import { db } from "../db";
 import { sessions } from "@db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123"; // Default for development
 
 // Middleware to check if user has provided correct admin password
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
+  console.log("isAdmin middleware - checking auth");
+  
   if (!req.isAuthenticated()) {
+    console.log("isAdmin middleware - user not authenticated");
     return res.status(401).send("Not authenticated");
   }
 
   const session = req.session as any;
+  console.log("isAdmin middleware - session:", {
+    isAdminAuthorized: session.isAdminAuthorized,
+    sessionID: session.id
+  });
+  
   if (!session.isAdminAuthorized) {
+    console.log("isAdmin middleware - user not admin authorized");
     return res.status(403).send("Not authorized");
   }
 
+  console.log("isAdmin middleware - auth successful");
   next();
 }
 
@@ -37,6 +47,9 @@ export function setupAdminRoutes(app: Express) {
   // Get all sessions (for admin)
   app.get("/api/admin/sessions", isAdmin, async (req, res) => {
     try {
+      console.log("Admin session request - isAuthenticated:", req.isAuthenticated());
+      console.log("Admin session - session data:", req.session);
+      
       const allSessions = await db.query.sessions.findMany({
         orderBy: (sessions, { desc }) => [desc(sessions.date)],
         with: {
@@ -49,8 +62,10 @@ export function setupAdminRoutes(app: Express) {
           surfboard: true
         }
       });
+      console.log("Successfully fetched admin sessions:", allSessions.length);
       res.json(allSessions);
     } catch (error) {
+      console.error("Error fetching admin sessions:", error);
       res.status(500).json({ error: "Failed to fetch sessions" });
     }
   });
