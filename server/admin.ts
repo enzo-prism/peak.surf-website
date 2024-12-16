@@ -1,7 +1,18 @@
 import { type Express, Request, Response, NextFunction } from "express";
 import { db } from "../db";
-import { sessions } from "@db/schema";
+import { sessions, users } from "@db/schema";
 import { eq, sql } from "drizzle-orm";
+import { scrypt, randomBytes, timingSafeEqual } from "crypto";
+import { promisify } from "util";
+
+const scryptAsync = promisify(scrypt);
+const crypto = {
+  hash: async (password: string) => {
+    const salt = randomBytes(16).toString("hex");
+    const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+    return `${buf.toString("hex")}.${salt}`;
+  }
+};
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123"; // Default for development
 
@@ -111,6 +122,42 @@ export function setupAdminRoutes(app: Express) {
     } catch (error) {
       console.error("Error bulk deleting sessions:", error);
       res.status(500).json({ error: "Failed to delete sessions" });
+    }
+  });
+  // Update user password (admin only)
+  app.put("/api/admin/users/:id/password", isAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const { password } = req.body;
+
+      if (!password || typeof password !== "string" || password.length < 6) {
+        return res.status(400).send("Password must be at least 6 characters long");
+      }
+
+      // Check if user exists
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, userId))
+        .limit(1);
+
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      // Hash the new password
+      const hashedPassword = await crypto.hash(password);
+
+      // Update the user's password
+      await db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, userId));
+
+      res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.error("Error updating user password:", error);
+      res.status(500).json({ error: "Failed to update password" });
     }
   });
 }

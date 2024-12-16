@@ -1,183 +1,73 @@
-import { useEffect, useState } from "react";
-import { useUser } from "@/hooks/use-user";
-import { useLocation } from "wouter";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Loader2, Trash2, Key } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface Session {
-  id: number;
-  userId: number;
-  date: string;
-  location: string;
-  highlight?: string;
-  photoUrl?: string;
-  isPublic: boolean;
-  waveConditions?: string;
-  waveHeight?: number;
-  user: {
-    username: string;
-    profilePhotoUrl?: string;
-  };
+interface PasswordChangeDialog {
+  isOpen: boolean;
+  userId: number | null;
+  username: string;
 }
 
 export default function AdminPage() {
-  const { user } = useUser();
   const { toast } = useToast();
-  const [, setLocation] = useLocation();
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
   const [deleting, setDeleting] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [passwordDialog, setPasswordDialog] = useState<PasswordChangeDialog>({
+    isOpen: false,
+    userId: null,
+    username: "",
+  });
+  const [newPassword, setNewPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
 
-  useEffect(() => {
-    fetchSessions();
-  }, []);
+  const { data: sessions = [] } = useQuery({
+    queryKey: ["/api/admin/sessions"],
+    queryFn: async () => {
+      const response = await fetch("/api/admin/sessions");
+      if (!response.ok) throw new Error(await response.text());
+      return response.json();
+    },
+  });
 
-  const fetchSessions = async () => {
-    try {
-      const response = await fetch("/api/admin/sessions", {
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
-      const data = await response.json();
-      setSessions(data);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const toggleSession = (sessionId: number) => {
+    setSelectedSessions((prev) =>
+      prev.includes(sessionId)
+        ? prev.filter((id) => id !== sessionId)
+        : [...prev, sessionId]
+    );
   };
 
   const deleteSession = async (sessionId: number) => {
     try {
+      setDeleting(true);
       const response = await fetch(`/api/admin/sessions/${sessionId}`, {
         method: "DELETE",
-        credentials: "include",
       });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
+      if (!response.ok) throw new Error(await response.text());
+      
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/sessions"] });
       toast({
         title: "Success",
         description: "Session deleted successfully",
       });
-
-      setSessions(sessions.filter(session => session.id !== sessionId));
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/admin/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password }),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        setIsAuthorized(true);
-        setError("");
-      } else {
-        const errorText = await response.text();
-        setError(errorText || "Invalid password");
-      }
     } catch (error) {
-      setError("Failed to verify password");
-    }
-  };
-
-  if (!isAuthorized) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black p-4">
-        <Card className="w-full max-w-md bg-black border-primary/20">
-          <CardContent className="pt-6">
-            <h1 className="text-xl font-bold mb-4 text-white">Admin Authentication</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="bg-black/50 border-primary/20 placeholder:text-primary/50 text-white"
-                />
-                {error && <p className="text-sm text-destructive mt-1">{error}</p>}
-              </div>
-              <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
-                Verify Password
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  const bulkDeleteSessions = async () => {
-    if (!selectedSessions.length) return;
-    
-    setDeleting(true);
-    try {
-      const response = await fetch("/api/admin/sessions/bulk-delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ ids: selectedSessions }),
-      });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
-      toast({
-        title: "Success",
-        description: `${selectedSessions.length} sessions deleted successfully`,
-      });
-
-      setSessions(sessions.filter(session => !selectedSessions.includes(session.id)));
-      setSelectedSessions([]);
-    } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Failed to delete session",
         variant: "destructive",
       });
     } finally {
@@ -185,49 +75,89 @@ export default function AdminPage() {
     }
   };
 
-  const toggleSession = (sessionId: number) => {
-    setSelectedSessions(prev => 
-      prev.includes(sessionId) 
-        ? prev.filter(id => id !== sessionId)
-        : [...prev, sessionId]
-    );
+  const bulkDeleteSessions = async () => {
+    if (selectedSessions.length === 0) return;
+
+    try {
+      setBulkDeleting(true);
+      const response = await fetch("/api/admin/sessions/bulk-delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selectedSessions }),
+      });
+      if (!response.ok) throw new Error(await response.text());
+
+      setSelectedSessions([]);
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/sessions"] });
+      toast({
+        title: "Success",
+        description: "Selected sessions deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete sessions",
+        variant: "destructive",
+      });
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
+  const updateUserPassword = async () => {
+    if (!passwordDialog.userId || !newPassword) return;
+
+    try {
+      setChangingPassword(true);
+      const response = await fetch(`/api/admin/users/${passwordDialog.userId}/password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: newPassword }),
+      });
+
+      if (!response.ok) throw new Error(await response.text());
+
+      toast({
+        title: "Success",
+        description: "Password updated successfully",
+      });
+      setPasswordDialog({ isOpen: false, userId: null, username: "" });
+      setNewPassword("");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update password",
+        variant: "destructive",
+      });
+    } finally {
+      setChangingPassword(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
-            <Button
-              variant="outline"
-              onClick={() => setLocation("/")}
-              className="px-6 text-white border-white/20 hover:bg-white/10"
-            >
-              Back to Home
-            </Button>
-          </div>
+    <div className="min-h-screen bg-black text-white">
+      <div className="container px-4 py-8 mx-auto max-w-[800px] space-y-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
           {selectedSessions.length > 0 && (
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={bulkDeleteSessions}
-              disabled={deleting}
-              className="flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={bulkDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
+              {bulkDeleting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              <Trash2 className="h-4 w-4 mr-2" />
               Delete Selected ({selectedSessions.length})
             </Button>
           )}
         </div>
+
         <div className="grid gap-4">
           {sessions.length === 0 ? (
             <Card className="bg-black/50 border-primary/20">
               <CardContent className="pt-6">
-                <p className="text-white text-center py-8">No sessions found</p>
+                <p className="text-center py-8">No sessions found</p>
               </CardContent>
             </Card>
           ) : (
@@ -242,37 +172,89 @@ export default function AdminPage() {
                         className="mt-1 border-white"
                       />
                       <div>
-                        <h2 className="text-lg font-semibold text-white">
+                        <h2 className="text-lg font-semibold">
                           {session.user.username}'s Session
                         </h2>
                         <p className="text-sm text-primary/60">
                           {new Date(session.date).toLocaleDateString()}
                         </p>
-                        <p className="text-sm text-white mt-2">
+                        <p className="text-sm mt-2">
                           Location: {session.location}
                         </p>
                         {session.highlight && (
-                          <p className="text-sm text-white mt-1">
+                          <p className="text-sm mt-1">
                             Highlight: {session.highlight}
                           </p>
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => deleteSession(session.id)}
-                      disabled={deleting}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setPasswordDialog({
+                          isOpen: true,
+                          userId: session.userId,
+                          username: session.user.username
+                        })}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                      >
+                        <Key className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => deleteSession(session.id)}
+                        disabled={deleting}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))
           )}
         </div>
+
+        <Dialog
+          open={passwordDialog.isOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              setPasswordDialog({ isOpen: false, userId: null, username: "" });
+              setNewPassword("");
+            }
+          }}
+        >
+          <DialogContent className="bg-black border-primary/20">
+            <DialogHeader>
+              <DialogTitle className="text-white">Change Password</DialogTitle>
+              <DialogDescription className="text-primary/60">
+                Set a new password for {passwordDialog.username}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <Input
+                type="password"
+                placeholder="New password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="bg-black/50 border-primary/20 placeholder:text-primary/50 text-white"
+              />
+              <Button
+                onClick={updateUserPassword}
+                disabled={changingPassword || !newPassword}
+                className="w-full bg-white text-black hover:bg-white/90"
+              >
+                {changingPassword && (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                )}
+                Update Password
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
