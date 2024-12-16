@@ -115,9 +115,9 @@ export default function AdminPage() {
   if (!isAuthorized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-black border-primary/20">
           <CardContent className="pt-6">
-            <h1 className="text-xl font-bold mb-4">Admin Authentication</h1>
+            <h1 className="text-xl font-bold mb-4 text-white">Admin Authentication</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Input
@@ -125,11 +125,11 @@ export default function AdminPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter admin password"
-                  className="bg-black/50 border-primary/20 placeholder:text-primary/50"
+                  className="bg-black/50 border-primary/20 placeholder:text-primary/50 text-white"
                 />
                 {error && <p className="text-sm text-destructive mt-1">{error}</p>}
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                 Verify Password
               </Button>
             </form>
@@ -198,10 +198,10 @@ export default function AdminPage() {
           <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
           {selectedSessions.length > 0 && (
             <Button
-              variant="destructive"
+              variant="outline"
               onClick={bulkDeleteSessions}
               disabled={deleting}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -213,45 +213,54 @@ export default function AdminPage() {
           )}
         </div>
         <div className="grid gap-4">
-          {sessions.map((session) => (
-            <Card key={session.id} className="bg-black/50 border-primary/20">
+          {sessions.length === 0 ? (
+            <Card className="bg-black/50 border-primary/20">
               <CardContent className="pt-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex gap-4">
-                    <Checkbox
-                      checked={selectedSessions.includes(session.id)}
-                      onCheckedChange={() => toggleSession(session.id)}
-                      className="mt-1"
-                    />
-                    <div>
-                      <h2 className="text-lg font-semibold text-white">
-                        {session.user.username}'s Session
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(session.date).toLocaleDateString()}
-                      </p>
-                      <p className="text-sm text-white mt-2">
-                        Location: {session.location}
-                      </p>
-                      {session.highlight && (
-                        <p className="text-sm text-white mt-1">
-                          Highlight: {session.highlight}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => deleteSession(session.id)}
-                    disabled={deleting}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <p className="text-white text-center py-8">No sessions found</p>
               </CardContent>
             </Card>
-          ))}
+          ) : (
+            sessions.map((session) => (
+              <Card key={session.id} className="bg-black/50 border-primary/20">
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start">
+                    <div className="flex gap-4">
+                      <Checkbox
+                        checked={selectedSessions.includes(session.id)}
+                        onCheckedChange={() => toggleSession(session.id)}
+                        className="mt-1 border-white"
+                      />
+                      <div>
+                        <h2 className="text-lg font-semibold text-white">
+                          {session.user.username}'s Session
+                        </h2>
+                        <p className="text-sm text-primary/60">
+                          {new Date(session.date).toLocaleDateString()}
+                        </p>
+                        <p className="text-sm text-white mt-2">
+                          Location: {session.location}
+                        </p>
+                        {session.highlight && (
+                          <p className="text-sm text-white mt-1">
+                            Highlight: {session.highlight}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => deleteSession(session.id)}
+                      disabled={deleting}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>
