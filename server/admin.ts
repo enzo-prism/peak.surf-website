@@ -7,13 +7,8 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123"; // Default for 
 
 // Middleware to check if user has provided correct admin password
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
-  console.log("isAdmin middleware - checking auth");
+  console.log("isAdmin middleware - checking authorization");
   
-  if (!req.isAuthenticated()) {
-    console.log("isAdmin middleware - user not authenticated");
-    return res.status(401).send("Not authenticated");
-  }
-
   const session = req.session as any;
   console.log("isAdmin middleware - session:", {
     isAdminAuthorized: session.isAdminAuthorized,
@@ -21,8 +16,8 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
   });
   
   if (!session.isAdminAuthorized) {
-    console.log("isAdmin middleware - user not admin authorized");
-    return res.status(403).send("Not authorized");
+    console.log("isAdmin middleware - password verification required");
+    return res.status(403).send("Password verification required");
   }
 
   console.log("isAdmin middleware - auth successful");
