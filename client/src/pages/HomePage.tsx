@@ -35,11 +35,9 @@ export default function HomePage() {
             <Button variant="ghost" size="sm" onClick={() => setLocation("/profile")} className="px-6">
               Profile
             </Button>
-            {user?.isAdmin && (
-              <Button variant="ghost" size="sm" onClick={() => setLocation("/admin")} className="px-6 text-primary/60 hover:text-primary">
+            <Button variant="ghost" size="sm" onClick={() => setLocation("/admin")} className="px-6 text-primary/60 hover:text-primary">
                 Admin
               </Button>
-            )}
             <Button variant="ghost" size="sm" onClick={() => logout()} className="px-6">
               <LogOut className="h-4 w-4 mr-2.5" />
               Logout
