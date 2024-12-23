@@ -132,7 +132,7 @@ export function setupAuth(app: Express) {
       const hashedPassword = await crypto.hash(password);
 
       try {
-        // Create the new user
+        // Verify database connection first
         const [newUser] = await db
           .insert(users)
           .values({
@@ -141,7 +141,15 @@ export function setupAuth(app: Express) {
             phoneNumber: phoneNumber,
             profilePhotoUrl: null,
           })
-          .returning();
+          .returning()
+          .catch(async (error) => {
+            console.error('Database insert error:', error);
+            // Check if it's a connection error
+            if (error.message.includes('endpoint is disabled')) {
+              throw new Error('Database is currently starting up, please try again in a few seconds');
+            }
+            throw error;
+          });
 
         // Log the user in after registration
         req.login(newUser, (err) => {
