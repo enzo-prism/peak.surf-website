@@ -131,27 +131,41 @@ export function setupAuth(app: Express) {
       // Hash the password
       const hashedPassword = await crypto.hash(password);
 
-      // Create the new user
-      const [newUser] = await db
-        .insert(users)
-        .values({
-          username,
-          password: hashedPassword,
-          phoneNumber: phoneNumber,
-        })
-        .returning();
+      try {
+        // Create the new user
+        const [newUser] = await db
+          .insert(users)
+          .values({
+            username,
+            password: hashedPassword,
+            phoneNumber: phoneNumber,
+          })
+          .returning();
 
-      // Log the user in after registration
-      req.login(newUser, (err) => {
-        if (err) {
-          return next(err);
-        }
-        return res.json({
-          message: "Registration successful",
-          user: { id: newUser.id, username: newUser.username },
+        // Log the user in after registration
+        req.login(newUser, (err) => {
+          if (err) {
+            console.error('Login error after registration:', err);
+            return next(err);
+          }
+          return res.json({
+            message: "Registration successful",
+            user: { id: newUser.id, username: newUser.username },
+          });
         });
-      });
+      } catch (error: any) {
+        console.error('Database error during registration:', error);
+        if (error.code === '23505') { // Unique violation
+          return res.status(400).json({ error: "Username already exists" });
+        } else if (error.code === '23502') { // Not null violation
+          return res.status(400).json({ error: "Missing required fields" });
+        } else if (error.code === '08006' || error.code === '57P01') { // Connection errors
+          return res.status(503).json({ error: "Database connection error, please try again" });
+        }
+        return res.status(500).json({ error: "Registration failed, please try again later" });
+      }
     } catch (error) {
+      console.error('Unexpected error during registration:', error);
       next(error);
     }
   });

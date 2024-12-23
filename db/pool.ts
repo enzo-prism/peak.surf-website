@@ -6,12 +6,14 @@ import { Redis } from 'ioredis';
 // Configure the connection pool
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 10, // Reduced for better resource management
+  max: 5, // Conservative pool size for better stability
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 3000,
-  maxUses: 7500,
-  statement_timeout: 10000, // Timeout queries after 10s
-  allowExitOnIdle: true
+  connectionTimeoutMillis: 5000,
+  maxUses: 7500, 
+  statement_timeout: 30000, // Increased timeout for larger queries
+  keepAlive: true, // Enable keepalive
+  allowExitOnIdle: true,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 // Monitor pool events
