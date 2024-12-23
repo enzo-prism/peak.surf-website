@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { pool } from "../db/pool";
 
 const app = express();
 app.use(express.json());
@@ -38,6 +39,22 @@ app.use((req, res, next) => {
   next();
 });
 
+// Graceful shutdown handling
+process.on('SIGTERM', async () => {
+  console.log('Received SIGTERM. Closing HTTP server...');
+  await new Promise<void>((resolve) => server.close(() => resolve()));
+  console.log('HTTP server closed. Closing database pool...');
+  await pool.end();
+  console.log('Database pool closed. Process will exit now.');
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT. Initiating graceful shutdown...');
+  await new Promise<void>((resolve) => server.close(() => resolve()));
+  await pool.end();
+  process.exit(0);
+});
 (async () => {
   const server = registerRoutes(app);
 

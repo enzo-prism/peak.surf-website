@@ -41,9 +41,17 @@ export function setupAuth(app: Express) {
     secret: process.env.REPL_ID || "porygon-supremacy",
     resave: false,
     saveUninitialized: false,
-    cookie: {},
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
     store: new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
+      max: 1000, // Maximum number of sessions to store
+      ttl: 86400000, // Time to live in milliseconds (24 hours)
+      dispose: (key: string, val: any) => {
+        console.log(`Session expired: ${key}`);
+      },
+      stale: false // Delete stale sessions
     }),
   };
 

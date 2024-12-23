@@ -2,7 +2,7 @@ import { type Express } from "express";
 import { createServer } from "http";
 import { setupAuth } from "./auth";
 import { setupAdminRoutes, setupAdminAuth } from "./admin";
-import { db } from "../db";
+import { db, withCache } from "../db/pool";
 import { sessions, surfboards, users } from "@db/schema";
 import { eq, asc, sql } from "drizzle-orm";
 import multer from "multer";
@@ -24,35 +24,36 @@ export function registerRoutes(app: Express) {
   setupAdminAuth(app);
   setupAdminRoutes(app);
 
-  // Get all public sessions
+  // Get all public sessions with caching
   app.get("/api/sessions/public", async (req, res) => {
     try {
-      // First get all public sessions
-      const publicSessions = await db.query.sessions.findMany({
-        where: eq(sessions.isPublic, true),
-        orderBy: (sessions, { desc }) => [desc(sessions.date)],
-        columns: {
-          id: true,
-          userId: true,
-          date: true,
-          location: true,
-          highlight: true,
-          photoUrl: true,
-          isPublic: true,
-          waveConditions: true,
-          waveHeight: true,
-          surfboardId: true,
-          surfFriends: true,
-        },
-        with: {
-          user: {
-            columns: {
-              username: true,
-              profilePhotoUrl: true
-            }
+      const publicSessions = await withCache('public_sessions', 300, async () => {
+        return db.query.sessions.findMany({
+          where: eq(sessions.isPublic, true),
+          orderBy: (sessions, { desc }) => [desc(sessions.date)],
+          columns: {
+            id: true,
+            userId: true,
+            date: true,
+            location: true,
+            highlight: true,
+            photoUrl: true,
+            isPublic: true,
+            waveConditions: true,
+            waveHeight: true,
+            surfboardId: true,
+            surfFriends: true,
           },
-          surfboard: true
-        }
+          with: {
+            user: {
+              columns: {
+                username: true,
+                profilePhotoUrl: true
+              }
+            },
+            surfboard: true
+          }
+        });
       });
 
       // Get session counts for all users who have public sessions
