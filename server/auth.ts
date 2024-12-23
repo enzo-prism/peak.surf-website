@@ -132,23 +132,36 @@ export function setupAuth(app: Express) {
       const hashedPassword = await crypto.hash(password);
 
       try {
-        // Verify database connection first
-        const [newUser] = await db
-          .insert(users)
-          .values({
-            username,
-            password: hashedPassword,
-            phoneNumber: phoneNumber,
-            profilePhotoUrl: null,
-          })
-          .returning()
-          .catch(async (error) => {
-            console.error('Database insert error:', error);
-            // Check if it's a connection error
-            if (error.message.includes('endpoint is disabled')) {
-              throw new Error('Database is currently starting up, please try again in a few seconds');
+          // Function to handle database operation with retries
+          const executeWithRetry = async (operation: () => Promise<any>, maxRetries = 3) => {
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+              try {
+                return await operation();
+              } catch (error: any) {
+                if (attempt === maxRetries) throw error;
+                
+                if (error.message?.includes('endpoint is disabled')) {
+                  console.log(`Database is starting up (attempt ${attempt}/${maxRetries}), retrying...`);
+                  await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+                  continue;
+                }
+                
+                throw error;
+              }
             }
-            throw error;
+          };
+
+          // Verify database connection first
+          const [newUser] = await executeWithRetry(async () => {
+            return db
+              .insert(users)
+              .values({
+                username,
+                password: hashedPassword,
+                phoneNumber: phoneNumber,
+                profilePhotoUrl: null,
+              })
+              .returning();
           });
 
         // Log the user in after registration
