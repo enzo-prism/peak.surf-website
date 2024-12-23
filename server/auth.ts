@@ -139,6 +139,7 @@ export function setupAuth(app: Express) {
             username,
             password: hashedPassword,
             phoneNumber: phoneNumber,
+            profilePhotoUrl: null,
           })
           .returning();
 
