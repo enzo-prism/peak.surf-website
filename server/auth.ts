@@ -163,15 +163,41 @@ export function setupAuth(app: Express) {
           });
         });
       } catch (error: any) {
-        console.error('Database error during registration:', error);
-        if (error.code === '23505') { // Unique violation
-          return res.status(400).json({ error: "Username already exists" });
-        } else if (error.code === '23502') { // Not null violation
-          return res.status(400).json({ error: "Missing required fields" });
-        } else if (error.code === '08006' || error.code === '57P01') { // Connection errors
-          return res.status(503).json({ error: "Database connection error, please try again" });
+        console.error('Database error during registration:', {
+          error: error.message,
+          stack: error.stack,
+          code: error.code
+        });
+        
+        if (!process.env.DATABASE_URL) {
+          return res.status(500).json({ 
+            error: "Database configuration missing",
+            details: "DATABASE_URL environment variable is not set"
+          });
         }
-        return res.status(500).json({ error: "Registration failed, please try again later" });
+        
+        if (error.message?.includes('client.query is not a function')) {
+          return res.status(500).json({ 
+            error: "Database connection initialization failed",
+            details: "Could not establish database connection. Please try again."
+          });
+        }
+        
+        if (error.code === '23505') {
+          return res.status(400).json({ error: "Username already exists" });
+        } else if (error.code === '23502') {
+          return res.status(400).json({ error: "Missing required fields" });
+        } else if (error.code === '08006' || error.code === '57P01') {
+          return res.status(503).json({ 
+            error: "Database connection error",
+            details: "Could not connect to database. Please try again in a few moments."
+          });
+        }
+        
+        return res.status(500).json({ 
+          error: "Registration failed",
+          details: error.message || "An unexpected error occurred"
+        });
       }
     } catch (error) {
       console.error('Unexpected error during registration:', error);
