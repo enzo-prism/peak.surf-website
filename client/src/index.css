@@ -1,12 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "SF Pro Rounded";
+  src: url("/fonts/SF-Pro-Rounded-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Rounded";
+  src: url("/fonts/SF-Pro-Rounded-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   body {
-    font-family: "Space Grotesk", "Helvetica Neue", sans-serif;
+    font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif;
     background: #050505;
     color: #f8f8f8;
     min-height: 100vh;
@@ -16,8 +32,15 @@
 
 @layer utilities {
   .font-display {
-    font-family: "Cormorant Garamond", "Times New Roman", serif;
+    font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif;
+    font-weight: 600;
     letter-spacing: 0.01em;
+  }
+
+  .font-hero {
+    font-family: "Inter", "Helvetica Neue", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.015em;
   }
 
   .site-bg {

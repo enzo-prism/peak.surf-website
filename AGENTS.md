@@ -21,7 +21,7 @@ No required environment variables.
 
 ## Structure and styling
 - The site is intentionally minimal and premium: mostly black with white accents.
-- Typography uses custom fonts defined in `client/src/index.css` (avoid default stacks).
+- Typography uses locally hosted SF Pro Rounded from `public/fonts`, defined in `client/src/index.css`.
 - Animation utilities live in `client/src/index.css` (`fade-up`, `fade-delay-*`).
 - Keep new sections inside `client/src/App.tsx` to maintain a single-page flow.
 
