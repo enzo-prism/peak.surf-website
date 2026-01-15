@@ -44,7 +44,7 @@ function App() {
           </div>
           <a
             href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-            className="hidden items-center gap-3 rounded-full border border-white/40 px-5 py-2 text-sm tracking-[0.2em] text-white transition hover:border-white hover:bg-white/10 md:flex"
+            className="font-cta hidden items-center gap-3 rounded-full border border-white/40 px-5 py-2 text-[13px] text-white transition hover:border-white hover:bg-white/10 md:flex"
           >
             <span aria-hidden="true" className="text-base leading-none">
               
@@ -66,7 +66,7 @@ function App() {
             <div className="fade-up fade-delay-3 flex flex-col gap-4 sm:flex-row">
               <a
                 href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-                className="inline-flex items-center justify-center gap-3 rounded-full bg-white px-7 py-3 text-sm font-semibold tracking-[0.25em] text-black transition hover:bg-white/90"
+                className="font-cta inline-flex items-center justify-center gap-3 rounded-full bg-white px-7 py-3 text-[13px] text-black transition hover:bg-white/90"
               >
                 <span aria-hidden="true" className="text-base leading-none">
                   
@@ -112,7 +112,7 @@ function App() {
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a
                 href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-                className="inline-flex items-center justify-center gap-3 rounded-full bg-white px-8 py-3 text-sm font-semibold tracking-[0.25em] text-black transition hover:bg-white/90"
+                className="font-cta inline-flex items-center justify-center gap-3 rounded-full bg-white px-8 py-3 text-[13px] text-black transition hover:bg-white/90"
               >
                 <span aria-hidden="true" className="text-base leading-none">
                   
