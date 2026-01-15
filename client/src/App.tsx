@@ -58,7 +58,7 @@ function App() {
             </div>
           </div>
           <a
-            href="https://apps.apple.com/"
+            href="https://apps.apple.com/us/app/peak-surf/id6757644027"
             className="hidden items-center rounded-full border border-white/40 px-5 py-2 text-sm uppercase tracking-[0.2em] text-white transition hover:border-white hover:bg-white/10 md:flex"
           >
             Download
@@ -88,13 +88,13 @@ function App() {
             </p>
             <div className="fade-up fade-delay-3 flex flex-col gap-4 sm:flex-row">
               <a
-                href="https://apps.apple.com/"
+                href="https://apps.apple.com/us/app/peak-surf/id6757644027"
                 className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-black transition hover:bg-white/90"
               >
                 Download Peak
               </a>
               <a
-                href="https://apps.apple.com/"
+                href="https://apps.apple.com/us/app/peak-surf/id6757644027"
                 className="inline-flex items-center justify-center rounded-full border border-white/40 px-7 py-3 text-sm uppercase tracking-[0.2em] text-white transition hover:border-white hover:bg-white/10"
               >
                 Log your next session
@@ -293,7 +293,7 @@ function App() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a
-                href="https://apps.apple.com/"
+                href="https://apps.apple.com/us/app/peak-surf/id6757644027"
                 className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-black transition hover:bg-white/90"
               >
                 Download on the App Store
