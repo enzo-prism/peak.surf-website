@@ -1,13 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-border;
+  body {
+    font-family: "Space Grotesk", "Helvetica Neue", sans-serif;
+    background: #050505;
+    color: #f8f8f8;
+    min-height: 100vh;
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Cormorant Garamond", "Times New Roman", serif;
+    letter-spacing: 0.01em;
   }
 
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
+  .site-bg {
+    background:
+      radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.08), transparent 45%),
+      radial-gradient(circle at 75% 5%, rgba(255, 255, 255, 0.08), transparent 40%),
+      radial-gradient(circle at 50% 85%, rgba(255, 255, 255, 0.06), transparent 55%),
+      #050505;
+  }
+
+  .fade-up {
+    animation: fade-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .fade-delay-1 {
+    animation-delay: 0.12s;
+  }
+
+  .fade-delay-2 {
+    animation-delay: 0.24s;
+  }
+
+  .fade-delay-3 {
+    animation-delay: 0.36s;
+  }
+
+  .fade-delay-4 {
+    animation-delay: 0.48s;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up {
+    animation: none;
   }
 }
