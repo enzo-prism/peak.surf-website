@@ -78,10 +78,8 @@ function App() {
 
           <div className="fade-up fade-delay-2 relative">
             <div className="rounded-[32px] border border-white/15 bg-white/5 p-6 shadow-[0_35px_120px_rgba(0,0,0,0.55)]">
-              <div className="flex min-h-[240px] flex-col items-center justify-center gap-3 text-center text-sm text-white/60">
-                <span className="text-xs tracking-[0.35em]">peak</span>
-                <span>private surf log for ios</span>
-                <span>minimal. premium. offline.</span>
+              <div className="flex min-h-[240px] items-center justify-center">
+                <img src="/Transparent.png" alt="peak logo" className="h-20 w-auto opacity-90" />
               </div>
             </div>
           </div>
