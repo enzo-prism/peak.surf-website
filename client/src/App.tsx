@@ -117,7 +117,7 @@ function App() {
                 <span aria-hidden="true" className="text-base leading-none">
                   
                 </span>
-                download on the app store
+                download app
               </a>
             </div>
           </div>
