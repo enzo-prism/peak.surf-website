@@ -1,5 +1,10 @@
 {
-  "include": ["client/src/App.tsx", "client/src/main.tsx"],
+  "include": [
+    "client/src/App.tsx",
+    "client/src/main.tsx",
+    "client/src/AboutPage.tsx",
+    "client/src/about.tsx"
+  ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,

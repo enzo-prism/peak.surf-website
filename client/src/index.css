@@ -21,10 +21,35 @@
 }
 
 @layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 65%;
+    --radius: 1.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
   body {
-    font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif;
-    background: #000;
-    color: #f8f8f8;
+    @apply bg-background font-sans text-foreground;
     min-height: 100vh;
     color-scheme: dark;
   }
@@ -55,10 +80,6 @@
     font-weight: 400;
     letter-spacing: 0.02em;
     text-transform: none;
-  }
-
-  .site-bg {
-    background: #000;
   }
 
   .fade-up {

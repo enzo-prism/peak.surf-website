@@ -1,3 +1,15 @@
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
 const featureHighlights = [
   {
     title: "log sessions fast",
@@ -148,64 +160,73 @@ const galleryImages = surfImages.slice(12);
 
 function App() {
   return (
-    <div className="site-bg relative min-h-screen overflow-hidden text-white">
-      <header className="relative z-10">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="relative">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8">
           <div className="flex items-center gap-4">
             <img src="/Transparent.png" alt="peak logo" className="h-8 w-auto" />
             <div className="leading-tight">
-              <p className="text-[11px] tracking-[0.35em] text-white/60">
+              <p className="font-lower text-[11px] tracking-[0.35em] text-muted-foreground">
                 peak
               </p>
-              <p className="text-sm text-white/80">premium surf journal</p>
+              <p className="text-sm text-muted-foreground">premium surf journal</p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <a
-              href="/about.html"
-              className="font-lower text-[11px] text-white/60 transition hover:text-white"
+          <div className="flex items-center gap-3">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
             >
-              about
-            </a>
-            <a
-              href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-              className="font-cta hidden items-center gap-3 rounded-full border border-white/40 px-5 py-2 text-[13px] text-white transition hover:border-white hover:bg-white/10 md:flex"
+              <a href="/about.html">about</a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="font-cta hidden rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20 md:inline-flex"
             >
-              <span aria-hidden="true" className="text-base leading-none">
-                
-              </span>
-              download
-            </a>
+              <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                <span aria-hidden="true" className="text-base leading-none">
+                  
+                </span>
+                download
+              </a>
+            </Button>
           </div>
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className="relative">
         <section className="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-24 pt-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
             <h1 className="fade-up fade-delay-1 font-hero text-4xl leading-tight md:text-6xl">
               track the session. keep the story.
             </h1>
-            <p className="fade-up fade-delay-2 text-lg text-white/70">
+            <p className="fade-up fade-delay-2 text-lg text-muted-foreground">
               private surf log for sessions, gear, and breaks. offline on your iphone.
             </p>
             <div className="fade-up fade-delay-3 flex flex-col gap-4 sm:flex-row">
-              <a
-                href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-                className="font-cta inline-flex items-center justify-center gap-3 rounded-full bg-white px-7 py-3 text-[13px] text-black transition hover:bg-white/90"
+              <Button
+                asChild
+                size="lg"
+                className="font-cta rounded-full px-7 text-[13px]"
               >
-                <span aria-hidden="true" className="text-base leading-none">
-                  
-                </span>
-                download on the app store
-              </a>
+                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                  <span aria-hidden="true" className="text-base leading-none">
+                    
+                  </span>
+                  download on the app store
+                </a>
+              </Button>
             </div>
           </div>
 
           <div className="fade-up fade-delay-2 relative">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="group relative overflow-hidden rounded-[32px] border border-white/15 bg-white/5 shadow-[0_35px_120px_rgba(0,0,0,0.55)] sm:col-span-2">
-                <div className="aspect-[5/6] w-full">
+              <Card className="group relative overflow-hidden border-border/60 bg-card/40 shadow-[0_35px_120px_rgba(0,0,0,0.6)] sm:col-span-2">
+                <AspectRatio ratio={5 / 6} className="w-full">
                   <img
                     src={heroPrimary.src}
                     alt={heroPrimary.alt}
@@ -213,15 +234,15 @@ function App() {
                     loading="eager"
                     decoding="async"
                   />
-                </div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-              </div>
+                </AspectRatio>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+              </Card>
               {heroStack.map((image) => (
-                <div
+                <Card
                   key={image.src}
-                  className="group relative overflow-hidden rounded-[28px] border border-white/15 bg-white/5 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
+                  className="group relative overflow-hidden border-border/60 bg-card/40 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
                 >
-                  <div className="aspect-[4/5] w-full">
+                  <AspectRatio ratio={4 / 5} className="w-full">
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -229,27 +250,32 @@ function App() {
                       loading="lazy"
                       decoding="async"
                     />
-                  </div>
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                </div>
+                  </AspectRatio>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+                </Card>
               ))}
             </div>
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="font-hero text-3xl md:text-4xl">capture peak moments</h2>
-            </div>
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
+              gallery
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
           </div>
+          <h2 className="mt-4 font-hero text-3xl md:text-4xl">capture peak moments</h2>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ribbonImages.map((image) => (
-              <div
+              <Card
                 key={image.src}
-                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
+                className="group relative overflow-hidden border-border/60 bg-card/40 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
               >
-                <div className="aspect-[3/4] w-full">
+                <AspectRatio ratio={3 / 4} className="w-full">
                   <img
                     src={image.src}
                     alt={image.alt}
@@ -257,51 +283,64 @@ function App() {
                     loading="lazy"
                     decoding="async"
                   />
-                </div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-              </div>
+                </AspectRatio>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+              </Card>
             ))}
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
-          <div className="flex items-end justify-between gap-6">
-            <div>
-              <h2 className="font-hero text-3xl md:text-4xl">everything that matters.</h2>
-            </div>
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
+              features
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
           </div>
+          <h2 className="mt-4 font-hero text-3xl md:text-4xl">everything that matters.</h2>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {featureHighlights.map((feature) => (
-              <div
+              <Card
                 key={feature.title}
-                className="group rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/30 hover:bg-white/10"
+                className="border-border/60 bg-card/40 transition hover:bg-card/60"
               >
-                <h3 className="text-lg font-semibold">{feature.title}</h3>
-                <p className="mt-3 text-sm text-white/70">{feature.description}</p>
-              </div>
+                <CardHeader className="space-y-2">
+                  <CardTitle className="text-lg font-semibold">
+                    {feature.title}
+                  </CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             ))}
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="font-lower text-[11px] text-white/60">life in motion</p>
-              <h2 className="mt-3 font-hero text-3xl md:text-4xl">
-                the water moves fast.
-              </h2>
-              <p className="mt-3 text-sm text-white/70">
-                the memories do not have to.
-              </p>
-            </div>
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
+              peak archive
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
           </div>
+          <h2 className="mt-4 font-hero text-3xl md:text-4xl">life in motion</h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            the water moves fast. the memories do not have to.
+          </p>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {galleryImages.map((image) => (
-              <div
+              <Card
                 key={image.src}
-                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
+                className="group relative overflow-hidden border-border/60 bg-card/40 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
               >
-                <div className="aspect-[4/5] w-full">
+                <AspectRatio ratio={4 / 5} className="w-full">
                   <img
                     src={image.src}
                     alt={image.alt}
@@ -309,35 +348,32 @@ function App() {
                     loading="lazy"
                     decoding="async"
                   />
-                </div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-              </div>
+                </AspectRatio>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+              </Card>
             ))}
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-28">
-          <div className="rounded-[40px] border border-white/15 bg-white/5 p-12 text-center">
-            <h2 className="mt-4 font-hero text-3xl md:text-4xl">
-              download peak.
-            </h2>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-                className="font-cta inline-flex items-center justify-center gap-3 rounded-full bg-white px-8 py-3 text-[13px] text-black transition hover:bg-white/90"
-              >
-                <span aria-hidden="true" className="text-base leading-none">
-                  
-                </span>
-                download app
-              </a>
-            </div>
-          </div>
+          <Card className="border-border/60 bg-card/40">
+            <CardContent className="flex flex-col items-center gap-6 p-10 text-center md:p-12">
+              <h2 className="font-hero text-3xl md:text-4xl">download peak.</h2>
+              <Button asChild size="lg" className="font-cta rounded-full px-8 text-[13px]">
+                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                  <span aria-hidden="true" className="text-base leading-none">
+                    
+                  </span>
+                  download app
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs tracking-[0.3em] text-white/40 md:flex-row">
+      <footer className="border-t border-border/60">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs tracking-[0.3em] text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
           <span>private surf log for ios</span>
         </div>

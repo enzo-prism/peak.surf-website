@@ -1,3 +1,15 @@
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
 const timeline = [
   {
     year: "2022",
@@ -48,56 +60,68 @@ const projectImages = [
 
 function AboutPage() {
   return (
-    <div className="site-bg relative min-h-screen overflow-hidden text-white">
-      <header className="relative z-10">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="relative">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8">
           <div className="flex items-center gap-4">
             <img src="/Transparent.png" alt="peak logo" className="h-8 w-auto" />
             <div className="leading-tight">
-              <p className="text-[11px] tracking-[0.35em] text-white/60">
+              <p className="font-lower text-[11px] tracking-[0.35em] text-muted-foreground">
                 peak
               </p>
-              <p className="text-sm text-white/80">premium surf journal</p>
+              <p className="text-sm text-muted-foreground">premium surf journal</p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <a
-              href="/"
-              className="font-lower text-[11px] text-white/60 transition hover:text-white"
+          <div className="flex items-center gap-3">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
             >
-              home
-            </a>
-            <a
-              href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-              className="font-cta hidden items-center gap-3 rounded-full border border-white/40 px-5 py-2 text-[13px] text-white transition hover:border-white hover:bg-white/10 md:flex"
+              <a href="/">home</a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="font-cta hidden rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20 md:inline-flex"
             >
-              <span aria-hidden="true" className="text-base leading-none">
-                
-              </span>
-              download
-            </a>
+              <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                <span aria-hidden="true" className="text-base leading-none">
+                  
+                </span>
+                download
+              </a>
+            </Button>
           </div>
         </div>
       </header>
 
-      <main className="relative z-10">
+      <main className="relative">
         <section className="mx-auto w-full max-w-6xl px-6 pb-16 pt-12">
-          <div className="max-w-3xl">
-            <p className="font-lower text-[11px] text-white/50">
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
               about peak
-            </p>
-            <h1 className="mt-4 font-hero text-4xl leading-tight md:text-5xl">
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
+          </div>
+          <div className="mt-6 max-w-3xl">
+            <h1 className="font-hero text-4xl leading-tight md:text-5xl">
               a senior project turned surf journal.
             </h1>
-            <p className="mt-6 text-sm text-white/70">
+            <p className="mt-6 text-sm text-muted-foreground">
               peak started in 2022 as a senior project at cal poly san luis obispo.
               enzo created it and spent his last two years at cal poly refining the work.
             </p>
-            <p className="mt-4 text-sm text-white/70">
+            <p className="mt-4 text-sm text-muted-foreground">
               while working at apple, he partnered with a program manager, product marketing
               managers, and product designers to elevate the peak app design and concept.
             </p>
-            <p className="mt-4 text-sm text-white/70">
+            <p className="mt-4 text-sm text-muted-foreground">
               it became a web app in 2025, released the ios app in 2026, and we are excited for the
               future of peak.
             </p>
@@ -105,72 +129,83 @@ function AboutPage() {
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-20">
-          <div className="rounded-[32px] border border-white/15 bg-white/5 p-8 md:p-10">
-            <p className="font-lower text-[11px] text-white/50">
-              timeline
-            </p>
-            <div className="mt-6 grid gap-4 text-sm text-white/70 md:grid-cols-3">
+          <Card className="border-border/60 bg-card/40">
+            <CardHeader className="space-y-2">
+              <CardTitle className="font-hero text-2xl md:text-3xl">timeline</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-3">
               {timeline.map((item) => (
-                <div
-                  key={item.year}
-                  className="rounded-2xl border border-white/10 bg-black/40 p-4"
-                >
-                  <p className="text-white/50">{item.year}</p>
-                  <p className="mt-3 text-white/80">{item.detail}</p>
-                </div>
+                <Card key={item.year} className="border-border/60 bg-background/40">
+                  <CardHeader className="space-y-2 p-4">
+                    <CardTitle className="text-base font-semibold text-foreground">
+                      {item.year}
+                    </CardTitle>
+                    <CardDescription className="text-sm text-muted-foreground">
+                      {item.detail}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
               ))}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
-          <p className="font-lower text-[11px] text-white/50">
-            project archive
-          </p>
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
+              project archive
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
+          </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {projectImages.map((image) => (
-              <div key={image.src} className="group">
-                <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-                  <div className="aspect-[4/3] w-full">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                </div>
-                <p className="font-lower mt-3 text-[11px] text-white/50">
-                  {image.label}
-                </p>
-              </div>
+              <Card
+                key={image.src}
+                className="group overflow-hidden border-border/60 bg-card/40 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+              >
+                <AspectRatio ratio={4 / 3} className="w-full">
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </AspectRatio>
+                <CardContent className="p-4">
+                  <p className="font-lower text-[11px] text-muted-foreground">
+                    {image.label}
+                  </p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-28">
-          <div className="rounded-[36px] border border-white/15 bg-white/5 p-10 text-center">
-            <h2 className="font-hero text-3xl md:text-4xl">
-              excited for the future of peak.
-            </h2>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="https://apps.apple.com/us/app/peak-surf/id6757644027"
-                className="font-cta inline-flex items-center justify-center gap-3 rounded-full bg-white px-8 py-3 text-[13px] text-black transition hover:bg-white/90"
-              >
-                <span aria-hidden="true" className="text-base leading-none">
-                  
-                </span>
-                download app
-              </a>
-            </div>
-          </div>
+          <Card className="border-border/60 bg-card/40">
+            <CardContent className="flex flex-col items-center gap-6 p-10 text-center md:p-12">
+              <h2 className="font-hero text-3xl md:text-4xl">
+                excited for the future of peak.
+              </h2>
+              <Button asChild size="lg" className="font-cta rounded-full px-8 text-[13px]">
+                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                  <span aria-hidden="true" className="text-base leading-none">
+                    
+                  </span>
+                  download app
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs tracking-[0.3em] text-white/40 md:flex-row">
+      <footer className="border-t border-border/60">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs tracking-[0.3em] text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
           <span>private surf log for ios</span>
         </div>
