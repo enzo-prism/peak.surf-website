@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -23,7 +23,7 @@
 @layer base {
   body {
     font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif;
-    background: #050505;
+    background: #000;
     color: #f8f8f8;
     min-height: 100vh;
     color-scheme: dark;
@@ -50,12 +50,15 @@
     text-transform: lowercase;
   }
 
+  .font-lower {
+    font-family: "Inter", "Helvetica Neue", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
   .site-bg {
-    background:
-      radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.08), transparent 45%),
-      radial-gradient(circle at 75% 5%, rgba(255, 255, 255, 0.08), transparent 40%),
-      radial-gradient(circle at 50% 85%, rgba(255, 255, 255, 0.06), transparent 55%),
-      #050505;
+    background: #000;
   }
 
   .fade-up {
