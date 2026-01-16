@@ -145,8 +145,6 @@ const heroPrimary = heroImages[0];
 const heroStack = heroImages.slice(1);
 const ribbonImages = surfImages.slice(3, 12);
 const galleryImages = surfImages.slice(12);
-const galleryPrimary = galleryImages[0];
-const gallerySecondary = galleryImages.slice(1);
 
 function App() {
   return (
@@ -159,7 +157,7 @@ function App() {
               <p className="text-[11px] tracking-[0.35em] text-white/60">
                 peak
               </p>
-              <p className="text-sm text-white/80">premium surf journal for ios</p>
+              <p className="text-sm text-white/80">premium surf journal</p>
             </div>
           </div>
           <div className="flex items-center gap-6">
@@ -286,47 +284,35 @@ function App() {
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="group relative overflow-hidden rounded-[36px] border border-white/15 bg-white/5 shadow-[0_35px_120px_rgba(0,0,0,0.55)]">
-              <div className="aspect-[4/5] w-full">
-                <img
-                  src={galleryPrimary.src}
-                  alt={galleryPrimary.alt}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="font-lower text-[11px] text-white/60">
-                  peak archive
-                </p>
-                <h3 className="mt-3 font-hero text-2xl md:text-3xl">life in motion</h3>
-                <p className="mt-3 text-sm text-white/70">
-                  the water moves fast. the memories do not have to.
-                </p>
-              </div>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-lower text-[11px] text-white/60">life in motion</p>
+              <h2 className="mt-3 font-hero text-3xl md:text-4xl">
+                the water moves fast.
+              </h2>
+              <p className="mt-3 text-sm text-white/70">
+                the memories do not have to.
+              </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {gallerySecondary.map((image) => (
-                <div
-                  key={image.src}
-                  className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
-                >
-                  <div className="aspect-[4/5] w-full">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {galleryImages.map((image) => (
+              <div
+                key={image.src}
+                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
+              >
+                <div className="aspect-[4/5] w-full">
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
-              ))}
-            </div>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+              </div>
+            ))}
           </div>
         </section>
 

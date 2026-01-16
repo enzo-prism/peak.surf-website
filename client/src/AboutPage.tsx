@@ -57,7 +57,7 @@ function AboutPage() {
               <p className="text-[11px] tracking-[0.35em] text-white/60">
                 peak
               </p>
-              <p className="text-sm text-white/80">premium surf journal for ios</p>
+              <p className="text-sm text-white/80">premium surf journal</p>
             </div>
           </div>
           <div className="flex items-center gap-6">
