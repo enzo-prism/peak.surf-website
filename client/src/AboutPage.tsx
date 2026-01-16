@@ -91,6 +91,14 @@ function AboutPage() {
               size="sm"
               className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
             >
+              <a href="/about.html">about</a>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+            >
               <a href="/club.html">club</a>
             </Button>
             <Button

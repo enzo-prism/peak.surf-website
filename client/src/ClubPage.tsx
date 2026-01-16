@@ -1,53 +1,70 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 
+const weeklyLoop = [
+  "spot drops midweek (members-only)",
+  "rsvp required (sessions are capped)",
+  "paddle out together",
+  "coffee + food after every time",
+];
+
 const steps = [
   {
     title: "apply",
-    description: "tell us who you are and how you surf.",
+    description: "tell us who you are, how you surf, and when you're usually free.",
   },
   {
-    title: "get invited",
-    description: "if there's a fit, we'll invite you to a paddle-out.",
+    title: "trial paddle-out (invite)",
+    description: "if it looks like a fit, we'll invite you to join a paddle-out.",
+  },
+  {
+    title: "join the roster",
+    description: "if the vibe and safety are right both ways, you're in.",
   },
   {
     title: "unlock the schedule",
-    description: "accepted members get the weekly lineup and post-surf spot.",
+    description: "accepted members get the weekly lineup + post-surf spot.",
   },
 ];
 
+const sessionTypes = [
+  "social paddle — beginner-friendly, mellow conditions",
+  "crew paddle — intermediate+, higher tempo",
+  "peak session — small group, best conditions (invite-only)",
+];
+
 const requirements = [
-  "age: 18-30 (phase 1)",
+  "cohort age: 18-30 (phase 1)",
   "location: bay area-based",
-  "skill level: all levels welcome (beginner-friendly + advanced sessions)",
-  "trust: link a public social profile or get referred by a current member",
+  "skill level: all levels welcome (session types keep it safe)",
+  "trust: referral or a public profile link or an intro video link",
 ];
 
 const benefits = [
-  "meet likeminded friends who actually show up",
-  "weekly paddle-outs (members-only schedule)",
-  "make peak moments with new people",
-  "discover surf breaks that can handle a crew",
-  "post-surf food + coffee",
-  "discounted gear from selected surf vendors",
+  "a crew that actually shows up",
+  "members-only schedule + capped sessions",
+  "post-surf coffee every week",
+  "discover breaks + food/coffee without blowing up spots",
+  "partner perks from selected surf vendors",
+  "optional: numbered peak club patch",
 ];
 
 const code = [
   "respect the lineup. no egos.",
+  "be on time. rsvp honestly.",
   "surf safe. look out for each other.",
-  "leave no trace.",
-  "no filming or photos of others without consent.",
+  "no filming or photos without consent.",
   "protect spots. don't broadcast locations.",
+];
+
+const scheduleTeaser = [
+  "weekly drop + rsvp",
+  "exact location shared with members",
+  "members-only lineup",
 ];
 
 function ClubPage() {
@@ -87,6 +104,14 @@ function ClubPage() {
             </Button>
             <Button
               asChild
+              variant="ghost"
+              size="sm"
+              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+            >
+              <a href="/club.html">club</a>
+            </Button>
+            <Button
+              asChild
               variant="outline"
               size="sm"
               className="font-cta hidden rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20 md:inline-flex"
@@ -115,10 +140,13 @@ function ClubPage() {
           </div>
           <div className="mt-6 max-w-2xl space-y-4">
             <h1 className="font-hero text-4xl leading-tight md:text-5xl">bay area surf club.</h1>
-            <p className="text-sm text-muted-foreground">
-              ages 18-30. weekly paddle-outs + post-surf coffee.
-            </p>
-            <p className="text-sm text-muted-foreground">small roster. application required.</p>
+            <p className="text-sm text-muted-foreground">cohort 01: ages 18-30.</p>
+            <p className="text-sm text-muted-foreground">weekly paddle-outs + post-surf coffee.</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p>small roster. capped sessions.</p>
+              <p>members-only schedule.</p>
+              <p>application required.</p>
+            </div>
             <Button asChild size="lg" className="font-cta rounded-full px-7 text-[13px]">
               <a href="#apply">apply</a>
             </Button>
@@ -131,17 +159,39 @@ function ClubPage() {
               variant="outline"
               className="font-lower border-border/60 text-[11px] text-muted-foreground"
             >
-              what is peak club
+              what it is
             </Badge>
             <Separator className="flex-1 w-auto bg-border/60" />
           </div>
           <Card className="mt-6 border-border/60 bg-card/40">
             <CardContent className="space-y-4 p-8 text-sm text-muted-foreground">
-              <p>peak started as a private surf journal.</p>
+              <p>peak is private online.</p>
+              <p>peak club is social in real life.</p>
               <p>
-                peak club is the real-world extension: a tight crew that paddles out together
-                every week and makes new peak moments in the water.
+                a consistent crew that paddles out every week, then grabs coffee and food after.
+                make peak moments in the water. keep them in your archive.
               </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 pb-16">
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
+              the weekly loop
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
+          </div>
+          <Card className="mt-6 border-border/60 bg-card/40">
+            <CardContent className="p-8">
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                {weeklyLoop.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </section>
@@ -156,17 +206,17 @@ function ClubPage() {
             </Badge>
             <Separator className="flex-1 w-auto bg-border/60" />
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
             {steps.map((step, index) => (
               <Card key={step.title} className="border-border/60 bg-card/40">
                 <CardHeader className="space-y-2">
                   <CardTitle className="text-base font-semibold">
                     {index + 1}) {step.title}
                   </CardTitle>
-                  <CardDescription className="text-sm text-muted-foreground">
-                    {step.description}
-                  </CardDescription>
                 </CardHeader>
+                <CardContent className="pt-0 text-sm text-muted-foreground">
+                  {step.description}
+                </CardContent>
               </Card>
             ))}
           </div>
@@ -174,6 +224,19 @@ function ClubPage() {
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-16">
           <div className="grid gap-4 lg:grid-cols-3">
+            <Card className="border-border/60 bg-card/40">
+              <CardHeader className="space-y-2">
+                <CardTitle className="text-xl font-semibold">session types</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {sessionTypes.map((item) => (
+                    <li key={item}>• {item}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
             <Card className="border-border/60 bg-card/40">
               <CardHeader className="space-y-2">
                 <CardTitle className="text-xl font-semibold">membership requirements</CardTitle>
@@ -184,6 +247,9 @@ function ClubPage() {
                     <li key={item}>• {item}</li>
                   ))}
                 </ul>
+                <p className="mt-4 text-xs text-muted-foreground">
+                  not 18-30? join the waitlist for future cohorts.
+                </p>
               </CardContent>
             </Card>
 
@@ -199,30 +265,35 @@ function ClubPage() {
                 </ul>
               </CardContent>
             </Card>
-
-            <Card className="border-border/60 bg-card/40">
-              <CardHeader className="space-y-2">
-                <CardTitle className="text-xl font-semibold">the code</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  {code.map((item) => (
-                    <li key={item}>• {item}</li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-16">
           <Card className="border-border/60 bg-card/40">
-            <CardContent className="flex flex-col items-start gap-4 p-8">
-              <h2 className="font-hero text-2xl md:text-3xl">ready?</h2>
-              <p className="text-sm text-muted-foreground">applications are reviewed weekly.</p>
-              <Button asChild size="lg" className="font-cta rounded-full px-7 text-[13px]">
-                <a href="#apply">apply</a>
-              </Button>
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-xl font-semibold">the code</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                {code.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 pb-16">
+          <Card className="border-border/60 bg-card/40">
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-xl font-semibold">members-only schedule</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                {scheduleTeaser.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </section>
@@ -231,15 +302,15 @@ function ClubPage() {
           <Card className="border-border/60 bg-card/40">
             <CardHeader className="space-y-2">
               <CardTitle className="font-hero text-2xl md:text-3xl">apply</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
-                tell us who you are and how you surf.
-              </CardDescription>
             </CardHeader>
             <CardContent>
+              <p className="text-sm text-muted-foreground">
+                applications reviewed weekly. if it's a fit, we'll reach out with an invite.
+              </p>
               <form
                 action="https://formspree.io/f/mqeeeeyz"
                 method="POST"
-                className="grid gap-4"
+                className="mt-6 grid gap-4"
               >
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="grid gap-2 text-xs text-muted-foreground">
@@ -251,20 +322,32 @@ function ClubPage() {
                     <Input name="email" type="email" placeholder="you@email.com" required />
                   </label>
                   <label className="grid gap-2 text-xs text-muted-foreground">
-                    age
-                    <Input name="age" type="number" min="18" max="30" placeholder="age" />
+                    availability
+                    <Input
+                      name="availability"
+                      type="text"
+                      placeholder="weekdays early / weekends / flexible"
+                    />
                   </label>
                   <label className="grid gap-2 text-xs text-muted-foreground">
-                    location
-                    <Input name="location" type="text" placeholder="city, bay area" />
+                    transport
+                    <Input name="transport" type="text" placeholder="car / can carpool / need carpool" />
                   </label>
                   <label className="grid gap-2 text-xs text-muted-foreground">
                     surf level
-                    <Input name="skill" type="text" placeholder="beginner, intermediate, advanced" />
+                    <Input name="skill" type="text" placeholder="beginner / intermediate / advanced" />
                   </label>
                   <label className="grid gap-2 text-xs text-muted-foreground">
-                    social profile or referral
-                    <Input name="social" type="text" placeholder="instagram or referrer" />
+                    where do you usually surf
+                    <Input name="spots" type="text" placeholder="favorite breaks" />
+                  </label>
+                  <label className="grid gap-2 text-xs text-muted-foreground md:col-span-2">
+                    referral / profile (for trust + safety)
+                    <Input
+                      name="trust"
+                      type="text"
+                      placeholder="instagram link / referral name / intro video link"
+                    />
                   </label>
                 </div>
                 <label className="grid gap-2 text-xs text-muted-foreground">
@@ -275,6 +358,9 @@ function ClubPage() {
                     rows={4}
                   />
                 </label>
+                <p className="text-xs text-muted-foreground">
+                  we use this only to review membership. no spam. no public member list.
+                </p>
                 <Button type="submit" size="lg" className="font-cta rounded-full px-7 text-[13px]">
                   send application
                 </Button>

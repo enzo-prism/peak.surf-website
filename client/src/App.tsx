@@ -183,6 +183,14 @@ function App() {
               size="sm"
               className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
             >
+              <a href="/">home</a>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+            >
               <a href="/about.html">about</a>
             </Button>
             <Button
