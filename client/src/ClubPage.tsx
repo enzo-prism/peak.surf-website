@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -71,6 +73,8 @@ const pillClasses =
   "inline-flex items-center rounded-full border border-border/60 bg-background px-3 py-1.5 text-[11px] text-muted-foreground transition hover:border-foreground/70 hover:text-foreground peer-checked:border-foreground peer-checked:bg-foreground peer-checked:text-background";
 
 function ClubPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="relative">
@@ -89,43 +93,104 @@ function ClubPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+            <div className="hidden items-center gap-3 md:flex">
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                <a href="/">home</a>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                <a href="/about.html">about</a>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                <a href="/club.html">club</a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
+              >
+                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                  <span aria-hidden="true" className="text-base leading-none">
+                    
+                  </span>
+                  download
+                </a>
+              </Button>
+            </div>
+            <button
+              type="button"
+              aria-label="toggle navigation"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-nav"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              className="inline-flex items-center justify-center rounded-full border border-border/60 p-2 text-muted-foreground transition hover:border-foreground/70 hover:text-foreground md:hidden"
             >
-              <a href="/">home</a>
-            </Button>
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
-            >
-              <a href="/about.html">about</a>
-            </Button>
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
-            >
-              <a href="/club.html">club</a>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="font-cta hidden rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20 md:inline-flex"
-            >
-              <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
-                <span aria-hidden="true" className="text-base leading-none">
-                  
-                </span>
-                download
-              </a>
-            </Button>
+              <span className="relative block h-3.5 w-5">
+                <span className="absolute left-0 top-0 h-0.5 w-full bg-current" />
+                <span className="absolute left-0 top-1.5 h-0.5 w-full bg-current" />
+                <span className="absolute left-0 top-3 h-0.5 w-full bg-current" />
+              </span>
+            </button>
+          </div>
+        </div>
+        <div id="mobile-nav" className={isMenuOpen ? "md:hidden" : "hidden md:hidden"}>
+          <div className="mx-auto w-full max-w-6xl px-6 pb-6">
+            <div className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-background/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <a href="/">home</a>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <a href="/about.html">about</a>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <a href="/club.html">club</a>
+              </Button>
+              <Button
+                asChild
+                size="sm"
+                className="font-cta w-full justify-center rounded-full px-5 text-[13px]"
+              >
+                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                  <span aria-hidden="true" className="text-base leading-none">
+                    
+                  </span>
+                  download
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
