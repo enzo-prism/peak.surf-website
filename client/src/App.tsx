@@ -88,7 +88,7 @@ function App() {
         <section className="mx-auto w-full max-w-6xl px-6 pb-24">
           <div className="flex items-end justify-between gap-6">
             <div>
-              <h2 className="font-display text-3xl md:text-4xl">everything that matters.</h2>
+              <h2 className="font-hero text-3xl md:text-4xl">everything that matters.</h2>
             </div>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -106,7 +106,7 @@ function App() {
 
         <section className="mx-auto w-full max-w-6xl px-6 pb-28">
           <div className="rounded-[40px] border border-white/15 bg-white/5 p-12 text-center">
-            <h2 className="mt-4 font-display text-3xl md:text-4xl">
+            <h2 className="mt-4 font-hero text-3xl md:text-4xl">
               download peak.
             </h2>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
