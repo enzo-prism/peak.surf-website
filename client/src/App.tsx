@@ -164,7 +164,11 @@ function App() {
       <header className="relative">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8">
           <div className="flex items-center gap-4">
-            <img src="/Transparent.png" alt="peak logo" className="h-8 w-auto" />
+            <img
+              src="/Transparent.png"
+              alt="peak logo"
+              className="h-8 w-auto transition-opacity hover:opacity-80"
+            />
             <div className="leading-tight">
               <p className="font-lower text-[11px] tracking-[0.35em] text-muted-foreground">
                 peak
