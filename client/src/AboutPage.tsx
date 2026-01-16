@@ -225,7 +225,7 @@ function AboutPage() {
       </main>
 
       <footer className="border-t border-border/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs tracking-[0.3em] text-muted-foreground md:flex-row">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
           <span>private surf log for ios</span>
         </div>

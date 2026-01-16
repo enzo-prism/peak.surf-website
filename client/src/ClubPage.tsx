@@ -428,7 +428,19 @@ function ClubPage() {
                     <Input name="spots" type="text" placeholder="favorite breaks" />
                   </label>
                   <label className="grid gap-2 text-xs text-muted-foreground md:col-span-2">
-                    referral / profile (for trust + safety)
+                    <span className="inline-flex items-center gap-2">
+                      referral / profile (for trust + safety)
+                      <button
+                        type="button"
+                        aria-label="trust and safety details"
+                        className="group relative inline-flex h-4 w-4 items-center justify-center rounded-full border border-border/70 text-[10px] text-muted-foreground/80"
+                      >
+                        ?
+                        <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-48 -translate-x-1/2 rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] text-muted-foreground opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+                          submit one of: referral name (best), public profile link, or intro video link.
+                        </span>
+                      </button>
+                    </span>
                     <Input
                       name="trust"
                       type="text"
@@ -457,7 +469,7 @@ function ClubPage() {
       </main>
 
       <footer className="border-t border-border/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs tracking-[0.3em] text-muted-foreground md:flex-row">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row font-lower">
           <span>peak surf journal</span>
           <span>bay area surf club</span>
         </div>
