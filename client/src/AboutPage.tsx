@@ -1,4 +1,3 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -186,17 +185,13 @@ function AboutPage() {
                 key={image.src}
                 className="group overflow-hidden border-border/60 bg-card/40 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
               >
-                <AspectRatio ratio={4 / 3} className="w-full">
-                  <div className="flex h-full w-full items-center justify-center bg-background/60 p-4">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="max-h-full max-w-full object-contain"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                </AspectRatio>
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-auto"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <CardContent className="p-4">
                   <p className="font-lower text-[11px] text-muted-foreground">
                     {image.label}
