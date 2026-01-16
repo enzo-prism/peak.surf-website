@@ -67,6 +67,9 @@ const scheduleTeaser = [
   "members-only lineup",
 ];
 
+const pillClasses =
+  "inline-flex items-center rounded-full border border-border/60 bg-background px-3 py-1.5 text-[11px] text-muted-foreground transition hover:border-foreground/70 hover:text-foreground peer-checked:border-foreground peer-checked:bg-foreground peer-checked:text-background";
+
 function ClubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -321,22 +324,105 @@ function ClubPage() {
                     your email
                     <Input name="email" type="email" placeholder="you@email.com" required />
                   </label>
-                  <label className="grid gap-2 text-xs text-muted-foreground">
-                    availability
-                    <Input
-                      name="availability"
-                      type="text"
-                      placeholder="weekdays early / weekends / flexible"
-                    />
-                  </label>
-                  <label className="grid gap-2 text-xs text-muted-foreground">
-                    transport
-                    <Input name="transport" type="text" placeholder="car / can carpool / need carpool" />
-                  </label>
-                  <label className="grid gap-2 text-xs text-muted-foreground">
-                    surf level
-                    <Input name="skill" type="text" placeholder="beginner / intermediate / advanced" />
-                  </label>
+                  <fieldset className="grid gap-2 text-xs text-muted-foreground">
+                    <legend>availability</legend>
+                    <div className="flex flex-wrap gap-2">
+                      <label className="cursor-pointer">
+                        <input
+                          name="availability"
+                          type="radio"
+                          value="weekdays early"
+                          className="peer sr-only"
+                          required
+                        />
+                        <span className={pillClasses}>weekdays early</span>
+                      </label>
+                      <label className="cursor-pointer">
+                        <input
+                          name="availability"
+                          type="radio"
+                          value="weekends"
+                          className="peer sr-only"
+                        />
+                        <span className={pillClasses}>weekends</span>
+                      </label>
+                      <label className="cursor-pointer">
+                        <input
+                          name="availability"
+                          type="radio"
+                          value="flexible"
+                          className="peer sr-only"
+                        />
+                        <span className={pillClasses}>flexible</span>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset className="grid gap-2 text-xs text-muted-foreground">
+                    <legend>transport</legend>
+                    <div className="flex flex-wrap gap-2">
+                      <label className="cursor-pointer">
+                        <input
+                          name="transport"
+                          type="radio"
+                          value="car"
+                          className="peer sr-only"
+                          required
+                        />
+                        <span className={pillClasses}>car</span>
+                      </label>
+                      <label className="cursor-pointer">
+                        <input
+                          name="transport"
+                          type="radio"
+                          value="can carpool"
+                          className="peer sr-only"
+                        />
+                        <span className={pillClasses}>can carpool</span>
+                      </label>
+                      <label className="cursor-pointer">
+                        <input
+                          name="transport"
+                          type="radio"
+                          value="need carpool"
+                          className="peer sr-only"
+                        />
+                        <span className={pillClasses}>need carpool</span>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset className="grid gap-2 text-xs text-muted-foreground">
+                    <legend>surf level</legend>
+                    <div className="flex flex-wrap gap-2">
+                      <label className="cursor-pointer">
+                        <input
+                          name="skill"
+                          type="radio"
+                          value="beginner"
+                          className="peer sr-only"
+                          required
+                        />
+                        <span className={pillClasses}>beginner</span>
+                      </label>
+                      <label className="cursor-pointer">
+                        <input
+                          name="skill"
+                          type="radio"
+                          value="intermediate"
+                          className="peer sr-only"
+                        />
+                        <span className={pillClasses}>intermediate</span>
+                      </label>
+                      <label className="cursor-pointer">
+                        <input
+                          name="skill"
+                          type="radio"
+                          value="advanced"
+                          className="peer sr-only"
+                        />
+                        <span className={pillClasses}>advanced</span>
+                      </label>
+                    </div>
+                  </fieldset>
                   <label className="grid gap-2 text-xs text-muted-foreground">
                     where do you usually surf
                     <Input name="spots" type="text" placeholder="favorite breaks" />
