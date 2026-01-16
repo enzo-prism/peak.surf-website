@@ -187,13 +187,15 @@ function AboutPage() {
                 className="group overflow-hidden border-border/60 bg-card/40 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
               >
                 <AspectRatio ratio={4 / 3} className="w-full">
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div className="flex h-full w-full items-center justify-center bg-background/60 p-4">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="max-h-full max-w-full object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                 </AspectRatio>
                 <CardContent className="p-4">
                   <p className="font-lower text-[11px] text-muted-foreground">
@@ -227,7 +229,7 @@ function AboutPage() {
       <footer className="border-t border-border/60">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
-          <span>private surf log for ios</span>
+          <span>premium surf log for ios</span>
         </div>
       </footer>
     </div>
