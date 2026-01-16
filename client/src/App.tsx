@@ -202,7 +202,7 @@ function App() {
         <section className="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-24 pt-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
             <h1 className="fade-up fade-delay-1 font-hero text-4xl leading-tight md:text-6xl">
-              track the session. keep the story.
+              designed by surfers. for surfers.
             </h1>
             <p className="fade-up fade-delay-2 text-lg text-muted-foreground">
               private surf log for sessions, gear, and breaks. offline on your iphone.
