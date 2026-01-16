@@ -206,9 +206,9 @@ function App() {
               <span className="block">for surfers.</span>
             </h1>
             <p className="fade-up fade-delay-2 text-lg text-muted-foreground">
-              private surf log for sessions, gear, and breaks. offline on your iphone.
+              capture all your peak surfing experiences. easily track sessions, spots, gear usage, and who you surf with.
             </p>
-            <div className="fade-up fade-delay-3 flex flex-col gap-4 sm:flex-row">
+            <div className="fade-up fade-delay-3 flex flex-col items-start gap-3">
               <Button
                 asChild
                 size="lg"
@@ -221,6 +221,18 @@ function App() {
                   download on the app store
                 </a>
               </Button>
+              <p className="text-xs text-muted-foreground">
+                engineered for apple devices by{" "}
+                <a
+                  href="https://www.design-prism.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-foreground underline underline-offset-4 transition hover:text-muted-foreground"
+                >
+                  prism
+                </a>{" "}
+                in silicon valley
+              </p>
             </div>
           </div>
 
