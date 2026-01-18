@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -69,11 +69,72 @@ const scheduleTeaser = [
   "members-only lineup",
 ];
 
+const successHighlights = [
+  {
+    title: "review window",
+    detail: "applications are reviewed weekly.",
+  },
+  {
+    title: "invite",
+    detail: "if it feels like a fit, you'll get a paddle-out invite.",
+  },
+  {
+    title: "next steps",
+    detail: "keep an eye on your email for the follow-up.",
+  },
+];
+
 const pillClasses =
   "inline-flex items-center rounded-full border border-border/60 bg-background px-3 py-1.5 text-[11px] text-muted-foreground transition hover:border-foreground/70 hover:text-foreground peer-checked:border-foreground peer-checked:bg-foreground peer-checked:text-background";
 
 function ClubPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [submissionState, setSubmissionState] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const isSubmitting = submissionState === "submitting";
+  const isSuccess = submissionState === "success";
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submissionState === "submitting") {
+      return;
+    }
+
+    setSubmissionState("submitting");
+    setErrorMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/mqeeeeyz", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setSubmissionState("success");
+        form.reset();
+        return;
+      }
+
+      const data = await response.json().catch(() => null);
+      const message =
+        data?.errors?.map((error: { message: string }) => error.message).join(", ") ??
+        "something went wrong. please try again.";
+      setErrorMessage(message);
+      setSubmissionState("error");
+    } catch (error) {
+      setErrorMessage("something went wrong. please try again.");
+      setSubmissionState("error");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -369,165 +430,240 @@ function ClubPage() {
         <section id="apply" className="mx-auto w-full max-w-6xl px-6 pb-24">
           <Card className="border-border/60 bg-card/40">
             <CardHeader className="space-y-2">
-              <CardTitle className="font-hero text-2xl md:text-3xl">apply</CardTitle>
+              <CardTitle className="font-hero text-2xl md:text-3xl">
+                {isSuccess ? "application received." : "apply"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                applications reviewed weekly. if it's a fit, we'll reach out with an invite.
-              </p>
-              <form
-                action="https://formspree.io/f/mqeeeeyz"
-                method="POST"
-                className="mt-6 grid gap-4"
-              >
-                <div className="grid gap-4 md:grid-cols-2">
-                  <label className="grid gap-2 text-xs text-muted-foreground">
-                    your name
-                    <Input name="name" type="text" placeholder="full name" required />
-                  </label>
-                  <label className="grid gap-2 text-xs text-muted-foreground">
-                    your email
-                    <Input name="email" type="email" placeholder="you@email.com" required />
-                  </label>
-                  <fieldset className="grid gap-2 text-xs text-muted-foreground">
-                    <legend>availability</legend>
-                    <div className="flex flex-wrap gap-2">
-                      <label className="cursor-pointer">
-                        <input
-                          name="availability"
-                          type="radio"
-                          value="weekdays early"
-                          className="peer sr-only"
-                          required
-                        />
-                        <span className={pillClasses}>weekdays early</span>
-                      </label>
-                      <label className="cursor-pointer">
-                        <input
-                          name="availability"
-                          type="radio"
-                          value="weekends"
-                          className="peer sr-only"
-                        />
-                        <span className={pillClasses}>weekends</span>
-                      </label>
-                      <label className="cursor-pointer">
-                        <input
-                          name="availability"
-                          type="radio"
-                          value="flexible"
-                          className="peer sr-only"
-                        />
-                        <span className={pillClasses}>flexible</span>
-                      </label>
+              {isSuccess ? (
+                <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-background/30 px-6 py-8 md:px-10">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),_transparent_60%)]" />
+                  <div className="relative space-y-6">
+                    <Badge
+                      variant="outline"
+                      className="font-lower border-border/60 text-[11px] text-muted-foreground"
+                    >
+                      application sent
+                    </Badge>
+                    <div className="space-y-3">
+                      <h3 className="font-hero text-3xl leading-tight md:text-4xl">
+                        you're on the review list.
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        we read every submission. if it's a fit, we'll reach out with a
+                        paddle-out invite.
+                      </p>
                     </div>
-                  </fieldset>
-                  <fieldset className="grid gap-2 text-xs text-muted-foreground">
-                    <legend>transport</legend>
-                    <div className="flex flex-wrap gap-2">
-                      <label className="cursor-pointer">
-                        <input
-                          name="transport"
-                          type="radio"
-                          value="car"
-                          className="peer sr-only"
-                          required
-                        />
-                        <span className={pillClasses}>car</span>
-                      </label>
-                      <label className="cursor-pointer">
-                        <input
-                          name="transport"
-                          type="radio"
-                          value="can carpool"
-                          className="peer sr-only"
-                        />
-                        <span className={pillClasses}>can carpool</span>
-                      </label>
-                      <label className="cursor-pointer">
-                        <input
-                          name="transport"
-                          type="radio"
-                          value="need carpool"
-                          className="peer sr-only"
-                        />
-                        <span className={pillClasses}>need carpool</span>
-                      </label>
+                    <div className="grid gap-3 md:grid-cols-3">
+                      {successHighlights.map((item) => (
+                        <div
+                          key={item.title}
+                          className="rounded-2xl border border-border/60 bg-card/40 p-4"
+                        >
+                          <p className="font-lower text-[11px] text-muted-foreground">
+                            {item.title}
+                          </p>
+                          <p className="mt-2 text-sm text-foreground/90">{item.detail}</p>
+                        </div>
+                      ))}
                     </div>
-                  </fieldset>
-                  <fieldset className="grid gap-2 text-xs text-muted-foreground">
-                    <legend>surf level</legend>
-                    <div className="flex flex-wrap gap-2">
-                      <label className="cursor-pointer">
-                        <input
-                          name="skill"
-                          type="radio"
-                          value="beginner"
-                          className="peer sr-only"
-                          required
-                        />
-                        <span className={pillClasses}>beginner</span>
-                      </label>
-                      <label className="cursor-pointer">
-                        <input
-                          name="skill"
-                          type="radio"
-                          value="intermediate"
-                          className="peer sr-only"
-                        />
-                        <span className={pillClasses}>intermediate</span>
-                      </label>
-                      <label className="cursor-pointer">
-                        <input
-                          name="skill"
-                          type="radio"
-                          value="advanced"
-                          className="peer sr-only"
-                        />
-                        <span className={pillClasses}>advanced</span>
-                      </label>
-                    </div>
-                  </fieldset>
-                  <label className="grid gap-2 text-xs text-muted-foreground">
-                    where do you usually surf
-                    <Input name="spots" type="text" placeholder="favorite breaks" />
-                  </label>
-                  <label className="grid gap-2 text-xs text-muted-foreground md:col-span-2">
-                    <span className="inline-flex items-center gap-2">
-                      referral / profile (for trust + safety)
-                      <button
-                        type="button"
-                        aria-label="trust and safety details"
-                        className="group relative inline-flex h-4 w-4 items-center justify-center rounded-full border border-border/70 text-[10px] text-muted-foreground/80"
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button
+                        asChild
+                        size="sm"
+                        className="font-cta rounded-full px-5 text-[12px]"
                       >
-                        ?
-                        <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-48 -translate-x-1/2 rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] text-muted-foreground opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
-                          submit one of: referral name (best), public profile link, or intro video link.
-                        </span>
-                      </button>
-                    </span>
-                    <Input
-                      name="trust"
-                      type="text"
-                      placeholder="instagram link / referral name / intro video link"
-                    />
-                  </label>
+                        <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                          <span aria-hidden="true" className="text-base leading-none">
+                            
+                          </span>
+                          download
+                        </a>
+                      </Button>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="font-cta rounded-full px-5 text-[12px] text-muted-foreground hover:text-foreground"
+                      >
+                        <a href="/">back home</a>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <label className="grid gap-2 text-xs text-muted-foreground">
-                  message
-                  <Textarea
-                    name="message"
-                    placeholder="tell us about your surfing and why you want to join"
-                    rows={4}
-                  />
-                </label>
-                <p className="text-xs text-muted-foreground">
-                  we use this only to review membership. no spam. no public member list.
-                </p>
-                <Button type="submit" size="lg" className="font-cta rounded-full px-7 text-[13px]">
-                  send application
-                </Button>
-              </form>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    applications reviewed weekly. if it's a fit, we'll reach out with an
+                    invite.
+                  </p>
+                  <form
+                    action="https://formspree.io/f/mqeeeeyz"
+                    method="POST"
+                    onSubmit={handleSubmit}
+                    className="mt-6 grid gap-4"
+                  >
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <label className="grid gap-2 text-xs text-muted-foreground">
+                        your name
+                        <Input name="name" type="text" placeholder="full name" required />
+                      </label>
+                      <label className="grid gap-2 text-xs text-muted-foreground">
+                        your email
+                        <Input name="email" type="email" placeholder="you@email.com" required />
+                      </label>
+                      <fieldset className="grid gap-2 text-xs text-muted-foreground">
+                        <legend>availability</legend>
+                        <div className="flex flex-wrap gap-2">
+                          <label className="cursor-pointer">
+                            <input
+                              name="availability"
+                              type="radio"
+                              value="weekdays early"
+                              className="peer sr-only"
+                              required
+                            />
+                            <span className={pillClasses}>weekdays early</span>
+                          </label>
+                          <label className="cursor-pointer">
+                            <input
+                              name="availability"
+                              type="radio"
+                              value="weekends"
+                              className="peer sr-only"
+                            />
+                            <span className={pillClasses}>weekends</span>
+                          </label>
+                          <label className="cursor-pointer">
+                            <input
+                              name="availability"
+                              type="radio"
+                              value="flexible"
+                              className="peer sr-only"
+                            />
+                            <span className={pillClasses}>flexible</span>
+                          </label>
+                        </div>
+                      </fieldset>
+                      <fieldset className="grid gap-2 text-xs text-muted-foreground">
+                        <legend>transport</legend>
+                        <div className="flex flex-wrap gap-2">
+                          <label className="cursor-pointer">
+                            <input
+                              name="transport"
+                              type="radio"
+                              value="car"
+                              className="peer sr-only"
+                              required
+                            />
+                            <span className={pillClasses}>car</span>
+                          </label>
+                          <label className="cursor-pointer">
+                            <input
+                              name="transport"
+                              type="radio"
+                              value="can carpool"
+                              className="peer sr-only"
+                            />
+                            <span className={pillClasses}>can carpool</span>
+                          </label>
+                          <label className="cursor-pointer">
+                            <input
+                              name="transport"
+                              type="radio"
+                              value="need carpool"
+                              className="peer sr-only"
+                            />
+                            <span className={pillClasses}>need carpool</span>
+                          </label>
+                        </div>
+                      </fieldset>
+                      <fieldset className="grid gap-2 text-xs text-muted-foreground">
+                        <legend>surf level</legend>
+                        <div className="flex flex-wrap gap-2">
+                          <label className="cursor-pointer">
+                            <input
+                              name="skill"
+                              type="radio"
+                              value="beginner"
+                              className="peer sr-only"
+                              required
+                            />
+                            <span className={pillClasses}>beginner</span>
+                          </label>
+                          <label className="cursor-pointer">
+                            <input
+                              name="skill"
+                              type="radio"
+                              value="intermediate"
+                              className="peer sr-only"
+                            />
+                            <span className={pillClasses}>intermediate</span>
+                          </label>
+                          <label className="cursor-pointer">
+                            <input
+                              name="skill"
+                              type="radio"
+                              value="advanced"
+                              className="peer sr-only"
+                            />
+                            <span className={pillClasses}>advanced</span>
+                          </label>
+                        </div>
+                      </fieldset>
+                      <label className="grid gap-2 text-xs text-muted-foreground">
+                        where do you usually surf
+                        <Input name="spots" type="text" placeholder="favorite breaks" />
+                      </label>
+                      <label className="grid gap-2 text-xs text-muted-foreground md:col-span-2">
+                        <span className="inline-flex items-center gap-2">
+                          referral / profile (for trust + safety)
+                          <button
+                            type="button"
+                            aria-label="trust and safety details"
+                            className="group relative inline-flex h-4 w-4 items-center justify-center rounded-full border border-border/70 text-[10px] text-muted-foreground/80"
+                          >
+                            ?
+                            <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-48 -translate-x-1/2 rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] text-muted-foreground opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+                              submit one of: referral name (best), public profile link, or
+                              intro video link.
+                            </span>
+                          </button>
+                        </span>
+                        <Input
+                          name="trust"
+                          type="text"
+                          placeholder="instagram link / referral name / intro video link"
+                        />
+                      </label>
+                    </div>
+                    <label className="grid gap-2 text-xs text-muted-foreground">
+                      message
+                      <Textarea
+                        name="message"
+                        placeholder="tell us about your surfing and why you want to join"
+                        rows={4}
+                      />
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                      we use this only to review membership. no spam. no public member list.
+                    </p>
+                    {submissionState === "error" ? (
+                      <p className="text-xs text-destructive" role="alert">
+                        {errorMessage}
+                      </p>
+                    ) : null}
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="font-cta rounded-full px-7 text-[13px]"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "sending..." : "send application"}
+                    </Button>
+                  </form>
+                </>
+              )}
             </CardContent>
           </Card>
         </section>
