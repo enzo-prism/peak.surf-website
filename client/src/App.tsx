@@ -159,6 +159,8 @@ const heroPrimary = heroImages[0];
 const heroStack = heroImages.slice(1);
 const ribbonImages = surfImages.slice(3, 12);
 const galleryImages = surfImages.slice(12);
+const appDemoVideo =
+  "https://res.cloudinary.com/dhqpqfw6w/video/upload/v1768795144/peak.surf_s0xq0o.mp4";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -353,6 +355,42 @@ function App() {
                 </Card>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-6 pb-24">
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+            >
+              app demo
+            </Badge>
+            <Separator className="flex-1 w-auto bg-border/60" />
+          </div>
+          <div className="mt-8 grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="space-y-4">
+              <h2 className="font-hero text-3xl md:text-4xl">designed for iPhone.</h2>
+              <p className="text-sm text-muted-foreground">
+                watch the peak workflow in action. fast logging, clean archives,
+                and a layout that feels native to iOS.
+              </p>
+            </div>
+            <Card className="group relative mx-auto w-full max-w-sm overflow-hidden border-border/60 bg-card/40 shadow-[0_35px_120px_rgba(0,0,0,0.6)]">
+              <AspectRatio ratio={9 / 19.5} className="w-full">
+                <video
+                  className="h-full w-full object-cover"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  aria-label="Peak iPhone app demo"
+                >
+                  <source src={appDemoVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </AspectRatio>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+            </Card>
           </div>
         </section>
 
