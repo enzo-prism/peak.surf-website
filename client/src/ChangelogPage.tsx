@@ -13,9 +13,51 @@ type CommitEntry = {
   sha: string;
   shortSha: string;
   message: string;
+  details: string;
   author: string;
   date: string | null;
   htmlUrl: string;
+};
+
+const commitTrailerPattern =
+  /^(co-authored-by|signed-off-by|reviewed-by|tested-by|changelog:|change-id:|refs:|relates-to:|fixes:|closes:|reviewed-on:|pull-request:)/i;
+const maxDetailsLength = 180;
+
+const formatCommitDetails = (rawMessage: string) => {
+  if (!rawMessage) {
+    return "";
+  }
+
+  const normalized = rawMessage.replace(/\r\n/g, "\n").trim();
+  const lines = normalized.split("\n");
+  lines.shift();
+
+  const body = lines.join("\n").trim();
+  if (!body) {
+    return "";
+  }
+
+  const paragraphs = body
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  for (const paragraph of paragraphs) {
+    const cleaned = paragraph
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .filter((line) => !commitTrailerPattern.test(line))
+      .join(" ");
+
+    if (cleaned) {
+      return cleaned.length > maxDetailsLength
+        ? `${cleaned.slice(0, maxDetailsLength - 1).trimEnd()}…`
+        : cleaned;
+    }
+  }
+
+  return "";
 };
 
 const formatDateTime = (dateString: string | null) => {
@@ -67,7 +109,9 @@ function ChangelogPage() {
         }
 
         const mapped = data.map((item) => {
-          const message = (item?.commit?.message ?? "").split("\n")[0]?.trim();
+          const rawMessage = (item?.commit?.message ?? "").trim();
+          const message = rawMessage.split("\n")[0]?.trim();
+          const details = formatCommitDetails(rawMessage);
           const author =
             item?.commit?.author?.name ??
             item?.commit?.committer?.name ??
@@ -83,6 +127,7 @@ function ChangelogPage() {
             sha,
             shortSha,
             message: message || "Update",
+            details,
             author,
             date,
             htmlUrl: item?.html_url ?? repoUrl,
@@ -271,7 +316,17 @@ function ChangelogPage() {
               className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
             >
               <a href={repoUrl} target="_blank" rel="noreferrer">
-                view on GitHub
+                <span className="inline-flex items-center gap-2">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    className="h-3.5 w-3.5 text-foreground/70"
+                    fill="currentColor"
+                  >
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+                  </svg>
+                  view on GitHub
+                </span>
               </a>
             </Button>
           </div>
@@ -298,6 +353,11 @@ function ChangelogPage() {
                     <CardTitle className="text-lg md:text-xl">
                       {commit.message}
                     </CardTitle>
+                    {commit.details && (
+                      <p className="text-sm leading-relaxed text-muted-foreground/90">
+                        {commit.details}
+                      </p>
+                    )}
                     <CardDescription className="text-sm text-muted-foreground">
                       {commit.author} · {formatDateTime(commit.date)}
                     </CardDescription>
