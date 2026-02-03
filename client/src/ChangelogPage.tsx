@@ -1,66 +1,111 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-const timeline = [
-  {
-    year: "2022",
-    detail: "started as a senior project at cal poly san luis obispo.",
-  },
-  {
-    year: "2025",
-    detail: "became a web app.",
-  },
-  {
-    year: "2026",
-    detail: "released the ios app.",
-  },
-];
+const repoUrl = "https://github.com/enzo-prism/peak-ios";
+const commitsApiUrl =
+  "https://api.github.com/repos/enzo-prism/peak-ios/commits?sha=main&per_page=20";
 
-const projectImages = [
-  {
-    src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/v1768584748/Frame_9_yra6b9.webp",
-    alt: "senior project board.",
-    label: "senior project (2022)",
-  },
-  {
-    src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/v1768584748/Frame_8_npiaty.webp",
-    alt: "initial backend architecture diagram 01.",
-    label: "backend architecture",
-  },
-  {
-    src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/v1768584746/Frame_7_owtjqy.webp",
-    alt: "initial backend architecture diagram 02.",
-    label: "backend architecture",
-  },
-  {
-    src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/v1768584754/Frame_13_jkc6yo.webp",
-    alt: "early logo explorations.",
-    label: "early logo concepts",
-  },
-  {
-    src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/v1768584750/Frame_6_x212si.webp",
-    alt: "early ui and ux concept 01.",
-    label: "early ui + ux concepts",
-  },
-  {
-    src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/v1768584750/Frame_5_drfacf.webp",
-    alt: "early ui and ux concept 02.",
-    label: "early ui + ux concepts",
-  },
-];
+type CommitEntry = {
+  sha: string;
+  shortSha: string;
+  message: string;
+  author: string;
+  date: string | null;
+  htmlUrl: string;
+};
 
-function AboutPage() {
+const formatDateTime = (dateString: string | null) => {
+  if (!dateString) {
+    return "Date unavailable";
+  }
+
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return "Date unavailable";
+  }
+
+  const datePart = date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+  const timePart = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  return `${datePart} · ${timePart}`;
+};
+
+function ChangelogPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [commits, setCommits] = useState<CommitEntry[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCommits = async () => {
+      try {
+        const response = await fetch(commitsApiUrl, {
+          headers: {
+            Accept: "application/vnd.github+json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`GitHub API error: ${response.status}`);
+        }
+
+        const data = (await response.json()) as Array<Record<string, any>>;
+        if (!Array.isArray(data)) {
+          throw new Error("Unexpected response format");
+        }
+
+        const mapped = data.map((item) => {
+          const message = (item?.commit?.message ?? "").split("\n")[0]?.trim();
+          const author =
+            item?.commit?.author?.name ??
+            item?.commit?.committer?.name ??
+            "Unknown";
+          const date =
+            item?.commit?.author?.date ??
+            item?.commit?.committer?.date ??
+            null;
+          const sha = item?.sha ?? "";
+          const shortSha = sha ? sha.slice(0, 7) : "";
+
+          return {
+            sha,
+            shortSha,
+            message: message || "Update",
+            author,
+            date,
+            htmlUrl: item?.html_url ?? repoUrl,
+          } satisfies CommitEntry;
+        });
+
+        if (isMounted) {
+          setCommits(mapped);
+          setStatus("success");
+        }
+      } catch (error) {
+        if (isMounted) {
+          setStatus("error");
+        }
+      }
+    };
+
+    loadCommits();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -206,111 +251,79 @@ function AboutPage() {
               variant="outline"
               className="font-lower border-border/60 text-[11px] text-muted-foreground"
             >
-              about peak
+              changelog
             </Badge>
             <Separator className="flex-1 w-auto bg-border/60" />
           </div>
-          <div className="mt-6 max-w-3xl">
-            <h1 className="font-hero text-4xl leading-tight md:text-5xl">
-              a senior project turned surf journal.
-            </h1>
-            <p className="mt-6 text-sm text-muted-foreground">
-              peak started in 2022 as a senior project at cal poly san luis obispo.
-              enzo created it and spent his last two years at cal poly refining the work.
-            </p>
-            <p className="mt-4 text-sm text-muted-foreground">
-              while working at apple, he partnered with a program manager, product marketing
-              managers, and product designers to elevate the peak app design and concept.
-            </p>
-            <p className="mt-4 text-sm text-muted-foreground">
-              it became a web app in 2025, released the ios app in 2026, and we are excited for the
-              future of peak.
-            </p>
+          <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl space-y-4">
+              <h1 className="font-hero text-4xl leading-tight md:text-5xl">
+                product updates from the peak iOS build.
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Latest 20 commits to main. straight from GitHub.
+              </p>
+            </div>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
+            >
+              <a href={repoUrl} target="_blank" rel="noreferrer">
+                view on GitHub
+              </a>
+            </Button>
           </div>
-        </section>
 
-        <section className="mx-auto w-full max-w-6xl px-6 pb-20">
-          <Card className="border-border/60 bg-card/40">
-            <CardHeader className="space-y-2">
-              <CardTitle className="font-hero text-2xl md:text-3xl">timeline</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-3">
-              {timeline.map((item) => (
-                <Card key={item.year} className="border-border/60 bg-background/40">
-                  <CardHeader className="space-y-2 p-4">
-                    <CardTitle className="text-base font-semibold text-foreground">
-                      {item.year}
+          <div className="mt-10 space-y-4">
+            {status === "loading" && (
+              <p className="text-sm text-muted-foreground">Loading latest updates…</p>
+            )}
+            {status === "error" && (
+              <p className="text-sm text-muted-foreground">
+                Unable to load updates. Try again in a bit.
+              </p>
+            )}
+            {status === "success" && commits.length === 0 && (
+              <p className="text-sm text-muted-foreground">No updates yet.</p>
+            )}
+            {status === "success" &&
+              commits.map((commit) => (
+                <Card
+                  key={commit.sha}
+                  className="border-border/60 bg-card/40 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
+                >
+                  <CardHeader className="space-y-2">
+                    <CardTitle className="text-lg md:text-xl">
+                      {commit.message}
                     </CardTitle>
                     <CardDescription className="text-sm text-muted-foreground">
-                      {item.detail}
+                      {commit.author} · {formatDateTime(commit.date)}
                     </CardDescription>
                   </CardHeader>
+                  <CardContent className="flex flex-wrap items-center justify-between gap-3">
+                    <span className="rounded-full border border-border/60 px-3 py-1 font-lower text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                      {commit.shortSha || "unknown"}
+                    </span>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+                    >
+                      <a href={commit.htmlUrl} target="_blank" rel="noreferrer">
+                        view commit
+                      </a>
+                    </Button>
+                  </CardContent>
                 </Card>
               ))}
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="mx-auto w-full max-w-6xl px-6 pb-24">
-          <div className="flex items-center gap-3">
-            <Badge
-              variant="outline"
-              className="font-lower border-border/60 text-[11px] text-muted-foreground"
-            >
-              project archive
-            </Badge>
-            <Separator className="flex-1 w-auto bg-border/60" />
           </div>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {projectImages.map((image) => (
-              <Card
-                key={image.src}
-                className="group overflow-hidden border-border/60 bg-card/40 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-auto"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <CardContent className="p-4">
-                  <p className="font-lower text-[11px] text-muted-foreground">
-                    {image.label}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto w-full max-w-6xl px-6 pb-28">
-          <Card className="border-border/60 bg-card/40">
-            <CardContent className="flex flex-col items-center gap-6 p-10 text-center md:p-12">
-              <h2 className="font-hero text-3xl md:text-4xl">
-                excited for the future of peak.
-              </h2>
-              <Button asChild size="lg" className="font-cta rounded-full px-8 text-[13px]">
-                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
-                  <span aria-hidden="true" className="text-base leading-none">
-                    
-                  </span>
-                  download app
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
         </section>
       </main>
-
-      <footer className="border-t border-border/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
-          <span>peak surf journal</span>
-          <span>premium surf log for ios</span>
-        </div>
-      </footer>
     </div>
   );
 }
 
-export default AboutPage;
+export default ChangelogPage;

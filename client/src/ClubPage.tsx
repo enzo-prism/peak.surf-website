@@ -181,6 +181,14 @@ function ClubPage() {
               </Button>
               <Button
                 asChild
+                variant="ghost"
+                size="sm"
+                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                <a href="/changelog.html">changelog</a>
+              </Button>
+              <Button
+                asChild
                 variant="outline"
                 size="sm"
                 className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
@@ -238,6 +246,15 @@ function ClubPage() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <a href="/club.html">club</a>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <a href="/changelog.html">changelog</a>
               </Button>
               <Button
                 asChild
