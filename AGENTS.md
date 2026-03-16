@@ -12,7 +12,7 @@ Peak Surf website is now a static marketing site for the Peak iOS app. It is a V
 ## Dev commands
 - `npm install`
 - `npm run dev` (Vite dev server on port 5000)
-- `npm run build` (static build output to `dist/public`)
+- `npm run build` (static build output to `dist`)
 - `npm run preview` (local preview of the static build)
 - `npm run check` (TypeScript typecheck)
 

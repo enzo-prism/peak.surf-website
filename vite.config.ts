@@ -20,7 +20,9 @@ export default defineConfig({
     host: true,
   },
   build: {
-    outDir: path.resolve(__dirname, "dist/public"),
+    // Keep the build output in the conventional dist/ directory so Vercel
+    // and local tooling agree on where the static site is emitted.
+    outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
     rollupOptions: {
       input: {
