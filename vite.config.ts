@@ -28,7 +28,6 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, "client", "index.html"),
         about: path.resolve(__dirname, "client", "about.html"),
-        club: path.resolve(__dirname, "client", "club.html"),
         changelog: path.resolve(__dirname, "client", "changelog.html"),
       },
     },

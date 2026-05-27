@@ -193,14 +193,6 @@ function ChangelogPage() {
                 size="sm"
                 className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
               >
-                <a href="/club.html">club</a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
-              >
                 <a href="/changelog.html">changelog</a>
               </Button>
               <Button
@@ -253,15 +245,6 @@ function ChangelogPage() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <a href="/about.html">about</a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <a href="/club.html">club</a>
               </Button>
               <Button
                 asChild

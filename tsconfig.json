@@ -4,8 +4,8 @@
     "client/src/main.tsx",
     "client/src/AboutPage.tsx",
     "client/src/about.tsx",
-    "client/src/ClubPage.tsx",
-    "client/src/club.tsx"
+    "client/src/ChangelogPage.tsx",
+    "client/src/changelog.tsx"
   ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
