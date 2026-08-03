@@ -1,11 +1,21 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 
 import SupportPage from "./SupportPage";
 import "./index.css";
 
-createRoot(document.getElementById("root")!).render(
+const container = document.getElementById("root")!;
+const tree = (
   <StrictMode>
     <SupportPage />
-  </StrictMode>,
+  </StrictMode>
 );
+
+// dist/*.html is prerendered by scripts/prerender.mjs, so the normal path is a
+// hydrate. The createRoot branch keeps `vite dev` (which serves the empty shell)
+// working.
+if (container.firstChild) {
+  hydrateRoot(container, tree);
+} else {
+  createRoot(container).render(tree);
+}

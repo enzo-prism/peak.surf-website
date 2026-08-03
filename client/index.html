@@ -46,25 +46,66 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Peak Surf",
-        "alternateName": "Peak",
-        "description": "A private surf journal for logging sessions, tracking boards, and understanding your surfing.",
-        "applicationCategory": "SportsApplication",
-        "applicationSubCategory": "Surfing",
-        "operatingSystem": "iOS",
-        "softwareVersion": "3.2",
-        "url": "https://www.peaksurf.club/",
-        "downloadUrl": "https://apps.apple.com/us/app/peak-surf/id6757644027",
-        "image": "https://www.peaksurf.club/opengraph.png",
-        "sameAs": [
-          "https://apps.apple.com/us/app/peak-surf/id6757644027"
-        ],
-        "publisher": {
-          "@type": "Organization",
-          "name": "Peak Surf",
-          "url": "https://www.peaksurf.club/"
-        }
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://www.peaksurf.club/#app",
+            "name": "Peak Surf",
+            "alternateName": "Peak",
+            "description": "A private surf journal for logging sessions, tracking boards, and understanding your surfing.",
+            "applicationCategory": "SportsApplication",
+            "applicationSubCategory": "Surfing",
+            "operatingSystem": "iOS 17.0 or later",
+            "softwareVersion": "3.2",
+            "url": "https://www.peaksurf.club/",
+            "downloadUrl": "https://apps.apple.com/us/app/peak-surf/id6757644027",
+            "installUrl": "https://apps.apple.com/us/app/peak-surf/id6757644027",
+            "image": "https://www.peaksurf.club/opengraph.png",
+            "screenshot": [
+              "https://www.peaksurf.club/app-screens/log.png",
+              "https://www.peaksurf.club/app-screens/history.png",
+              "https://www.peaksurf.club/app-screens/session-detail.png",
+              "https://www.peaksurf.club/app-screens/stats.png",
+              "https://www.peaksurf.club/app-screens/quiver.png",
+              "https://www.peaksurf.club/app-screens/year-in-review.png"
+            ],
+            "featureList": [
+              "Best Window Today surf timing from your own rated sessions",
+              "Start a session from Siri, Control Center, or the Lock Screen",
+              "Live Activity and Dynamic Island session tracking",
+              "Home Screen widgets",
+              "Wave count, speed, and distance from Apple Health workout routes",
+              "Quiver tracking for boards, wetsuits, and fins",
+              "Searchable session history and Year in Review",
+              "Offline and on-device, with no account required"
+            ],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock"
+            },
+            "sameAs": ["https://apps.apple.com/us/app/peak-surf/id6757644027"],
+            "publisher": { "@id": "https://www.peaksurf.club/#org" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://www.peaksurf.club/#org",
+            "name": "Peak Surf",
+            "url": "https://www.peaksurf.club/",
+            "logo": "https://www.peaksurf.club/opengraph.png",
+            "email": "enzo@design-prism.com",
+            "sameAs": ["https://www.design-prism.com"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.peaksurf.club/#website",
+            "name": "Peak Surf",
+            "url": "https://www.peaksurf.club/",
+            "inLanguage": "en-US",
+            "publisher": { "@id": "https://www.peaksurf.club/#org" }
+          }
+        ]
       }
     </script>
     <!-- Google tag (gtag.js) -->

@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 
 const appStoreUrl = "https://apps.apple.com/us/app/peak-surf/id6757644027";
-const supportEmail = "support@prism.app";
+const supportEmail = "enzo@design-prism.com";
 
 const privacySections = [
   {
@@ -279,7 +279,10 @@ function PrivacyPage() {
       <footer className="border-t border-border/60">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
-          <nav aria-label="Footer navigation" className="flex items-center gap-5">
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <a className="inline-flex items-center hover:text-foreground" href="/">home</a>
+            <a className="inline-flex items-center hover:text-foreground" href="/about.html">about</a>
+            <a className="inline-flex items-center hover:text-foreground" href="/changelog.html">changelog</a>
             <a className="inline-flex items-center hover:text-foreground" href="/privacy.html">privacy</a>
             <a className="inline-flex items-center hover:text-foreground" href="/support.html">support</a>
           </nav>

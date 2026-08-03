@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 
 const appStoreUrl = "https://apps.apple.com/us/app/peak-surf/id6757644027";
-const supportEmail = "support@prism.app";
+const supportEmail = "enzo@design-prism.com";
 
 function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -138,8 +138,22 @@ function SupportPage() {
               Need help or want to share feedback? Send us an email and include
               the details below so we can respond quickly.
             </p>
-            <Button asChild size="lg" className="font-cta mt-8 rounded-full px-8 text-[13px]">
-              <a href={`mailto:${supportEmail}`}>email {supportEmail}</a>
+            {/*
+              The button base class is whitespace-nowrap, and the full address is
+              wider than a 320px viewport can hold. Allow the label to wrap and
+              keep the address on its own line so the pill stays inside the page.
+            */}
+            <Button
+              asChild
+              size="lg"
+              className="font-cta mt-8 h-auto min-h-11 whitespace-normal rounded-3xl px-5 py-3 text-[13px] sm:rounded-full sm:px-8"
+            >
+              <a href={`mailto:${supportEmail}`} className="text-center">
+                <span className="block sm:inline">email</span>
+                <span className="block break-words sm:inline sm:ps-1">
+                  {supportEmail}
+                </span>
+              </a>
             </Button>
           </div>
         </section>
@@ -192,7 +206,10 @@ function SupportPage() {
       <footer className="border-t border-border/60">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
-          <nav aria-label="Footer navigation" className="flex items-center gap-5">
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <a className="inline-flex items-center hover:text-foreground" href="/">home</a>
+            <a className="inline-flex items-center hover:text-foreground" href="/about.html">about</a>
+            <a className="inline-flex items-center hover:text-foreground" href="/changelog.html">changelog</a>
             <a className="inline-flex items-center hover:text-foreground" href="/privacy.html">privacy</a>
             <a className="inline-flex items-center hover:text-foreground" href="/support.html">support</a>
           </nav>
