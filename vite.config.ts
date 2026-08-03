@@ -29,6 +29,8 @@ export default defineConfig({
         main: path.resolve(__dirname, "client", "index.html"),
         about: path.resolve(__dirname, "client", "about.html"),
         changelog: path.resolve(__dirname, "client", "changelog.html"),
+        privacy: path.resolve(__dirname, "client", "privacy.html"),
+        support: path.resolve(__dirname, "client", "support.html"),
       },
     },
   },

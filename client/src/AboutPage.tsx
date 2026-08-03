@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import AppleLogo from "@/components/AppleLogo";
 
 const timeline = [
   {
@@ -61,9 +62,32 @@ const projectImages = [
 
 function AboutPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    firstMobileLinkRef.current?.focus();
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isMenuOpen]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only z-50 rounded-md bg-foreground px-4 py-2 text-background focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to content
+      </a>
       <header className="relative">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8">
           <div className="flex items-center gap-4">
@@ -76,11 +100,11 @@ function AboutPage() {
               <p className="font-lower text-[11px] tracking-[0.35em] text-muted-foreground">
                 peak
               </p>
-              <p className="text-sm text-muted-foreground">premium surf journal</p>
+              <p className="text-sm text-muted-foreground">private surf journal</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-3 md:flex">
+            <nav aria-label="Main navigation" className="hidden items-center gap-3 md:flex">
               <Button
                 asChild
                 variant="ghost"
@@ -112,20 +136,19 @@ function AboutPage() {
                 className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
               >
                 <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
-                  <span aria-hidden="true" className="text-base leading-none">
-                    
-                  </span>
+                  <AppleLogo className="text-base" />
                   download
                 </a>
               </Button>
-            </div>
+            </nav>
             <button
+              ref={menuButtonRef}
               type="button"
               aria-label="toggle navigation"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
               onClick={() => setIsMenuOpen((open) => !open)}
-              className="inline-flex items-center justify-center rounded-full border border-border/60 p-2 text-muted-foreground transition hover:border-foreground/70 hover:text-foreground md:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:border-foreground/70 hover:text-foreground md:hidden"
             >
               <span className="relative block h-3.5 w-5">
                 <span className="absolute left-0 top-0 h-0.5 w-full bg-current" />
@@ -135,7 +158,11 @@ function AboutPage() {
             </button>
           </div>
         </div>
-        <div id="mobile-nav" className={isMenuOpen ? "md:hidden" : "hidden md:hidden"}>
+        <nav
+          id="mobile-nav"
+          aria-label="Mobile navigation"
+          className={isMenuOpen ? "md:hidden" : "hidden md:hidden"}
+        >
           <div className="mx-auto w-full max-w-6xl px-6 pb-6">
             <div className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-background/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
               <Button
@@ -145,7 +172,7 @@ function AboutPage() {
                 className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <a href="/">home</a>
+                <a ref={firstMobileLinkRef} href="/">home</a>
               </Button>
               <Button
                 asChild
@@ -171,18 +198,16 @@ function AboutPage() {
                 className="font-cta w-full justify-center rounded-full px-5 text-[13px]"
               >
                 <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
-                  <span aria-hidden="true" className="text-base leading-none">
-                    
-                  </span>
+                  <AppleLogo className="text-base" />
                   download
                 </a>
               </Button>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
 
-      <main className="relative">
+      <main id="main-content" tabIndex={-1} className="relative">
         <section className="mx-auto w-full max-w-6xl px-6 pb-16 pt-12">
           <div className="flex items-center gap-3">
             <Badge
@@ -275,9 +300,7 @@ function AboutPage() {
               </h2>
               <Button asChild size="lg" className="font-cta rounded-full px-8 text-[13px]">
                 <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
-                  <span aria-hidden="true" className="text-base leading-none">
-                    
-                  </span>
+                  <AppleLogo className="text-base" />
                   download app
                 </a>
               </Button>
@@ -289,7 +312,11 @@ function AboutPage() {
       <footer className="border-t border-border/60">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
           <span>peak surf journal</span>
-          <span>premium surf log for ios</span>
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-5">
+            <a className="inline-flex items-center hover:text-foreground" href="/privacy.html">privacy</a>
+            <a className="inline-flex items-center hover:text-foreground" href="/support.html">support</a>
+            <a className="inline-flex items-center hover:text-foreground" href="/changelog.html">changelog</a>
+          </nav>
         </div>
       </footer>
     </div>
