@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
+import AppStoreLink from "@/components/AppStoreLink";
 
 const repoUrl = "https://github.com/enzo-prism/peak-ios";
 const commitsApiUrl =
@@ -225,10 +226,10 @@ function ChangelogPage() {
                 size="sm"
                 className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
               >
-                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                <AppStoreLink location="changelog_header">
                   <AppleLogo className="text-base" />
                   download
-                </a>
+                </AppStoreLink>
               </Button>
             </nav>
             <button
@@ -287,10 +288,10 @@ function ChangelogPage() {
                 size="sm"
                 className="font-cta w-full justify-center rounded-full px-5 text-[13px]"
               >
-                <a href="https://apps.apple.com/us/app/peak-surf/id6757644027">
+                <AppStoreLink location="changelog_mobile_menu">
                   <AppleLogo className="text-base" />
                   download
-                </a>
+                </AppStoreLink>
               </Button>
             </div>
           </div>
