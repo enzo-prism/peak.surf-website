@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import AboutPage from "./AboutPage";
 import "./index.css";
 
@@ -7,6 +8,7 @@ const container = document.getElementById("root")!;
 const tree = (
   <StrictMode>
     <AboutPage />
+    <Analytics />
   </StrictMode>
 );
 

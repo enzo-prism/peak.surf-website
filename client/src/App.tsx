@@ -5,39 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
-
-const APP_STORE_URL = "https://apps.apple.com/us/app/peak-surf/id6757644027";
+import AppStoreLink from "@/components/AppStoreLink";
 
 function cloudinarySrcSet(src: string) {
   return [480, 800, 1200, 1600]
     .map((width) => `${src.replace("w_1400", `w_${width}`)} ${width}w`)
     .join(", ");
-}
-
-type AnalyticsWindow = Window & {
-  gtag?: (
-    command: string,
-    eventName: string,
-    parameters?: Record<string, unknown>,
-  ) => void;
-  plausible?: (
-    eventName: string,
-    options?: { props?: Record<string, unknown> },
-  ) => void;
-};
-
-function trackEvent(
-  eventName: string,
-  parameters: Record<string, unknown> = {},
-) {
-  try {
-    const analytics = window as AnalyticsWindow;
-    analytics.gtag?.("event", eventName, parameters);
-    analytics.plausible?.(eventName, { props: parameters });
-  } catch {
-    // Analytics is intentionally optional. A missing or blocked script never
-    // interrupts the visitor's path to the App Store.
-  }
 }
 
 const journey = [
@@ -201,31 +174,6 @@ const lifestyleImages = [
   },
 ];
 
-function AppStoreLink({
-  placement,
-  children,
-  className,
-}: {
-  placement: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <a
-      href={APP_STORE_URL}
-      className={className}
-      onClick={() =>
-        trackEvent("app_store_click", {
-          placement,
-          advertised_version: "3.2",
-        })
-      }
-    >
-      {children}
-    </a>
-  );
-}
-
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -287,7 +235,7 @@ function App() {
               size="sm"
               className="ml-3 h-11 rounded-full bg-white px-5 text-xs text-black hover:bg-white/85"
             >
-              <AppStoreLink placement="header">get peak 3.2</AppStoreLink>
+              <AppStoreLink location="home_header">get peak 3.2</AppStoreLink>
             </Button>
           </nav>
 
@@ -332,7 +280,7 @@ function App() {
               </a>
             ))}
             <Button asChild className="mt-2 h-11 rounded-full bg-white text-black">
-              <AppStoreLink placement="mobile_menu">get peak 3.2</AppStoreLink>
+              <AppStoreLink location="home_mobile_menu">get peak 3.2</AppStoreLink>
             </Button>
           </nav>
         </div>
@@ -370,7 +318,7 @@ function App() {
                   size="lg"
                   className="h-12 rounded-full bg-white px-7 text-sm text-black hover:bg-white/85"
                 >
-                  <AppStoreLink placement="hero">
+                  <AppStoreLink location="home_hero">
                     <AppleLogo className="mr-2 text-base" />
                     download Peak 3.2
                   </AppStoreLink>
@@ -381,12 +329,7 @@ function App() {
                   variant="outline"
                   className="h-12 rounded-full border-white/20 bg-transparent px-7 text-sm text-white hover:bg-white/10 hover:text-white"
                 >
-                  <a
-                    href="#how-it-works"
-                    onClick={() =>
-                      trackEvent("learn_more_click", { placement: "hero" })
-                    }
-                  >
+                  <a href="#how-it-works">
                     see how it works
                   </a>
                 </Button>
@@ -728,7 +671,7 @@ function App() {
                 size="lg"
                 className="h-14 rounded-full bg-black px-8 text-white hover:bg-black/80"
               >
-                <AppStoreLink placement="footer_cta">
+                <AppStoreLink location="home_footer_cta">
                   <AppleLogo className="mr-2 text-base" />
                   download Peak 3.2
                 </AppStoreLink>

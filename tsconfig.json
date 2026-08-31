@@ -5,7 +5,11 @@
     "client/src/AboutPage.tsx",
     "client/src/about.tsx",
     "client/src/ChangelogPage.tsx",
-    "client/src/changelog.tsx"
+    "client/src/changelog.tsx",
+    "client/src/PrivacyPage.tsx",
+    "client/src/privacy.tsx",
+    "client/src/SupportPage.tsx",
+    "client/src/support.tsx"
   ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {

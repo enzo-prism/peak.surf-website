@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
+import AppStoreLink from "@/components/AppStoreLink";
 
-const appStoreUrl = "https://apps.apple.com/us/app/peak-surf/id6757644027";
 const supportEmail = "enzo@design-prism.com";
 
 function SiteHeader() {
@@ -56,10 +56,10 @@ function SiteHeader() {
               <a href="/support.html" aria-current="page">support</a>
             </Button>
             <Button asChild variant="outline" size="sm" className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20">
-              <a href={appStoreUrl}>
+              <AppStoreLink location="support_header">
                 <AppleLogo className="text-base" />
                 download
-              </a>
+              </AppStoreLink>
             </Button>
           </nav>
 
@@ -98,10 +98,10 @@ function SiteHeader() {
               <a href="/support.html" aria-current="page">support</a>
             </Button>
             <Button asChild size="sm" className="font-cta w-full justify-center rounded-full px-5 text-[13px]">
-              <a href={appStoreUrl}>
+              <AppStoreLink location="support_mobile_menu">
                 <AppleLogo className="text-base" />
                 download
-              </a>
+              </AppStoreLink>
             </Button>
           </div>
         </div>
