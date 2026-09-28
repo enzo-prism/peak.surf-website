@@ -1,27 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "SF Pro Rounded";
-  src: url("/fonts/SF-Pro-Rounded-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "SF Pro Rounded";
-  src: url("/fonts/SF-Pro-Rounded-Semibold.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
 @layer base {
   :root {
+    /* Native SF Pro on Apple platforms; no downloadable font dependency. */
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", sans-serif;
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
     --card: 0 0% 4%;
@@ -53,6 +37,8 @@
     min-height: 100vh;
     color-scheme: dark;
     text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
   }
 
   header a,
@@ -80,28 +66,28 @@
 
 @layer utilities {
   .font-display {
-    font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 600;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.02em;
   }
 
   .font-hero {
-    font-family: "Inter", "Helvetica Neue", sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.015em;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.035em;
   }
 
   .font-cta {
-    font-family: "Inter", "Helvetica Neue", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: -0.01em;
     text-transform: lowercase;
   }
 
   .font-lower {
-    font-family: "Inter", "Helvetica Neue", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 400;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     text-transform: none;
   }
 
@@ -244,7 +230,7 @@
 .swell-contours g { transform-origin: center; animation: swell-drift 16s ease-in-out infinite alternate; }
 .hero-layout { display: grid; grid-template-columns: 1.22fr .78fr; align-items: center; gap: 2rem; position: relative; padding-top: 72px; padding-bottom: 70px; min-height: min(790px, 88svh); }
 .hero-copy { position: relative; z-index: 2; }
-.peak-site .hero-title { font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif; font-size: clamp(3.2rem, 5.9vw, 5.65rem); font-weight: 600; letter-spacing: -.065em; line-height: 1.01; }
+.peak-site .hero-title { font-family: var(--font-sans); font-size: clamp(3.2rem, 5.9vw, 5.65rem); font-weight: 600; letter-spacing: -.05em; line-height: 1.04; }
 .hero-line { display: block; overflow: hidden; padding: .04em 0 .13em; margin-bottom: -.12em; }
 .hero-line > span { display: block; animation: title-arrive 1.25s var(--motion-ease) both; }
 .hero-line:nth-child(2) > span { animation-delay: .15s; }
@@ -271,7 +257,7 @@
 .motion-toggle:hover { background: #ffffff10; color: white; }
 .motion-toggle:disabled { opacity: .65; }
 .peak-site a:focus-visible, .peak-site button:focus-visible { outline: 2px solid #b6d7c7; outline-offset: 5px; }
-.peak-site .section-title, .peak-site .product-feature-band h3 { font-family: "SF Pro Rounded", "Helvetica Neue", sans-serif; font-weight: 600; }
+.peak-site .section-title, .peak-site .product-feature-band h3 { font-family: var(--font-sans); font-weight: 600; }
 .peak-site .section-eyebrow { font-size: 10px; letter-spacing: .22em; color: #b1b9b5; }
 .peak-site .journey-card { border-radius: 1.5rem; overflow: hidden; transition: border-color .4s, background .4s, translate .4s !important; transform: none; }
 .peak-site .journey-card:hover { translate: 0 -5px; border-color: #b6d7c755; }
@@ -300,7 +286,7 @@
 .peak-site .product-feature-visual:hover .phone-frame { translate: 0 -8px; }
 .peak-site .supporting-screen .phone-frame { transition: translate .7s var(--motion-ease), border-color .7s; }
 .peak-site .supporting-screen:hover .phone-frame { translate: 0 -6px; border-color: #646e69; }
-.ocean-statement { font-family: "SF Pro Rounded", sans-serif; font-size: clamp(2.75rem, 7vw, 6.5rem); font-weight: 600; line-height: 1; letter-spacing: -.055em; }
+.ocean-statement { font-family: var(--font-sans); font-size: clamp(2.75rem, 7vw, 6.5rem); font-weight: 600; line-height: 1.04; letter-spacing: -.045em; }
 .ocean-statement span { color: #8b9791; }
 .peak-site .closing-section > div { background: #e9ede6; }
 .peak-site.motion-ready [data-reveal]:not(.is-visible) { opacity: 0; translate: 0 24px; }

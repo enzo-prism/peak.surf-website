@@ -21,7 +21,7 @@ No required environment variables.
 
 ## Structure and styling
 - The site is intentionally minimal and premium: mostly black with white accents.
-- Typography uses locally hosted SF Pro Rounded from `public/fonts`, defined in `client/src/index.css`.
+- Typography uses native SF Pro on Apple platforms through `--font-sans` in `client/src/index.css`, with system-font fallbacks elsewhere. All typography utilities and Tailwind `font-sans` share this stack; do not reintroduce SF Pro Rounded or Inter.
 - Animation utilities live in `client/src/index.css` (`fade-up`, `fade-delay-*`).
 - Keep new sections inside `client/src/App.tsx` to maintain a single-page flow.
 

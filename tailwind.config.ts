@@ -13,7 +13,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["SF Pro Rounded", "Inter", "Helvetica Neue", "sans-serif"],
+        sans: ["var(--font-sans)"],
       },
       colors: {
         border: "hsl(var(--border))",

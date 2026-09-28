@@ -92,8 +92,8 @@ const privacySections = [
           personal details.
         </p>
         <p>
-          Website pages may also request fonts from Google, images from
-          Cloudinary, and public changelog data from GitHub. Those services
+          Website pages use system fonts and may request images from
+          Cloudinary and public changelog data from GitHub. Those services
           receive standard web request information, but this website cannot
           access your Peak journal, Apple Health data, or saved media.
         </p>

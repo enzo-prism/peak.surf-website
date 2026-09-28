@@ -353,7 +353,7 @@ function App() {
                       <span className="text-xs tracking-[0.22em] text-white/55">
                         {item.eyebrow}
                       </span>
-                      <span className="font-mono text-xs text-white/55">
+                      <span className="tabular-nums text-xs text-white/55">
                         {item.step}
                       </span>
                     </div>
