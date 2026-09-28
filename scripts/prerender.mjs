@@ -37,6 +37,8 @@ const ROOT_DIV = '<div id="root"></div>';
 const vite = await createServer({
   server: { middlewareMode: true },
   appType: "custom",
+  // SSR rendering does not need a browser dependency scan during shutdown.
+  optimizeDeps: { noDiscovery: true },
   logLevel: "warn",
 });
 

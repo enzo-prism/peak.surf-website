@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useMotion } from "./useMotion";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -158,23 +159,24 @@ const supportingProductScreens = [
 const lifestyleImages = [
   {
     src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/f_auto,q_auto,w_1400/v1768584781/Frame_32_cdeoif.webp",
-    alt: "Surfer riding a clean wave",
+    alt: "Surfboards beneath a shaded surf shop sign",
   },
   {
     src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/f_auto,q_auto,w_1400/v1768584768/Frame_33_o5mkjw.webp",
-    alt: "Surfer moving through the face of a wave",
+    alt: "Surfer holding a board beside the rocky coast",
   },
   {
     src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/f_auto,q_auto,w_1400/v1768584769/Frame_30_odkhgc.webp",
-    alt: "Ocean surf session photographed from shore",
+    alt: "Surfer with a board at the shoreline at sunset",
   },
   {
     src: "https://res.cloudinary.com/dhqpqfw6w/image/upload/f_auto,q_auto,w_1400/v1768584764/Frame_24_xcrbqs.webp",
-    alt: "Surfer carving across open water",
+    alt: "Friends with surfboards after a session",
   },
 ];
 
 function App() {
+  const motion = useMotion();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
@@ -195,7 +197,7 @@ function App() {
   }, [isMenuOpen]);
 
   return (
-    <div className="min-h-screen overflow-hidden bg-background text-foreground">
+    <div ref={motion.root} data-motion={motion.paused || motion.reduced ? "paused" : "active"} className="peak-site min-h-screen bg-background text-foreground">
       <a
         href="#main-content"
         className="sr-only z-[100] rounded-full bg-white px-5 py-3 text-black focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
@@ -203,7 +205,7 @@ function App() {
         skip to content
       </a>
 
-      <header className="relative z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+      <header className="site-header z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 md:px-8">
           <a
             href="/"
@@ -287,68 +289,45 @@ function App() {
       </header>
 
       <main id="main-content" tabIndex={-1}>
-        <section className="relative">
-          <div className="hero-glow" aria-hidden="true" />
-          <div className="mx-auto grid w-full max-w-7xl items-center gap-14 px-5 pb-24 pt-16 md:px-8 md:pb-32 md:pt-24 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="relative z-10 max-w-3xl">
-              <Badge className="fade-up border border-white/15 bg-white/5 px-3 py-1.5 font-normal text-white/75 hover:bg-white/5">
-                <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[#86d9b3]" />
-                Peak 3.2 · available now
+        <section data-motion-zone className="hero" aria-labelledby="hero-title">
+          <div className="hero-ocean" aria-hidden="true">
+            <img src={lifestyleImages[2].src} srcSet={cloudinarySrcSet(lifestyleImages[2].src)} sizes="100vw" alt="" width="1400" height="1867" {...{ fetchpriority: "high" }} />
+          </div>
+          <SwellContours />
+          <div className="hero-layout mx-auto max-w-7xl px-5 md:px-8">
+            <div className="hero-copy">
+              <Badge className="fade-up border border-white/20 bg-black/20 px-3 py-2 font-normal text-white/80 hover:bg-black/20">
+                <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[#b6d7c7]" />
+                Peak 3.2 · the private surf journal
               </Badge>
-              {/*
-                The three lines are hard-broken on purpose, so the type scale is
-                fluid and capped per band to keep the longest line ("Track what
-                happened.") on one line at every width. A fixed scale wrapped it
-                into six ragged lines from 1024px up.
-              */}
-              <h1 className="fade-up fade-delay-1 mt-7 font-hero text-[clamp(1.5rem,7.4vw,2.3rem)] leading-[0.96] tracking-[-0.05em] sm:text-[clamp(2.3rem,8.1vw,3.65rem)] lg:text-[clamp(2.75rem,4.4vw,3.6rem)]">
-                Know when to go.
-                <br />
-                <span className="text-white/65">Track what happened.</span>
-                <br />
-                Keep it private.
+              <h1 id="hero-title" className="hero-title mt-8">
+                <span className="hero-line"><span>Every wave.</span></span>
+                <span className="hero-line"><span>Worth <em>keeping.</em></span></span>
               </h1>
-              <p className="fade-up fade-delay-2 mt-8 max-w-2xl text-lg leading-relaxed text-white/60 md:text-xl">
-                Peak turns your own surf history into useful timing, editable
-                session insights, and a journal that stays on your devices.
+              <p className="fade-up fade-delay-2 hero-description">
+                Know when to go. Remember how it felt.
+                <br />Your surf history, kept entirely yours.
               </p>
-              <div className="fade-up fade-delay-3 mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="h-12 rounded-full bg-white px-7 text-sm text-black hover:bg-white/85"
-                >
-                  <AppStoreLink location="home_hero">
-                    <AppleLogo className="mr-2 text-base" />
-                    download Peak 3.2
-                  </AppStoreLink>
+              <div className="fade-up fade-delay-3 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Button asChild size="lg" className="premium-button h-14 rounded-full bg-white px-7 text-sm text-black hover:bg-white/90">
+                  <AppStoreLink location="home_hero"><AppleLogo className="mr-2 text-base" />download Peak 3.2<span aria-hidden="true" className="button-arrow">↗</span></AppStoreLink>
                 </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="h-12 rounded-full border-white/20 bg-transparent px-7 text-sm text-white hover:bg-white/10 hover:text-white"
-                >
-                  <a href="#how-it-works">
-                    see how it works
-                  </a>
-                </Button>
+                <a href="#how-it-works" className="hero-explore">Explore the journal <span aria-hidden="true">↓</span></a>
               </div>
-              <p className="fade-up fade-delay-4 mt-5 text-xs leading-relaxed text-white/55">
-                Version 3.2 is available now on the App Store. Free update for
-                everyone already on Peak.
-              </p>
+              <p className="fade-up fade-delay-4 mt-5 text-xs text-white/60">Free on iPhone. No account. Just you and the ocean.</p>
             </div>
-
-            <div className="fade-up fade-delay-2 relative mx-auto w-full max-w-[620px]">
-              <div className="hero-product-stage">
-                <ProductPhone
-                  screen={productScreens.log}
-                  priority
-                  className="max-w-[330px]"
-                />
-              </div>
+            <div className="hero-device fade-up fade-delay-2">
+              <div className="hero-device-halo" aria-hidden="true" />
+              <div className="hero-phone-float"><ProductPhone screen={productScreens.log} priority /></div>
+              <div className="device-note"><span className="note-rule" />Your next session starts here.</div>
             </div>
+          </div>
+          <div className="hero-bottom mx-auto max-w-7xl px-5 md:px-8">
+            <a href="#how-it-works" className="scroll-cue"><span aria-hidden="true">↓</span> A little less screen. A little more sea.</a>
+            <button type="button" className="motion-toggle" onClick={motion.toggle} aria-pressed={motion.paused || motion.reduced} disabled={motion.reduced}>
+              <span aria-hidden="true">{motion.paused || motion.reduced ? "▶" : "Ⅱ"}</span>
+              {motion.reduced ? "Reduced motion" : motion.paused ? "Resume motion" : "Pause motion"}
+            </button>
           </div>
         </section>
 
@@ -366,7 +345,8 @@ function App() {
               {journey.map((item) => (
                 <Card
                   key={item.step}
-                  className="group border-white/10 bg-white/[0.035] transition duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.055]"
+                  data-reveal
+                  className="journey-card group border-white/10 bg-white/[0.035] transition duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.055]"
                 >
                   <CardContent className="flex h-full flex-col p-7 md:p-8">
                     <div className="flex items-center justify-between">
@@ -377,7 +357,8 @@ function App() {
                         {item.step}
                       </span>
                     </div>
-                    <h3 className="mt-16 font-hero text-3xl tracking-[-0.035em]">
+                    <JourneyGraphic step={item.step} />
+                    <h3 className="mt-8 font-hero text-3xl tracking-[-0.035em]">
                       {item.title}
                     </h3>
                     <p className="mt-4 flex-1 text-sm leading-7 text-white/55">
@@ -392,7 +373,7 @@ function App() {
           </div>
         </section>
 
-        <section className="mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <section data-reveal className="mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="section-eyebrow">built into iPhone</p>
             <h2 className="section-title mt-5">Ready before you unlock.</h2>
@@ -410,7 +391,7 @@ function App() {
             {ecosystemFeatures.map((feature, index) => (
               <div
                 key={feature.label}
-                className="flex min-h-28 items-center gap-4 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5"
+                className="ecosystem-card flex min-h-28 items-center gap-4 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5"
               >
                 <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/10 bg-black text-xs text-white/55">
                   {String(index + 1).padStart(2, "0")}
@@ -426,6 +407,7 @@ function App() {
 
         <section
           id="intelligence"
+          data-reveal
           className="scroll-mt-24 border-y border-white/10 bg-[#f2f1ed] text-black"
         >
           <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[1fr_1fr] lg:items-center">
@@ -451,7 +433,7 @@ function App() {
               </div>
             </div>
 
-            <div className="rounded-[2.5rem] border border-black/10 bg-black p-4 shadow-[0_35px_100px_rgba(0,0,0,0.25)] sm:p-6">
+            <div className="insight-card rounded-[2.5rem] border border-black/10 bg-black p-4 shadow-[0_35px_100px_rgba(0,0,0,0.25)] sm:p-6">
               <div className="rounded-[1.8rem] border border-white/10 bg-[#151515] p-5 sm:p-7">
                 <div className="flex items-center justify-between">
                   <div>
@@ -484,7 +466,7 @@ function App() {
                 </div>
                 <div className="mt-4 h-20 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] px-4 pt-4">
                   <p className="text-[10px] uppercase tracking-[0.15em] text-white/55">
-                    workout route
+                    workout route · illustrative session
                   </p>
                   <svg
                     viewBox="0 0 400 60"
@@ -492,7 +474,7 @@ function App() {
                     role="img"
                     aria-label="Example surf route line"
                   >
-                    <path
+                    <path className="route-path" pathLength="1"
                       d="M0 40 C55 8 95 54 145 28 S225 46 270 18 S350 50 400 10"
                       fill="none"
                       stroke="rgba(134,217,179,.8)"
@@ -509,7 +491,7 @@ function App() {
           id="privacy"
           className="scroll-mt-24 mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[1fr_1fr] lg:items-start"
         >
-          <div className="lg:sticky lg:top-32">
+          <div data-reveal className="lg:sticky lg:top-32">
             <p className="section-eyebrow">private intelligence</p>
             <h2 className="section-title mt-5">Built from your history. Kept as yours.</h2>
             <p className="section-copy mt-6">
@@ -534,7 +516,7 @@ function App() {
             ].map(([title, description], index) => (
               <div
                 key={title}
-                className="grid gap-4 bg-black p-6 sm:grid-cols-[44px_1fr] sm:p-8"
+                data-reveal className="privacy-row grid gap-4 bg-black p-6 sm:grid-cols-[44px_1fr] sm:p-8"
               >
                 <span className="text-xs text-white/55">
                   {String(index + 1).padStart(2, "0")}
@@ -565,7 +547,7 @@ function App() {
               {featuredProductScreens.map((feature, index) => (
                 <article
                   key={feature.eyebrow}
-                  className="product-feature-band"
+                  data-reveal className="product-feature-band"
                 >
                   <div
                     className={
@@ -574,7 +556,7 @@ function App() {
                         : "lg:pr-10"
                     }
                   >
-                    <p className="section-eyebrow">{feature.eyebrow}</p>
+                    <p className="section-eyebrow"><span className="chapter-number">0{index + 1}</span>{feature.eyebrow}</p>
                     <h3 className="mt-5 max-w-xl font-hero text-[clamp(2.25rem,4.5vw,4.5rem)] leading-[0.97] tracking-[-0.045em]">
                       {feature.title}
                     </h3>
@@ -608,7 +590,7 @@ function App() {
               </div>
               <div className="mt-12 grid gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
                 {supportingProductScreens.map((screen) => (
-                  <figure key={screen.src} className="group">
+                  <figure key={screen.src} data-reveal className="supporting-screen group">
                     <ProductPhone screen={screen} />
                     <figcaption className="mx-auto mt-5 max-w-[290px]">
                       <p className="text-sm font-medium">{screen.label}</p>
@@ -623,11 +605,13 @@ function App() {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-7xl px-5 py-24 md:px-8 md:py-32">
+        <section className="lifestyle-section mx-auto w-full max-w-7xl px-5 py-24 md:px-8 md:py-32">
+          <div data-reveal className="mb-14"><p className="section-eyebrow">Made for the days that stay with you</p><h2 className="ocean-statement mt-5">Be out there.<br /><span>Keep it with you.</span></h2></div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {lifestyleImages.map((image, index) => (
               <figure
                 key={image.src}
+                data-reveal
                 className={`overflow-hidden rounded-[1.75rem] border border-white/10 ${
                   index % 2 === 1 ? "lg:translate-y-8" : ""
                 }`}
@@ -651,7 +635,7 @@ function App() {
           </p>
         </section>
 
-        <section className="px-5 pb-24 md:px-8 md:pb-32">
+        <section data-reveal className="closing-section px-5 pb-24 md:px-8 md:pb-32">
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white text-black">
             <div className="grid gap-10 p-8 sm:p-12 md:p-16 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
@@ -712,6 +696,33 @@ function App() {
   );
 }
 
+function SwellContours() {
+  return <svg className="swell-contours" viewBox="0 0 1440 860" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+    <g>{Array.from({ length: 12 }, (_, index) => <path key={index} d={`M-200 ${430 + index * 27} C180 ${90 + index * 32} 420 ${920 + index * 15} 800 ${470 + index * 23} S1250 ${210 + index * 26} 1670 ${390 + index * 28}`} />)}</g>
+  </svg>;
+}
+
+function JourneyGraphic({ step }: { step: string }) {
+  return <div data-motion-zone className={`journey-graphic journey-graphic-${step}`} aria-hidden="true">
+    <svg viewBox="0 0 300 90" fill="none">
+      {step === "01" ? <>
+        <path className="graphic-grid" d="M0 25H300M0 65H300M50 0V90M150 0V90M250 0V90" />
+        <path className="tide-line" pathLength="1" d="M0 70C55 70 65 20 115 20S170 70 220 70S265 20 300 20" />
+        <circle className="tide-marker" cx="115" cy="20" r="5" />
+        <path className="graphic-grid" d="M115 29V90" />
+      </> : step === "02" ? <>
+        <rect className="activity-shell" x="40" y="16" width="220" height="58" rx="29" />
+        <circle className="activity-dot" cx="65" cy="45" r="4" />
+        {Array.from({ length: 19 }, (_, i) => <path key={i} className="activity-bar" style={{ animationDelay: `${i * -0.13}s` }} d={`M${87 + i * 7} 34V56`} />)}
+        <circle cx="235" cy="45" r="3" fill="currentColor" />
+      </> : <>
+        <path className="graphic-grid" d="M20 75H280" />
+        {[30, 44, 35, 60, 49, 70, 56, 78].map((height, i) => <rect key={i} className="journal-bar" x={30 + i * 31} y={80 - height * 0.8} width="15" height={height * 0.8} rx="3" style={{ animationDelay: `${i * 0.07}s` }} />)}
+      </>}
+    </svg>
+  </div>;
+}
+
 function ProductPhone({
   screen,
   priority = false,
@@ -759,7 +770,7 @@ function SectionIntro({
   description: string;
 }) {
   return (
-    <div className="max-w-3xl">
+    <div data-reveal className="max-w-3xl">
       <p className="section-eyebrow">{eyebrow}</p>
       <h2 className="section-title mt-5">{title}</h2>
       <p className="section-copy mt-6">{description}</p>
