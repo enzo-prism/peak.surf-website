@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { SUPPORT_EMAIL } from "@/site";
 
@@ -32,7 +33,7 @@ function SupportPage() {
       <main id="main-content" tabIndex={-1}>
         <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="font-lower border-border/60 text-[11px] text-muted-foreground">
+            <Badge variant="outline" className="font-lower border-border/60 text-xs text-muted-foreground">
               support
             </Badge>
             <Separator className="w-auto flex-1 bg-border/60" />
@@ -69,7 +70,7 @@ function SupportPage() {
         <section className="mx-auto grid w-full max-w-6xl gap-4 px-6 pb-28 md:grid-cols-2">
           <Card className="border-border/60 bg-card/40">
             <CardHeader>
-              <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">
                 for any issue
               </p>
               <h2 className="font-semibold leading-none tracking-tight font-hero text-2xl">include these details</h2>
@@ -88,7 +89,7 @@ function SupportPage() {
 
           <Card className="border-border/60 bg-card/40">
             <CardHeader>
-              <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">
                 auto-fill conditions
               </p>
               <h2 className="font-semibold leading-none tracking-tight font-hero text-2xl">add this context</h2>
@@ -112,6 +113,7 @@ function SupportPage() {
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="support_sticky_bar" />} />
     </div>
   );
 }

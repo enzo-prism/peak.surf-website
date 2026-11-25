@@ -8,12 +8,14 @@ Peak Surf website (https://www.peaksurf.club) is a static marketing site for the
 - `client/src/seo/pages.ts`: page registry. Titles, descriptions, canonicals, Open Graph, JSON-LD, sitemap entries, and llms.txt summaries for every page.
 - `client/src/seo/routes.ts`: public URL paths (extensionless) used for all internal links.
 - `client/src/content/`: copy shared between pages, structured data, and llms files (`faq.ts`, `features.ts`, `releases.ts`, `appleWatch.ts`).
-- `client/src/components/SiteChrome.tsx`: shared header, footer, and skip link for every page except home.
+- `client/src/components/SiteChrome.tsx`: shared sticky header (with the mobile menu sheet), footer, and skip link for every page, including home (which passes its own anchor links and `wide`).
+- `client/src/components/MobileDownloadBar.tsx`: the download bar pinned to the bottom of the screen on phones.
+- `client/src/components/AppStoreBadge.tsx`: Apple's official App Store badge, the desktop QR code, and the Android "iPhone only" note.
 - `client/src/App.tsx`: home page layout and marketing copy.
 - Other pages: `FeaturesPage.tsx`, `AppleWatchPage.tsx`, `FaqPage.tsx`, `AboutPage.tsx`, `ChangelogPage.tsx`, `PrivacyPage.tsx`, `SupportPage.tsx`, `NotFoundPage.tsx`.
 - `client/*.html`: minimal page shells. Each has a `<!--peak:head-->` placeholder that `vite.config.ts` fills from the page registry, plus one module script.
 - `client/src/index.css`: typography, animation utilities, and global styling.
-- `public/`: static assets (logos, icons, screenshots) and `robots.txt`.
+- `public/`: static assets (logos, icons, screenshots, `app-store-badge.svg`, `app-store-qr.svg`) and `robots.txt`.
 - `vercel.json`: clean URLs, legacy redirects, cache and security headers.
 - `scripts/prerender.mjs`: prerenders every page and writes `sitemap.xml`, `llms.txt`, and `llms-full.txt` into `dist/`.
 - `scripts/check-seo.mjs`: validates the built site; fails the build on SEO regressions.
@@ -43,8 +45,8 @@ Facts can be checked against the live App Store listing: `curl -s "https://itune
 ## Adding a page
 1. Add an entry to `pages` in `client/src/seo/pages.ts` and a path to `client/src/seo/routes.ts`.
 2. Create `client/<file>.html` from an existing shell (keep `<!--peak:head-->` and exactly one module script).
-3. Create the entry module (`client/src/<name>.tsx`, copy `about.tsx`, mounting `<Analytics />` once) and the page component using `SiteHeader`/`SiteFooter`.
-4. Pass page-specific `AppStoreLink` elements (unique static `location` values) to `SiteHeader`.
+3. Create the entry module (`client/src/<name>.tsx`, copy `about.tsx`, mounting `<Analytics />` once) and the page component using `SiteHeader`, `SiteFooter`, and `MobileDownloadBar`.
+4. Give every `AppStoreLink` a unique static `location` (`<page>_header`, `<page>_mobile_menu`, `<page>_sticky_bar`, `<page>_footer_cta`). Mark in-page download buttons with `data-download-cta` so the mobile download bar steps aside while they are on screen.
 5. Add it to `footerNav` in `SiteChrome.tsx` so it is linked site-wide.
 Vite inputs, prerendering, sitemap, and llms files pick it up from the registry automatically.
 
@@ -64,5 +66,14 @@ No required environment variables.
 - Animation utilities live in `client/src/index.css` (`fade-up`, `fade-delay-*`).
 - Home page sections stay inside `client/src/App.tsx` to maintain a single-page flow; deeper content gets its own registered page.
 
+## Mobile and touch rules
+- Design for a 375–390px iPhone first. No text below 12px and no tap target below 44×44px (footer links, chips, and menu rows included).
+- Every page has exactly one download button in reach on phones: the sticky header's compact button near the top, then the bottom `MobileDownloadBar` once the visitor scrolls past half a screen. The bar hides while any `data-download-cta` element is visible and adds `download-bar-on` to `<html>`, which hides the header button so the two never show together. Android visitors get no bar and see the `AndroidNote` instead.
+- Long runs of cards become horizontal scroll-snap rows below `lg` (`.swipe-row` in `index.css`) and grids on desktop. Each row is a focusable `role="region"` with an `aria-label`.
+- In-page download buttons use Apple's official badge (`AppStoreBadge`, at least 40px tall, never recolored). Header, menu, and bar buttons stay as text pills. `public/app-store-badge.svg` came from Apple's marketing toolbox (toolbox.marketingtools.apple.com). If the App Store ID changes, regenerate the QR code: `npx qrcode@1.5.4 -t svg -e M -q 2 -d 000000 -l ffffff -o public/app-store-qr.svg "https://apps.apple.com/app/id<ID>"`.
+- Tailwind's `hoverOnlyWhenSupported` is on, and hand-written hover effects in `index.css` sit inside `@media (hover: hover)`, so taps never leave cards stuck in a hover state. Give tappable elements an `:active` state instead (buttons scale down slightly by default).
+- The hero phone crossfades three real app screens with CSS only. The extra screens mount after the page's `load` event, and Pause motion or reduced motion holds the first screen.
+- The home FAQ uses `<details>` accordions. The answers stay in the DOM, so search engines still read them; the full `/faq` page stays fully expanded.
+
 ## Tests
-No unit tests. `npm run build` runs the analytics and SEO validators; `npm run check` runs the typecheck. Last Lighthouse pass (2026-11-24, local build, mobile): SEO 100 and accessibility 100 on every page, performance 98–100.
+No unit tests. `npm run build` runs the analytics and SEO validators; `npm run check` runs the typecheck. Last Lighthouse pass (2026-11-25, local build, mobile): accessibility 100 on every page, performance 97–99, CLS 0. Last mobile audit (2026-11-25, emulated iPhone at 375 and 390px): no horizontal overflow, no text under 12px, no tap target under 44px, no hydration errors; the home page is about 10,500px tall (was 18,700px).

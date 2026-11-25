@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { AppStoreBadge } from "@/components/AppStoreBadge";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { faqGroups } from "@/content/faq";
 import { SUPPORT_EMAIL } from "@/site";
@@ -31,7 +32,7 @@ function FaqPage() {
       <main id="main-content" tabIndex={-1}>
         <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="font-lower border-border/60 text-[11px] text-muted-foreground">
+            <Badge variant="outline" className="font-lower border-border/60 text-xs text-muted-foreground">
               faq
             </Badge>
             <Separator className="w-auto flex-1 bg-border/60" />
@@ -54,7 +55,7 @@ function FaqPage() {
                 <li key={group.title}>
                   <a
                     href={`#${slug(group.title)}`}
-                    className="inline-flex min-h-9 items-center rounded-full border border-border/60 px-4 text-xs text-muted-foreground transition hover:border-foreground/60 hover:text-foreground"
+                    className="inline-flex min-h-11 items-center rounded-full border border-border/60 px-4 text-sm transition active:bg-white/10 text-muted-foreground transition hover:border-foreground/60 hover:text-foreground"
                   >
                     {group.title}
                   </a>
@@ -70,7 +71,6 @@ function FaqPage() {
               key={group.title}
               id={slug(group.title)}
               aria-labelledby={`${slug(group.title)}-title`}
-              className="scroll-mt-8"
             >
               <h2
                 id={`${slug(group.title)}-title`}
@@ -80,9 +80,9 @@ function FaqPage() {
               </h2>
               <div className="mt-6 divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60">
                 {group.items.map((item) => (
-                  <article key={item.id} id={item.id} className="scroll-mt-8 bg-card/40 p-6 md:p-8">
+                  <article key={item.id} id={item.id} className="bg-card/40 p-6 md:p-8">
                     <h3 className="text-lg font-medium text-foreground">
-                      <a href={`#${item.id}`} className="hover:underline hover:underline-offset-4">
+                      <a href={`#${item.id}`} className="-my-2 block py-2 hover:underline hover:underline-offset-4">
                         {item.question}
                       </a>
                     </h3>
@@ -117,18 +117,16 @@ function FaqPage() {
                   and a real person will reply. Or download Peak and try it, it is free.
                 </p>
               </div>
-              <Button asChild size="lg" className="font-cta shrink-0 rounded-full px-8 text-[13px]">
-                <AppStoreLink location="faq_footer_cta">
-                  <AppleLogo className="text-base" />
-                  download Peak
-                </AppStoreLink>
-              </Button>
+              <AppStoreLink location="faq_footer_cta" data-download-cta className="app-badge-link shrink-0">
+                <AppStoreBadge />
+              </AppStoreLink>
             </CardContent>
           </Card>
         </section>
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="faq_sticky_bar" />} />
     </div>
   );
 }

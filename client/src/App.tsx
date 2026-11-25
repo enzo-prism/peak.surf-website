@@ -1,16 +1,31 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMotion } from "./useMotion";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
+import { AndroidNote, AppStoreBadge, AppStoreQr } from "@/components/AppStoreBadge";
 import AppStoreLink from "@/components/AppStoreLink";
-import { footerNav } from "@/components/SiteChrome";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
+import { SiteFooter, SiteHeader, SkipLink, type HeaderLink } from "@/components/SiteChrome";
 import { featuredFaqItems } from "@/content/faq";
 import { hrefFor } from "@/seo/routes";
 import { APP_VERSION, MIN_IOS } from "@/site";
+
+const homeLinks: HeaderLink[] = [
+  { label: "how it works", href: "#how-it-works" },
+  { label: "features", href: hrefFor("features") },
+  { label: "apple watch", href: hrefFor("appleWatch") },
+  { label: "faq", href: "#faq" },
+  { label: "about", href: hrefFor("about") },
+];
+
+const homeMobileLinks: HeaderLink[] = [
+  ...homeLinks,
+  { label: "changelog", href: hrefFor("changelog") },
+  { label: "support", href: hrefFor("support") },
+];
 
 function cloudinarySrcSet(src: string) {
   return [480, 800, 1200, 1600]
@@ -181,120 +196,21 @@ const lifestyleImages = [
 
 function App() {
   const motion = useMotion();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    firstMobileLinkRef.current?.focus();
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isMenuOpen]);
-
   return (
     <div ref={motion.root} data-motion={motion.paused || motion.reduced ? "paused" : "active"} className="peak-site min-h-screen bg-background text-foreground">
-      <a
-        href="#main-content"
-        className="sr-only z-[100] rounded-full bg-white px-5 py-3 text-black focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        skip to content
-      </a>
-
-      <header className="site-header z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 md:px-8">
-          <a
-            href="/"
-            aria-label="Peak home"
-            className="flex min-h-11 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            <img src="/Transparent.png" alt="" className="h-8 w-auto" />
-            <div className="leading-tight">
-              <p className="font-display text-sm">peak</p>
-              <p className="text-[11px] text-white/50">private surf journal</p>
-            </div>
-          </a>
-
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
-            <a className="nav-link" href="#how-it-works">
-              how it works
-            </a>
-            <a className="nav-link" href={hrefFor("features")}>
-              features
-            </a>
-            <a className="nav-link" href={hrefFor("appleWatch")}>
-              apple watch
-            </a>
-            <a className="nav-link" href="#faq">
-              faq
-            </a>
-            <a className="nav-link" href={hrefFor("about")}>
-              about
-            </a>
-            <Button
-              asChild
-              size="sm"
-              className="ml-3 h-11 rounded-full bg-white px-5 text-xs text-black hover:bg-white/85"
-            >
-              <AppStoreLink location="home_header">get peak {APP_VERSION}</AppStoreLink>
-            </Button>
-          </nav>
-
-          <button
-            ref={menuButtonRef}
-            type="button"
-            aria-label="Toggle navigation"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-nav"
-            onClick={() => setIsMenuOpen((open) => !open)}
-            className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80 transition hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:hidden"
-          >
-            <span className="sr-only">menu</span>
-            <span className="space-y-1.5" aria-hidden="true">
-              <span className="block h-px w-5 bg-current" />
-              <span className="block h-px w-5 bg-current" />
-              <span className="block h-px w-5 bg-current" />
-            </span>
-          </button>
-        </div>
-
-        <div id="mobile-nav" className={isMenuOpen ? "md:hidden" : "hidden"}>
-          <nav
-            aria-label="Mobile navigation"
-            className="mx-5 mb-5 grid gap-1 rounded-2xl border border-white/10 bg-[#111] p-3"
-          >
-            {[
-              ["how it works", "#how-it-works"],
-              ["features", hrefFor("features")],
-              ["apple watch", hrefFor("appleWatch")],
-              ["faq", "#faq"],
-              ["about", hrefFor("about")],
-              ["changelog", hrefFor("changelog")],
-            ].map(([label, href]) => (
-              <a
-                key={href}
-                ref={label === "how it works" ? firstMobileLinkRef : undefined}
-                href={href}
-                onClick={() => setIsMenuOpen(false)}
-                className="rounded-xl px-4 py-3 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
-              >
-                {label}
-              </a>
-            ))}
-            <Button asChild className="mt-2 h-11 rounded-full bg-white text-black">
-              <AppStoreLink location="home_mobile_menu">get peak {APP_VERSION}</AppStoreLink>
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <SkipLink />
+      <SiteHeader
+        wide
+        links={homeLinks}
+        mobileLinks={homeMobileLinks}
+        cta={<AppStoreLink location="home_header">get peak {APP_VERSION}</AppStoreLink>}
+        mobileCta={
+          <AppStoreLink location="home_mobile_menu">
+            <AppleLogo className="text-base" />
+            download Peak {APP_VERSION}
+          </AppStoreLink>
+        }
+      />
 
       <main id="main-content" tabIndex={-1}>
         <section data-motion-zone className="hero" aria-labelledby="hero-title">
@@ -316,17 +232,18 @@ function App() {
                 Know when to go. Remember how it felt.
                 <br />Your surf history, kept entirely yours.
               </p>
-              <div className="fade-up fade-delay-3 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Button asChild size="lg" className="premium-button h-14 rounded-full bg-white px-7 text-sm text-black hover:bg-white/90">
-                  <AppStoreLink location="home_hero"><AppleLogo className="mr-2 text-base" />download Peak {APP_VERSION}<span aria-hidden="true" className="button-arrow">↗</span></AppStoreLink>
-                </Button>
+              <div className="fade-up fade-delay-3 mt-9 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <AppStoreLink location="home_hero" data-download-cta className="app-badge-link">
+                  <AppStoreBadge className="h-[54px]" />
+                </AppStoreLink>
                 <a href="#how-it-works" className="hero-explore">Explore the journal <span aria-hidden="true">↓</span></a>
               </div>
-              <p className="fade-up fade-delay-4 mt-5 text-xs text-white/60">Free on iPhone. No account. Just you and the ocean.</p>
+              <p className="fade-up fade-delay-4 mt-5 text-[13px] text-white/65">Free on iPhone · No account · iOS {MIN_IOS} or later</p>
+              <div className="mt-5 max-w-md"><AndroidNote /></div>
             </div>
             <div className="hero-device fade-up fade-delay-2">
               <div className="hero-device-halo" aria-hidden="true" />
-              <div className="hero-phone-float"><ProductPhone screen={productScreens.log} priority /></div>
+              <div className="hero-phone-float"><HeroScreens /></div>
               <div className="device-note"><span className="note-rule" />Your next session starts here.</div>
             </div>
           </div>
@@ -341,7 +258,7 @@ function App() {
 
         <section
           id="how-it-works"
-          className="scroll-mt-24 border-y border-white/10 bg-[#070707]"
+          className="border-y border-white/10 bg-[#070707]"
         >
           <div className="mx-auto w-full max-w-7xl px-5 py-24 md:px-8 md:py-32">
             <SectionIntro
@@ -349,7 +266,7 @@ function App() {
               title="Your whole session, connected."
               description="Peak is a free surf log for iPhone that fits around the surf instead of pulling you away from it."
             />
-            <div className="mt-14 grid gap-4 lg:grid-cols-3">
+            <div className="swipe-row swipe-row-wide mt-12 lg:grid lg:grid-cols-3 lg:gap-4" role="region" aria-label="Before, during and after a session" tabIndex={0}>
               {journey.map((item) => (
                 <Card
                   key={item.step}
@@ -358,22 +275,22 @@ function App() {
                 >
                   <CardContent className="flex h-full flex-col p-7 md:p-8">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs tracking-[0.22em] text-white/55">
+                      <span className="text-xs tracking-[0.22em] text-white/60">
                         {item.eyebrow}
                       </span>
-                      <span className="tabular-nums text-xs text-white/55">
+                      <span className="tabular-nums text-xs text-white/60">
                         {item.step}
                       </span>
                     </div>
                     <JourneyGraphic step={item.step} />
-                    <h3 className="mt-8 font-hero text-3xl tracking-[-0.035em]">
+                    <h3 className="mt-6 font-hero text-[1.75rem] leading-tight tracking-[-0.035em] md:mt-8 md:text-3xl">
                       {item.title}
                     </h3>
                     <p className="mt-4 flex-1 text-sm leading-7 text-white/55">
                       {item.description}
                     </p>
-                    <Separator className="my-7 bg-white/10" />
-                    <p className="text-xs text-white/55">{item.detail}</p>
+                    <Separator className="my-6 bg-white/10 md:my-7" />
+                    <p className="text-[13px] text-white/60">{item.detail}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -381,7 +298,7 @@ function App() {
           </div>
         </section>
 
-        <section data-reveal className="mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <section data-reveal className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-20 md:gap-16 md:px-8 md:py-32 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="section-eyebrow">built into iPhone</p>
             <h2 className="section-title mt-5">Ready before you unlock.</h2>
@@ -390,23 +307,23 @@ function App() {
               check progress at a glance, and leave your phone alone when the
               waves are working.
             </p>
-            <p className="mt-6 text-xs leading-6 text-white/55">
+            <p className="mt-6 text-[13px] leading-6 text-white/60">
               Siri, widgets, Control Center, Lock Screen, Live Activities, and
               Dynamic Island all ship in Peak {APP_VERSION}.
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-3">
             {ecosystemFeatures.map((feature, index) => (
               <div
                 key={feature.label}
-                className="ecosystem-card flex min-h-28 items-center gap-4 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5"
+                className="ecosystem-card flex flex-col items-start gap-3 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-4 sm:min-h-28 sm:flex-row sm:items-center sm:gap-4 sm:p-5"
               >
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/10 bg-black text-xs text-white/55">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-black text-xs text-white/60 sm:h-11 sm:w-11 sm:rounded-2xl">
                   {String(index + 1).padStart(2, "0")}
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{feature.label}</p>
-                  <p className="mt-1 text-xs text-white/55">{feature.detail}</p>
+                  <p className="text-[15px] font-medium sm:text-sm">{feature.label}</p>
+                  <p className="mt-1 text-[13px] leading-5 text-white/60 sm:text-xs">{feature.detail}</p>
                 </div>
               </div>
             ))}
@@ -416,11 +333,11 @@ function App() {
         <section
           id="intelligence"
           data-reveal
-          className="scroll-mt-24 border-y border-white/10 bg-[#f2f1ed] text-black"
+          className="border-y border-white/10 bg-[#f2f1ed] text-black"
         >
           <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[1fr_1fr] lg:items-center">
             <div>
-              <p className="text-xs uppercase tracking-[0.23em] text-black/60">
+              <p className="text-xs uppercase tracking-[0.22em] text-black/65">
                 apple health insights
               </p>
               <h2 className="mt-5 font-hero text-[clamp(2.5rem,5vw,5rem)] leading-[0.95] tracking-[-0.05em]">
@@ -435,7 +352,7 @@ function App() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
                 <div className="inline-flex items-center gap-3 rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs text-black/60">
-                  <span className="grid h-5 w-5 place-items-center rounded-full bg-black text-[10px] text-white">
+                  <span aria-hidden="true" className="grid h-5 w-5 place-items-center rounded-full bg-black text-[11px] text-white">
                     ✓
                   </span>
                   Numbers are computed by Peak
@@ -458,7 +375,7 @@ function App() {
                       morning session
                     </p>
                   </div>
-                  <span className="rounded-full border border-white/10 px-3 py-1 text-[11px] text-white/50">
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/60">
                     editable
                   </span>
                 </div>
@@ -481,7 +398,7 @@ function App() {
                   ))}
                 </div>
                 <div className="mt-4 h-20 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] px-4 pt-4">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-white/55">
+                  <p className="text-xs uppercase tracking-[0.14em] text-white/60">
                     workout route · illustrative session
                   </p>
                   <svg
@@ -505,7 +422,7 @@ function App() {
 
         <section
           id="privacy"
-          className="scroll-mt-24 mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[1fr_1fr] lg:items-start"
+          className="mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[1fr_1fr] lg:items-start"
         >
           <div data-reveal className="lg:sticky lg:top-32">
             <p className="section-eyebrow">private intelligence</p>
@@ -532,13 +449,13 @@ function App() {
             ].map(([title, description], index) => (
               <div
                 key={title}
-                data-reveal className="privacy-row grid gap-4 bg-black p-6 sm:grid-cols-[44px_1fr] sm:p-8"
+                data-reveal className="privacy-row grid grid-cols-[32px_1fr] gap-3 bg-black p-5 sm:grid-cols-[44px_1fr] sm:gap-4 sm:p-8"
               >
-                <span className="text-xs text-white/55">
+                <span className="pt-1 text-xs tabular-nums text-white/60">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div>
-                  <h3 className="text-lg font-medium">{title}</h3>
+                  <h3 className="text-[17px] font-medium sm:text-lg">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-white/55">
                     {description}
                   </p>
@@ -555,11 +472,11 @@ function App() {
               title="A journal you will want to revisit."
               description="Peak keeps logging quiet, then makes your history, progress, and gear easy to understand."
             />
-            <p className="mt-7 inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs leading-5 text-white/60">
+            <p className="mt-6 inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs leading-5 text-white/65">
               Screens show fictional sample surf data for demonstration.
             </p>
 
-            <div className="mt-16 space-y-20 md:space-y-28">
+            <div className="product-feature-list swipe-row mt-10 lg:mt-16" role="region" aria-label="Peak screens: best window, session detail, and stats" tabIndex={0}>
               {featuredProductScreens.map((feature, index) => (
                 <article
                   key={feature.eyebrow}
@@ -573,13 +490,13 @@ function App() {
                     }
                   >
                     <p className="section-eyebrow"><span className="chapter-number">0{index + 1}</span>{feature.eyebrow}</p>
-                    <h3 className="mt-5 max-w-xl font-hero text-[clamp(2.25rem,4.5vw,4.5rem)] leading-[0.97] tracking-[-0.045em]">
+                    <h3 className="mt-4 max-w-xl font-hero text-[clamp(1.85rem,4.5vw,4.5rem)] leading-[1] tracking-[-0.045em] lg:mt-5">
                       {feature.title}
                     </h3>
-                    <p className="mt-6 max-w-xl text-base leading-7 text-white/60 md:text-lg">
+                    <p className="mt-4 max-w-xl text-[15px] leading-6 text-white/65 md:text-lg md:leading-7 lg:mt-6">
                       {feature.description}
                     </p>
-                    <p className="mt-7 text-xs leading-6 text-white/55">
+                    <p className="mt-4 text-[13px] leading-6 text-white/60 lg:mt-7">
                       {feature.detail}
                     </p>
                   </div>
@@ -590,27 +507,27 @@ function App() {
                   >
                     <ProductPhone
                       screen={feature.screen}
-                      className="max-w-[330px]"
+                      sizes="(min-width: 1024px) 330px, 240px"
                     />
                   </div>
                 </article>
               ))}
             </div>
 
-            <div className="mt-24 border-t border-white/10 pt-14 md:mt-32 md:pt-20">
+            <div className="mt-16 border-t border-white/10 pt-12 md:mt-32 md:pt-20">
               <div className="max-w-2xl">
                 <p className="section-eyebrow">the rest of your journal</p>
                 <h3 className="mt-4 font-hero text-3xl tracking-[-0.035em] md:text-5xl">
                   History, gear, and the year behind you.
                 </h3>
               </div>
-              <div className="mt-12 grid gap-x-7 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="supporting-list swipe-row mt-10 md:mt-12" role="region" aria-label="Peak screens: history, quiver, and year in review" tabIndex={0}>
                 {supportingProductScreens.map((screen) => (
                   <figure key={screen.src} data-reveal className="supporting-screen group">
-                    <ProductPhone screen={screen} />
+                    <ProductPhone screen={screen} sizes="(min-width: 1024px) 330px, 220px" />
                     <figcaption className="mx-auto mt-5 max-w-[290px]">
-                      <p className="text-sm font-medium">{screen.label}</p>
-                      <p className="mt-1.5 text-xs leading-5 text-white/55">
+                      <p className="text-[15px] font-medium">{screen.label}</p>
+                      <p className="mt-1.5 text-[13px] leading-5 text-white/60">
                         {screen.caption}
                       </p>
                     </figcaption>
@@ -621,14 +538,14 @@ function App() {
           </div>
         </section>
 
-        <section className="lifestyle-section mx-auto w-full max-w-7xl px-5 py-24 md:px-8 md:py-32">
-          <div data-reveal className="mb-14"><p className="section-eyebrow">Made for the days that stay with you</p><h2 className="ocean-statement mt-5">Be out there.<br /><span>Keep it with you.</span></h2></div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="lifestyle-section mx-auto w-full max-w-7xl px-5 py-20 md:px-8 md:py-32">
+          <div data-reveal className="mb-10 md:mb-14"><p className="section-eyebrow">Made for the days that stay with you</p><h2 className="ocean-statement mt-5">Be out there.<br /><span>Keep it with you.</span></h2></div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {lifestyleImages.map((image, index) => (
               <figure
                 key={image.src}
                 data-reveal
-                className={`overflow-hidden rounded-[1.75rem] border border-white/10 ${
+                className={`overflow-hidden rounded-[1.25rem] border border-white/10 sm:rounded-[1.75rem] ${
                   index % 2 === 1 ? "lg:translate-y-8" : ""
                 }`}
               >
@@ -636,7 +553,7 @@ function App() {
                   src={image.src}
                   alt={image.alt}
                   srcSet={cloudinarySrcSet(image.src)}
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  sizes="(min-width: 1024px) 25vw, 50vw"
                   width="1050"
                   height="1400"
                   className="aspect-[3/4] w-full object-cover transition duration-700 hover:scale-[1.03]"
@@ -646,7 +563,7 @@ function App() {
               </figure>
             ))}
           </div>
-          <p className="mx-auto mt-16 max-w-xl text-center text-sm leading-6 text-white/55">
+          <p className="mx-auto mt-12 max-w-xl text-center text-sm leading-6 text-white/60 md:mt-16">
             The ocean moves fast. Your memory does not have to.
           </p>
         </section>
@@ -654,9 +571,9 @@ function App() {
         <section
           id="faq"
           aria-labelledby="faq-title"
-          className="scroll-mt-24 border-y border-white/10 bg-[#070707]"
+          className="border-y border-white/10 bg-[#070707]"
         >
-          <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-20 md:gap-14 md:px-8 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
             <div data-reveal>
               <p className="section-eyebrow">questions</p>
               <h2 id="faq-title" className="section-title mt-5">Good to know before you paddle out.</h2>
@@ -671,77 +588,104 @@ function App() {
                 Read all questions <span aria-hidden="true" className="ml-1">→</span>
               </a>
             </div>
-            <div className="grid gap-px overflow-hidden rounded-[2rem] border border-white/10 bg-white/10">
-              {featuredFaqItems.map((item) => (
-                <div key={item.id} data-reveal className="bg-black p-6 sm:p-8">
-                  <h3 className="text-lg font-medium">{item.question}</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/60">{item.answer}</p>
-                  {item.link && (
-                    <a
-                      href={item.link.href}
-                      className="mt-3 inline-flex min-h-11 items-center text-xs text-white/80 underline-offset-4 hover:text-white hover:underline"
-                    >
-                      {item.link.label} <span aria-hidden="true" className="ml-1">→</span>
-                    </a>
-                  )}
-                </div>
+            <div className="grid gap-px self-start overflow-hidden rounded-[2rem] border border-white/10 bg-white/10">
+              {featuredFaqItems.map((item, index) => (
+                <details key={item.id} data-reveal className="faq-item group bg-black" open={index === 0}>
+                  <summary className="faq-summary">
+                    <h3 className="text-[17px] font-medium leading-snug sm:text-lg">{item.question}</h3>
+                    <span className="faq-icon" aria-hidden="true" />
+                  </summary>
+                  <div className="px-5 pb-6 sm:px-8 sm:pb-8">
+                    <p className="text-[15px] leading-6 text-white/65 sm:text-sm">{item.answer}</p>
+                    {item.link && (
+                      <a
+                        href={item.link.href}
+                        className="mt-2 inline-flex min-h-11 items-center text-sm text-white/85 underline-offset-4 hover:text-white hover:underline"
+                      >
+                        {item.link.label} <span aria-hidden="true" className="ml-1">→</span>
+                      </a>
+                    )}
+                  </div>
+                </details>
               ))}
             </div>
           </div>
         </section>
 
-        <section data-reveal className="closing-section px-5 pb-24 md:px-8 md:pb-32">
+        <section data-reveal className="closing-section px-5 py-20 md:px-8 md:pb-32 md:pt-24">
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white text-black">
             <div className="grid gap-10 p-8 sm:p-12 md:p-16 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-black/60">
+                <p className="text-xs uppercase tracking-[0.22em] text-black/65">
                   available now on iPhone
                 </p>
                 <h2 className="mt-5 max-w-3xl font-hero text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.95] tracking-[-0.05em]">
                   Start your private surf history.
                 </h2>
-                <p className="mt-6 max-w-xl text-sm leading-6 text-black/60">
+                <p className="mt-6 max-w-xl text-[15px] leading-6 text-black/65">
                   Download Peak {APP_VERSION} today. Free, no account, and your
                   history stays on your devices. Requires iOS {MIN_IOS} or later.
                 </p>
+                <div className="mt-5 max-w-md"><AndroidNote tone="light" /></div>
               </div>
-              <Button
-                asChild
-                size="lg"
-                className="h-14 rounded-full bg-black px-8 text-white hover:bg-black/80"
-              >
-                <AppStoreLink location="home_footer_cta">
-                  <AppleLogo className="mr-2 text-base" />
-                  download Peak {APP_VERSION}
+              <div className="flex flex-col items-start gap-6 lg:items-end">
+                <AppStoreLink location="home_footer_cta" data-download-cta className="app-badge-link">
+                  <AppStoreBadge className="h-14" />
                 </AppStoreLink>
-              </Button>
+                <AppStoreQr />
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-8 text-xs text-white/55 md:flex-row md:items-center md:justify-between md:px-8">
-          <span>Peak · private surf journal for iPhone</span>
-          <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer navigation">
-            {footerNav
-              .filter((item) => item.key !== "home")
-              .map((item) => (
-                <a key={item.key} className="footer-link" href={hrefFor(item.key)}>
-                  {item.label}
-                </a>
+      <SiteFooter wide />
+      <MobileDownloadBar link={<AppStoreLink location="home_sticky_bar" />} />
+    </div>
+  );
+}
+
+const heroScreens = [productScreens.log, productScreens.sessionDetail, productScreens.stats];
+
+/**
+ * The hero phone cycles through three real Peak screens with a slow
+ * crossfade (CSS only, see .hero-screens in index.css). The first screen is
+ * prerendered; the others mount after hydration so they never compete with
+ * the page's first paint. Pause motion and reduced motion stop the cycle on
+ * the first screen.
+ */
+function HeroScreens() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const show = () => setReady(true);
+    if (document.readyState === "complete") show();
+    else window.addEventListener("load", show, { once: true });
+    return () => window.removeEventListener("load", show);
+  }, []);
+
+  return (
+    <div data-motion-zone className="hero-screens phone-frame">
+      {heroScreens.map((screen, index) =>
+        index === 0 || ready ? (
+          <div key={screen.src} className={`hero-screen hero-screen-${index + 1}`} aria-hidden={index === 0 ? undefined : true}>
+            <picture>
+              {screen.responsiveSources?.map((source) => (
+                <source key={source.srcSet} type={source.type} srcSet={source.srcSet} sizes="(min-width: 1024px) 278px, 230px" />
               ))}
-            <a
-              className="footer-link"
-              href="https://www.design-prism.com"
-              target="_blank"
-              rel="noreferrer"
-            >
-              made by Prism
-            </a>
-          </nav>
-        </div>
-      </footer>
+              <img
+                src={screen.src}
+                alt={index === 0 ? "Peak app screens: the Log screen, a session detail, and personal stats" : ""}
+                width="1320"
+                height="2868"
+                sizes="(min-width: 1024px) 278px, 230px"
+                className="h-full w-full object-cover"
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </picture>
+          </div>
+        ) : null,
+      )}
     </div>
   );
 }
@@ -777,12 +721,13 @@ function ProductPhone({
   screen,
   priority = false,
   className = "",
+  sizes = "(min-width: 1024px) 330px, min(86vw, 330px)",
 }: {
   screen: ProductScreen;
   priority?: boolean;
   className?: string;
+  sizes?: string;
 }) {
-  const sizes = "(min-width: 1024px) 330px, min(86vw, 330px)";
 
   return (
     <div className={`phone-frame ${className}`}>

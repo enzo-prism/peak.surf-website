@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { releases } from "@/content/releases";
 import { APP_FIRST_RELEASED, formatLongDate } from "@/site";
@@ -180,7 +181,7 @@ function ChangelogPage() {
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
-              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+              className="font-lower border-border/60 text-xs text-muted-foreground"
             >
               changelog
             </Badge>
@@ -206,13 +207,13 @@ function ChangelogPage() {
               <article
                 key={release.version}
                 id={`peak-${release.version.replace(/\./g, "-")}`}
-                className="scroll-mt-8 rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8"
+                className="rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8"
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <h3 className="text-xl font-semibold text-foreground md:text-2xl">
                     Peak {release.version}
                   </h3>
-                  <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">
                     released <time dateTime={release.released}>{formatLongDate(release.released)}</time>
                   </p>
                 </div>
@@ -308,14 +309,14 @@ function ChangelogPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-wrap items-center justify-between gap-3">
-                    <span className="rounded-full border border-border/60 px-3 py-1 font-lower text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="rounded-full border border-border/60 px-3 py-1 font-lower text-xs uppercase tracking-[0.2em] text-muted-foreground">
                       {commit.shortSha || "unknown"}
                     </span>
                     <Button
                       asChild
                       variant="ghost"
                       size="sm"
-                      className="font-lower h-11 text-[11px] text-muted-foreground hover:text-foreground"
+                      className="font-lower h-11 text-xs text-muted-foreground hover:text-foreground"
                     >
                       <a href={commit.htmlUrl} target="_blank" rel="noreferrer">
                         view commit
@@ -329,6 +330,7 @@ function ChangelogPage() {
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="changelog_sticky_bar" />} />
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { AppStoreBadge } from "@/components/AppStoreBadge";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { appleWatchMetrics, appleWatchPrinciples, appleWatchSteps } from "@/content/appleWatch";
 import { hrefFor } from "@/seo/routes";
@@ -33,7 +34,7 @@ function AppleWatchPage() {
         <article>
           <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
             <div className="flex items-center gap-3">
-              <Badge variant="outline" className="font-lower border-border/60 text-[11px] text-muted-foreground">
+              <Badge variant="outline" className="font-lower border-border/60 text-xs text-muted-foreground">
                 apple watch surf tracking
               </Badge>
               <Separator className="w-auto flex-1 bg-border/60" />
@@ -81,7 +82,7 @@ function AppleWatchPage() {
             <ol className="mt-6 grid gap-4 md:grid-cols-2">
               {appleWatchSteps.map((step, index) => (
                 <li key={step.title} className="rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8">
-                  <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">
                     step {index + 1}
                   </p>
                   <h3 className="mt-3 text-lg font-medium text-foreground">{step.title}</h3>
@@ -134,18 +135,16 @@ function AppleWatchPage() {
                   .
                 </p>
               </div>
-              <Button asChild size="lg" className="font-cta shrink-0 rounded-full px-8 text-[13px]">
-                <AppStoreLink location="apple_watch_footer_cta">
-                  <AppleLogo className="text-base" />
-                  download Peak
-                </AppStoreLink>
-              </Button>
+              <AppStoreLink location="apple_watch_footer_cta" data-download-cta className="app-badge-link shrink-0">
+                <AppStoreBadge />
+              </AppStoreLink>
             </CardContent>
           </Card>
         </section>
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="apple_watch_sticky_bar" />} />
     </div>
   );
 }

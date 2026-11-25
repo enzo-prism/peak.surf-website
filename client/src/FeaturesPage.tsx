@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { AppStoreBadge } from "@/components/AppStoreBadge";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { featureGroups } from "@/content/features";
 import { hrefFor } from "@/seo/routes";
@@ -41,7 +42,7 @@ function FeaturesPage() {
       <main id="main-content" tabIndex={-1}>
         <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="font-lower border-border/60 text-[11px] text-muted-foreground">
+            <Badge variant="outline" className="font-lower border-border/60 text-xs text-muted-foreground">
               features
             </Badge>
             <Separator className="w-auto flex-1 bg-border/60" />
@@ -62,7 +63,7 @@ function FeaturesPage() {
           <dl className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 sm:grid-cols-2 lg:grid-cols-3">
             {quickFacts.map(([term, value]) => (
               <div key={term} className="bg-background p-5">
-                <dt className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                <dt className="font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">
                   {term}
                 </dt>
                 <dd className="mt-2 text-base text-foreground">{value}</dd>
@@ -76,7 +77,7 @@ function FeaturesPage() {
                 <li key={group.id}>
                   <a
                     href={`#${group.id}`}
-                    className="inline-flex min-h-9 items-center rounded-full border border-border/60 px-4 text-xs text-muted-foreground transition hover:border-foreground/60 hover:text-foreground"
+                    className="inline-flex min-h-11 items-center rounded-full border border-border/60 px-4 text-sm transition active:bg-white/10 text-muted-foreground transition hover:border-foreground/60 hover:text-foreground"
                   >
                     {group.title}
                   </a>
@@ -89,7 +90,7 @@ function FeaturesPage() {
         <section className="mx-auto w-full max-w-6xl px-6 pb-20" aria-label="Feature list">
           <div className="grid gap-4 md:grid-cols-2">
             {featureGroups.map((group) => (
-              <Card key={group.id} id={group.id} className="scroll-mt-8 border-border/60 bg-card/40">
+              <Card key={group.id} id={group.id} className="border-border/60 bg-card/40">
                 <CardHeader>
                   <h2 className="font-hero text-2xl font-semibold leading-tight tracking-tight">
                     {group.title}
@@ -132,18 +133,16 @@ function FeaturesPage() {
                   .
                 </p>
               </div>
-              <Button asChild size="lg" className="font-cta shrink-0 rounded-full px-8 text-[13px]">
-                <AppStoreLink location="features_footer_cta">
-                  <AppleLogo className="text-base" />
-                  download Peak
-                </AppStoreLink>
-              </Button>
+              <AppStoreLink location="features_footer_cta" data-download-cta className="app-badge-link shrink-0">
+                <AppStoreBadge />
+              </AppStoreLink>
             </CardContent>
           </Card>
         </section>
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="features_sticky_bar" />} />
     </div>
   );
 }

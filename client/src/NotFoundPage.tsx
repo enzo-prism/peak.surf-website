@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { AppStoreBadge } from "@/components/AppStoreBadge";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { hrefFor } from "@/seo/routes";
 
@@ -31,7 +32,7 @@ function NotFoundPage() {
       />
 
       <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl px-6 pb-28 pt-12">
-        <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">404</p>
+        <p className="font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">404</p>
         <h1 className="mt-4 font-hero text-4xl leading-tight md:text-5xl">This wave already broke.</h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
           The page you are looking for does not exist or has moved. Try one of
@@ -50,15 +51,13 @@ function NotFoundPage() {
             </li>
           ))}
         </ul>
-        <Button asChild size="lg" className="font-cta mt-10 rounded-full px-8 text-[13px]">
-          <AppStoreLink location="not_found_cta">
-            <AppleLogo className="text-base" />
-            download Peak
-          </AppStoreLink>
-        </Button>
+        <AppStoreLink location="not_found_cta" data-download-cta className="app-badge-link mt-10">
+          <AppStoreBadge />
+        </AppStoreLink>
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="not_found_sticky_bar" />} />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,6 +11,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { AppStoreBadge } from "@/components/AppStoreBadge";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 
 const timeline = [
@@ -88,7 +89,7 @@ function AboutPage() {
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
-              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+              className="font-lower border-border/60 text-xs text-muted-foreground"
             >
               about peak
             </Badge>
@@ -139,7 +140,7 @@ function AboutPage() {
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
-              className="font-lower border-border/60 text-[11px] text-muted-foreground"
+              className="font-lower border-border/60 text-xs text-muted-foreground"
             >
               project archive
             </Badge>
@@ -159,7 +160,7 @@ function AboutPage() {
                   decoding="async"
                 />
                 <CardContent className="p-4">
-                  <p className="font-lower text-[11px] text-muted-foreground">
+                  <p className="font-lower text-xs text-muted-foreground">
                     {image.label}
                   </p>
                 </CardContent>
@@ -174,18 +175,16 @@ function AboutPage() {
               <h2 className="font-hero text-3xl md:text-4xl">
                 excited for the future of peak.
               </h2>
-              <Button asChild size="lg" className="font-cta rounded-full px-8 text-[13px]">
-                <AppStoreLink location="about_footer_cta">
-                  <AppleLogo className="text-base" />
-                  download app
-                </AppStoreLink>
-              </Button>
+              <AppStoreLink location="about_footer_cta" data-download-cta className="app-badge-link ">
+                <AppStoreBadge />
+              </AppStoreLink>
             </CardContent>
           </Card>
         </section>
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="about_sticky_bar" />} />
     </div>
   );
 }

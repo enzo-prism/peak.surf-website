@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { MobileDownloadBar } from "@/components/MobileDownloadBar";
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
 import { SUPPORT_EMAIL } from "@/site";
 
@@ -125,7 +126,7 @@ function PrivacyPage() {
       <main id="main-content" tabIndex={-1}>
         <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="font-lower border-border/60 text-[11px] text-muted-foreground">
+            <Badge variant="outline" className="font-lower border-border/60 text-xs text-muted-foreground">
               privacy
             </Badge>
             <Separator className="w-auto flex-1 bg-border/60" />
@@ -140,7 +141,7 @@ function PrivacyPage() {
               We do not require accounts, and the Peak app does not use analytics
               or tracking SDKs.
             </p>
-            <p className="mt-4 font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="mt-4 font-lower text-xs uppercase tracking-[0.18em] text-muted-foreground">
               last updated August 30, 2026
             </p>
           </div>
@@ -181,6 +182,7 @@ function PrivacyPage() {
       </main>
 
       <SiteFooter />
+      <MobileDownloadBar link={<AppStoreLink location="privacy_sticky_bar" />} />
     </div>
   );
 }

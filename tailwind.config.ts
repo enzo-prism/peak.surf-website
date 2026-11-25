@@ -2,6 +2,9 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
+  // Wrap hover: utilities in @media (hover: hover) so taps on phones do not
+  // leave cards stuck in their hover state.
+  future: { hoverOnlyWhenSupported: true },
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     container: {
