@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
+import { releases } from "@/content/releases";
+import { APP_FIRST_RELEASED, formatLongDate } from "@/site";
 
 const repoUrl = "https://github.com/enzo-prism/peak-ios";
 const commitsApiUrl =
@@ -86,26 +89,8 @@ const formatDateTime = (dateString: string | null) => {
 };
 
 function ChangelogPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [commits, setCommits] = useState<CommitEntry[]>([]);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    firstMobileLinkRef.current?.focus();
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isMenuOpen]);
 
   useEffect(() => {
     let isMounted = true;
@@ -173,147 +158,97 @@ function ChangelogPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <a
-        href="#main-content"
-        className="sr-only z-50 rounded-md bg-foreground px-4 py-2 text-background focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to content
-      </a>
-      <header className="relative">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8">
-          <div className="flex items-center gap-4">
-            <img
-              src="/Transparent.png"
-              alt="peak logo"
-              className="h-8 w-auto transition-opacity hover:opacity-80"
-            />
-            <div className="leading-tight">
-              <p className="font-lower text-[11px] tracking-[0.35em] text-muted-foreground">
-                peak
-              </p>
-              <p className="text-sm text-muted-foreground">private surf journal</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <nav aria-label="Main navigation" className="hidden items-center gap-3 md:flex">
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
-              >
-                <a href="/">home</a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
-              >
-                <a href="/about.html">about</a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="font-lower text-[11px] text-muted-foreground hover:text-foreground"
-              >
-                <a href="/changelog.html">changelog</a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20"
-              >
-                <AppStoreLink location="changelog_header">
-                  <AppleLogo className="text-base" />
-                  download
-                </AppStoreLink>
-              </Button>
-            </nav>
-            <button
-              ref={menuButtonRef}
-              type="button"
-              aria-label="toggle navigation"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-nav"
-              onClick={() => setIsMenuOpen((open) => !open)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:border-foreground/70 hover:text-foreground md:hidden"
-            >
-              <span className="relative block h-3.5 w-5">
-                <span className="absolute left-0 top-0 h-0.5 w-full bg-current" />
-                <span className="absolute left-0 top-1.5 h-0.5 w-full bg-current" />
-                <span className="absolute left-0 top-3 h-0.5 w-full bg-current" />
-              </span>
-            </button>
-          </div>
-        </div>
-        <nav
-          id="mobile-nav"
-          aria-label="Mobile navigation"
-          className={isMenuOpen ? "md:hidden" : "hidden md:hidden"}
-        >
-          <div className="mx-auto w-full max-w-6xl px-6 pb-6">
-            <div className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-background/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <a ref={firstMobileLinkRef} href="/">home</a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <a href="/about.html">about</a>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <a href="/changelog.html">changelog</a>
-              </Button>
-              <Button
-                asChild
-                size="sm"
-                className="font-cta w-full justify-center rounded-full px-5 text-[13px]"
-              >
-                <AppStoreLink location="changelog_mobile_menu">
-                  <AppleLogo className="text-base" />
-                  download
-                </AppStoreLink>
-              </Button>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <SkipLink />
+      <SiteHeader
+        current="changelog"
+        cta={
+          <AppStoreLink location="changelog_header">
+            <AppleLogo className="text-base" />
+            download
+          </AppStoreLink>
+        }
+        mobileCta={
+          <AppStoreLink location="changelog_mobile_menu">
+            <AppleLogo className="text-base" />
+            download
+          </AppStoreLink>
+        }
+      />
 
       <main id="main-content" tabIndex={-1} className="relative">
-        <section className="mx-auto w-full max-w-6xl px-6 pb-16 pt-12">
+        <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
               className="font-lower border-border/60 text-[11px] text-muted-foreground"
             >
-              development log
+              changelog
             </Badge>
             <Separator className="flex-1 w-auto bg-border/60" />
           </div>
-          <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="mt-6 max-w-3xl">
+            <h1 className="font-hero text-4xl leading-tight md:text-5xl">
+              What's new in Peak.
+            </h1>
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              Release notes for every Peak version on the App Store, followed by
+              a live, transparent log of what we are building next.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="release-notes-title" className="mx-auto w-full max-w-6xl px-6 pb-16">
+          <h2 id="release-notes-title" className="font-hero text-2xl md:text-3xl">
+            Release notes
+          </h2>
+          <div className="mt-6 space-y-4">
+            {releases.map((release) => (
+              <article
+                key={release.version}
+                id={`peak-${release.version.replace(/\./g, "-")}`}
+                className="scroll-mt-8 rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8"
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <h3 className="text-xl font-semibold text-foreground md:text-2xl">
+                    Peak {release.version}
+                  </h3>
+                  <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                    released <time dateTime={release.released}>{formatLongDate(release.released)}</time>
+                  </p>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                  {release.summary}
+                </p>
+                <div className="mt-6 grid gap-6 md:grid-cols-3">
+                  {release.sections.map((section) => (
+                    <div key={section.title}>
+                      <h4 className="text-sm font-medium text-foreground">{section.title}</h4>
+                      <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+                        {section.items.map((item) => (
+                          <li key={item} className="flex gap-3">
+                            <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/60" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Peak first launched on the App Store on{" "}
+            <time dateTime={APP_FIRST_RELEASED}>{formatLongDate(APP_FIRST_RELEASED)}</time>.
+          </p>
+        </section>
+
+        <section aria-labelledby="development-log-title" className="mx-auto w-full max-w-6xl px-6 pb-28">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl space-y-4">
-              <h1 className="font-hero text-4xl leading-tight md:text-5xl">
-                a transparent look at what we are building.
-              </h1>
+              <h2 id="development-log-title" className="font-hero text-2xl md:text-3xl">
+                Development log
+              </h2>
               <p className="text-sm text-muted-foreground">
                 Latest public commits to main. Items can include work still in
                 testing and are not release notes.
@@ -357,7 +292,7 @@ function ChangelogPage() {
               commits.map((commit) => (
                 <Card
                   key={commit.sha}
-                  className="border-border/60 bg-card/40 shadow-[0_25px_70px_rgba(0,0,0,0.45)]"
+                  className="border-border/60 bg-card/40"
                 >
                   <CardHeader className="space-y-2">
                     <CardTitle className="text-lg md:text-xl">
@@ -393,16 +328,7 @@ function ChangelogPage() {
         </section>
       </main>
 
-      <footer className="border-t border-border/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
-          <span>peak surf journal</span>
-          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-5">
-            <a className="inline-flex items-center hover:text-foreground" href="/privacy.html">privacy</a>
-            <a className="inline-flex items-center hover:text-foreground" href="/support.html">support</a>
-            <a className="inline-flex items-center hover:text-foreground" href="/about.html">about</a>
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

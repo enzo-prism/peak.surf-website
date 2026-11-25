@@ -1,8 +1,7 @@
 import { track } from "@vercel/analytics";
 import { forwardRef, type ComponentPropsWithoutRef } from "react";
 
-const APP_STORE_URL = "https://apps.apple.com/us/app/peak-surf/id6757644027";
-const APP_VERSION = "3.2";
+import { APP_STORE_URL, APP_VERSION } from "@/site";
 
 type AppStoreLinkProps = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
   location: string;

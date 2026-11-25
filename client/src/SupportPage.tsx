@@ -1,125 +1,33 @@
-import { useEffect, useRef, useState } from "react";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { SiteFooter, SiteHeader, SkipLink } from "@/components/SiteChrome";
+import { SUPPORT_EMAIL } from "@/site";
 
-const supportEmail = "enzo@design-prism.com";
-
-function SiteHeader() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    firstMobileLinkRef.current?.focus();
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isMenuOpen]);
-
-  return (
-    <header className="relative">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-8">
-        <a
-          href="/"
-          className="flex min-h-11 items-center gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Peak Surf home"
-        >
-          <img src="/Transparent.png" alt="" className="h-8 w-auto transition-opacity hover:opacity-80" />
-          <div className="leading-tight">
-            <p className="font-lower text-[11px] tracking-[0.35em] text-muted-foreground">peak</p>
-            <p className="text-sm text-muted-foreground">private surf journal</p>
-          </div>
-        </a>
-
-        <div className="flex items-center gap-3">
-          <nav aria-label="Main navigation" className="hidden items-center gap-3 md:flex">
-            <Button asChild variant="ghost" size="sm" className="font-lower text-[11px] text-muted-foreground hover:text-foreground">
-              <a href="/">home</a>
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="font-lower text-[11px] text-muted-foreground hover:text-foreground">
-              <a href="/privacy.html">privacy</a>
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="font-lower text-[11px] text-foreground">
-              <a href="/support.html" aria-current="page">support</a>
-            </Button>
-            <Button asChild variant="outline" size="sm" className="font-cta rounded-full border-border/60 bg-transparent px-5 text-[13px] text-foreground hover:bg-accent/20">
-              <AppStoreLink location="support_header">
-                <AppleLogo className="text-base" />
-                download
-              </AppStoreLink>
-            </Button>
-          </nav>
-
-          <button
-            ref={menuButtonRef}
-            type="button"
-            aria-label="Toggle navigation"
-            aria-expanded={isMenuOpen}
-            aria-controls="support-mobile-nav"
-            onClick={() => setIsMenuOpen((open) => !open)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:border-foreground/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
-          >
-            <span className="relative block h-3.5 w-5" aria-hidden="true">
-              <span className="absolute left-0 top-0 h-0.5 w-full bg-current" />
-              <span className="absolute left-0 top-1.5 h-0.5 w-full bg-current" />
-              <span className="absolute left-0 top-3 h-0.5 w-full bg-current" />
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <nav
-        id="support-mobile-nav"
-        aria-label="Mobile navigation"
-        className={isMenuOpen ? "md:hidden" : "hidden"}
-      >
-        <div className="mx-auto w-full max-w-6xl px-6 pb-6">
-          <div className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-background/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-            <Button asChild variant="ghost" size="sm" className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground">
-              <a ref={firstMobileLinkRef} href="/">home</a>
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="w-full justify-start font-lower text-[11px] text-muted-foreground hover:text-foreground">
-              <a href="/privacy.html">privacy</a>
-            </Button>
-            <Button asChild variant="ghost" size="sm" className="w-full justify-start font-lower text-[11px] text-foreground">
-              <a href="/support.html" aria-current="page">support</a>
-            </Button>
-            <Button asChild size="sm" className="font-cta w-full justify-center rounded-full px-5 text-[13px]">
-              <AppStoreLink location="support_mobile_menu">
-                <AppleLogo className="text-base" />
-                download
-              </AppStoreLink>
-            </Button>
-          </div>
-        </div>
-      </nav>
-    </header>
-  );
-}
+const supportEmail = SUPPORT_EMAIL;
 
 function SupportPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <a
-        href="#main-content"
-        className="sr-only z-50 rounded-md bg-foreground px-4 py-2 text-background focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to content
-      </a>
-      <SiteHeader />
+      <SkipLink />
+      <SiteHeader
+        current="support"
+        cta={
+          <AppStoreLink location="support_header">
+            <AppleLogo className="text-base" />
+            download
+          </AppStoreLink>
+        }
+        mobileCta={
+          <AppStoreLink location="support_mobile_menu">
+            <AppleLogo className="text-base" />
+            download
+          </AppStoreLink>
+        }
+      />
 
       <main id="main-content" tabIndex={-1}>
         <section className="mx-auto w-full max-w-6xl px-6 pb-12 pt-12">
@@ -164,7 +72,7 @@ function SupportPage() {
               <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                 for any issue
               </p>
-              <CardTitle className="font-hero text-2xl">include these details</CardTitle>
+              <h2 className="font-semibold leading-none tracking-tight font-hero text-2xl">include these details</h2>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3 text-sm text-muted-foreground">
@@ -183,7 +91,7 @@ function SupportPage() {
               <p className="font-lower text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                 auto-fill conditions
               </p>
-              <CardTitle className="font-hero text-2xl">add this context</CardTitle>
+              <h2 className="font-semibold leading-none tracking-tight font-hero text-2xl">add this context</h2>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3 text-sm text-muted-foreground">
@@ -203,18 +111,7 @@ function SupportPage() {
         </section>
       </main>
 
-      <footer className="border-t border-border/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-muted-foreground md:flex-row">
-          <span>peak surf journal</span>
-          <nav aria-label="Footer navigation" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            <a className="inline-flex items-center hover:text-foreground" href="/">home</a>
-            <a className="inline-flex items-center hover:text-foreground" href="/about.html">about</a>
-            <a className="inline-flex items-center hover:text-foreground" href="/changelog.html">changelog</a>
-            <a className="inline-flex items-center hover:text-foreground" href="/privacy.html">privacy</a>
-            <a className="inline-flex items-center hover:text-foreground" href="/support.html">support</a>
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

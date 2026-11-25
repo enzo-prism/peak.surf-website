@@ -7,6 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import AppleLogo from "@/components/AppleLogo";
 import AppStoreLink from "@/components/AppStoreLink";
+import { footerNav } from "@/components/SiteChrome";
+import { featuredFaqItems } from "@/content/faq";
+import { hrefFor } from "@/seo/routes";
+import { APP_VERSION, MIN_IOS } from "@/site";
 
 function cloudinarySrcSet(src: string) {
   return [480, 800, 1200, 1600]
@@ -223,13 +227,16 @@ function App() {
             <a className="nav-link" href="#how-it-works">
               how it works
             </a>
-            <a className="nav-link" href="#intelligence">
-              intelligence
+            <a className="nav-link" href={hrefFor("features")}>
+              features
             </a>
-            <a className="nav-link" href="#privacy">
-              privacy
+            <a className="nav-link" href={hrefFor("appleWatch")}>
+              apple watch
             </a>
-            <a className="nav-link" href="/about.html">
+            <a className="nav-link" href="#faq">
+              faq
+            </a>
+            <a className="nav-link" href={hrefFor("about")}>
               about
             </a>
             <Button
@@ -237,7 +244,7 @@ function App() {
               size="sm"
               className="ml-3 h-11 rounded-full bg-white px-5 text-xs text-black hover:bg-white/85"
             >
-              <AppStoreLink location="home_header">get peak 3.2</AppStoreLink>
+              <AppStoreLink location="home_header">get peak {APP_VERSION}</AppStoreLink>
             </Button>
           </nav>
 
@@ -266,10 +273,11 @@ function App() {
           >
             {[
               ["how it works", "#how-it-works"],
-              ["intelligence", "#intelligence"],
-              ["privacy", "#privacy"],
-              ["about", "/about.html"],
-              ["changelog", "/changelog.html"],
+              ["features", hrefFor("features")],
+              ["apple watch", hrefFor("appleWatch")],
+              ["faq", "#faq"],
+              ["about", hrefFor("about")],
+              ["changelog", hrefFor("changelog")],
             ].map(([label, href]) => (
               <a
                 key={href}
@@ -282,7 +290,7 @@ function App() {
               </a>
             ))}
             <Button asChild className="mt-2 h-11 rounded-full bg-white text-black">
-              <AppStoreLink location="home_mobile_menu">get peak 3.2</AppStoreLink>
+              <AppStoreLink location="home_mobile_menu">get peak {APP_VERSION}</AppStoreLink>
             </Button>
           </nav>
         </div>
@@ -298,7 +306,7 @@ function App() {
             <div className="hero-copy">
               <Badge className="fade-up border border-white/20 bg-black/20 px-3 py-2 font-normal text-white/80 hover:bg-black/20">
                 <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[#b6d7c7]" />
-                Peak 3.2 · the private surf journal
+                Peak {APP_VERSION} · the private surf journal for iPhone
               </Badge>
               <h1 id="hero-title" className="hero-title mt-8">
                 <span className="hero-line"><span>Every wave.</span></span>
@@ -310,7 +318,7 @@ function App() {
               </p>
               <div className="fade-up fade-delay-3 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button asChild size="lg" className="premium-button h-14 rounded-full bg-white px-7 text-sm text-black hover:bg-white/90">
-                  <AppStoreLink location="home_hero"><AppleLogo className="mr-2 text-base" />download Peak 3.2<span aria-hidden="true" className="button-arrow">↗</span></AppStoreLink>
+                  <AppStoreLink location="home_hero"><AppleLogo className="mr-2 text-base" />download Peak {APP_VERSION}<span aria-hidden="true" className="button-arrow">↗</span></AppStoreLink>
                 </Button>
                 <a href="#how-it-works" className="hero-explore">Explore the journal <span aria-hidden="true">↓</span></a>
               </div>
@@ -339,7 +347,7 @@ function App() {
             <SectionIntro
               eyebrow="before · during · after"
               title="Your whole session, connected."
-              description="Peak 3.2 fits around the surf instead of pulling you away from it."
+              description="Peak is a free surf log for iPhone that fits around the surf instead of pulling you away from it."
             />
             <div className="mt-14 grid gap-4 lg:grid-cols-3">
               {journey.map((item) => (
@@ -384,7 +392,7 @@ function App() {
             </p>
             <p className="mt-6 text-xs leading-6 text-white/55">
               Siri, widgets, Control Center, Lock Screen, Live Activities, and
-              Dynamic Island all ship in Peak 3.2.
+              Dynamic Island all ship in Peak {APP_VERSION}.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -425,11 +433,19 @@ function App() {
                 to estimate wave count, speed, distance, and rides. Every
                 estimate can be reviewed and edited.
               </p>
-              <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs text-black/60">
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-black text-[10px] text-white">
-                  ✓
-                </span>
-                Numbers are computed by Peak
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+                <div className="inline-flex items-center gap-3 rounded-full border border-black/10 bg-white/55 px-4 py-2 text-xs text-black/60">
+                  <span className="grid h-5 w-5 place-items-center rounded-full bg-black text-[10px] text-white">
+                    ✓
+                  </span>
+                  Numbers are computed by Peak
+                </div>
+                <a
+                  href={hrefFor("appleWatch")}
+                  className="inline-flex min-h-11 items-center text-sm text-black underline-offset-4 hover:underline"
+                >
+                  How Apple Watch surf tracking works <span aria-hidden="true" className="ml-1">→</span>
+                </a>
               </div>
             </div>
 
@@ -635,6 +651,45 @@ function App() {
           </p>
         </section>
 
+        <section
+          id="faq"
+          aria-labelledby="faq-title"
+          className="scroll-mt-24 border-y border-white/10 bg-[#070707]"
+        >
+          <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 py-24 md:px-8 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
+            <div data-reveal>
+              <p className="section-eyebrow">questions</p>
+              <h2 id="faq-title" className="section-title mt-5">Good to know before you paddle out.</h2>
+              <p className="section-copy mt-6">
+                Peak is free, needs no account, and keeps your surf history on
+                your iPhone.
+              </p>
+              <a
+                href={hrefFor("faq")}
+                className="mt-8 inline-flex min-h-11 items-center text-sm text-white underline-offset-4 hover:underline"
+              >
+                Read all questions <span aria-hidden="true" className="ml-1">→</span>
+              </a>
+            </div>
+            <div className="grid gap-px overflow-hidden rounded-[2rem] border border-white/10 bg-white/10">
+              {featuredFaqItems.map((item) => (
+                <div key={item.id} data-reveal className="bg-black p-6 sm:p-8">
+                  <h3 className="text-lg font-medium">{item.question}</h3>
+                  <p className="mt-3 text-sm leading-6 text-white/60">{item.answer}</p>
+                  {item.link && (
+                    <a
+                      href={item.link.href}
+                      className="mt-3 inline-flex min-h-11 items-center text-xs text-white/80 underline-offset-4 hover:text-white hover:underline"
+                    >
+                      {item.link.label} <span aria-hidden="true" className="ml-1">→</span>
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section data-reveal className="closing-section px-5 pb-24 md:px-8 md:pb-32">
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white text-black">
             <div className="grid gap-10 p-8 sm:p-12 md:p-16 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -646,8 +701,8 @@ function App() {
                   Start your private surf history.
                 </h2>
                 <p className="mt-6 max-w-xl text-sm leading-6 text-black/60">
-                  Download Peak 3.2 today. Free, no account, and your
-                  history stays on your devices.
+                  Download Peak {APP_VERSION} today. Free, no account, and your
+                  history stays on your devices. Requires iOS {MIN_IOS} or later.
                 </p>
               </div>
               <Button
@@ -657,7 +712,7 @@ function App() {
               >
                 <AppStoreLink location="home_footer_cta">
                   <AppleLogo className="mr-2 text-base" />
-                  download Peak 3.2
+                  download Peak {APP_VERSION}
                 </AppStoreLink>
               </Button>
             </div>
@@ -669,18 +724,13 @@ function App() {
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-8 text-xs text-white/55 md:flex-row md:items-center md:justify-between md:px-8">
           <span>Peak · private surf journal for iPhone</span>
           <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer navigation">
-            <a className="footer-link" href="/privacy.html">
-              privacy
-            </a>
-            <a className="footer-link" href="/support.html">
-              support
-            </a>
-            <a className="footer-link" href="/about.html">
-              about
-            </a>
-            <a className="footer-link" href="/changelog.html">
-              changelog
-            </a>
+            {footerNav
+              .filter((item) => item.key !== "home")
+              .map((item) => (
+                <a key={item.key} className="footer-link" href={hrefFor(item.key)}>
+                  {item.label}
+                </a>
+              ))}
             <a
               className="footer-link"
               href="https://www.design-prism.com"

@@ -6,12 +6,13 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:analytics && vite build && node scripts/prerender.mjs",
+    "build": "npm run check:analytics && vite build && node scripts/prerender.mjs && node scripts/check-seo.mjs",
     "start": "vite preview --host 0.0.0.0 --port 5000 --strictPort",
     "preview": "vite preview",
     "check": "tsc -p tsconfig.json && npm run check:analytics",
     "check:analytics": "node scripts/check-analytics.mjs",
-    "prerender": "node scripts/prerender.mjs"
+    "prerender": "node scripts/prerender.mjs",
+    "check:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "@radix-ui/react-aspect-ratio": "^1.1.8",
